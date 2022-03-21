@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `patient_record` (
   `patientName` char(64) NOT NULL,
   `drugName` varchar(128) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `refillStatus` BIT(1) NOT NULL,
+  `refillStatus` BIT NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`nric`,`drugName`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `patient_record` (
 
 INSERT INTO `patient_record` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`) VALUES
 ('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 0, `29/07/2010`),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 10, 1, `29/07/2010`),
+('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 1, `29/07/2010`),
 ('Albendazole', 100),
 ('Baricitinib', 150),
 ('Calcium Acetate', 200),
