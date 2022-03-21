@@ -12,9 +12,9 @@ CORS(app)
 
 class Patient(db.Model):
     __tablename__ = 'patient'
-    NRIC = db.Column(db.String(64), primary_key=True)
+    NRIC = db.Column(db.String(9), primary_key=True)
     patientName = db.Column(db.String(64), nullable=False)
-    mobileNumber = db.Column(db.Integer)
+    mobileNumber = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String(128), nullable=False)
     vaccinationStatus = db.Column(db.String(64), nullable=False)
 
@@ -162,4 +162,4 @@ def delete_patient(NRIC):
 
 
 if __name__ == '__main__':
-    app.run(port=5222, debug=True)
+    app.run(host='0.0.0.0', port=5222, debug=True)

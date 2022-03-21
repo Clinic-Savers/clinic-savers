@@ -14,7 +14,7 @@ class Drug(db.Model):
     __tablename__ = 'drug'
     drugId = db.Column(db.Integer, primary_key=True)
     drugName = db.Column(db.String(128), nullable=False)
-    quantity = db.Column(db.Integer)
+    quantity = db.Column(db.Integer, nullable=False)
 
     def __init__(self, drugId, drugName, quantity):
         self.drugId = drugId
@@ -154,4 +154,4 @@ def delete_drug(drugId):
 
 
 if __name__ == '__main__':
-    app.run(port=5432, debug=True)
+    app.run(host='0.0.0.0', port=5432, debug=True)

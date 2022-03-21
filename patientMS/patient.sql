@@ -30,7 +30,7 @@ USE `patient`;
 DROP TABLE IF EXISTS `patient`;
 CREATE TABLE IF NOT EXISTS `patient` (
   `patientName` char(64) NOT NULL,
-  `NRIC` varchar(64) NOT NULL,
+  `NRIC` varchar(9) NOT NULL,
   `mobileNumber` int(8) NOT NULL,
   `address` varchar(128) NOT NULL,
   `vaccinationStatus` char(64) NOT NULL,
