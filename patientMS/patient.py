@@ -12,21 +12,21 @@ CORS(app)
 
 class Patient(db.Model):
     __tablename__ = 'patient'
-    NRIC = db.Column(db.String(9), primary_key=True)
+    nric = db.Column(db.String(9), nullable=False, primary_key=True)
     patientName = db.Column(db.String(64), nullable=False)
     mobileNumber = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String(128), nullable=False)
     vaccinationStatus = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, NRIC, patientName, mobileNumber, address, vaccinationStatus):
-        self.NRIC = NRIC
+    def __init__(self, nric, patientName, mobileNumber, address, vaccinationStatus):
+        self.nric = nric
         self.patientName = patientName
         self.mobileNumber = mobileNumber
         self.address = address
         self.vaccinationStatus = vaccinationStatus
         
     def json(self):
-        return {"patientName": self.patientName, "NRIC": self.NRIC, "mobileNumber": self.mobileNumber, "address": self.address, "vaccinationStatus": self.vaccinationStatus}
+        return {"patientName": self.patientName, "nric": self.nric, "mobileNumber": self.mobileNumber, "address": self.address, "vaccinationStatus": self.vaccinationStatus}
 
 
 @app.route("/patient")
@@ -49,9 +49,9 @@ def get_all():
     ), 404
 
 
-@app.route("/patient/<string:NRIC>")
-def find_by_NRIC(NRIC):
-    patient = Patient.query.filter_by(NRIC=NRIC).first()
+@app.route("/patient/<string:nric>")
+def find_by_nric(nric):
+    patient = Patient.query.filter_by(nric=nric).first()
     if patient:
         return jsonify(
             {
@@ -67,21 +67,21 @@ def find_by_NRIC(NRIC):
     ), 404
 
 
-@app.route("/patient/<string:NRIC>", methods=['POST'])
-def create_patient(NRIC):
-    if (Patient.query.filter_by(NRIC=NRIC).first()):
+@app.route("/patient/<string:nric>", methods=['POST'])
+def create_patient(nric):
+    if (Patient.query.filter_by(nric=nric).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "NRIC": NRIC
+                    "nric": nric
                 },
                 "message": "Patient already exists."
             }
         ), 400
 
     data = request.get_json()
-    patient = Patient(NRIC, **data)
+    patient = Patient(nric, **data)
 
     try:
         db.session.add(patient)
@@ -91,7 +91,7 @@ def create_patient(NRIC):
             {
                 "code": 500,
                 "data": {
-                    "NRIC": NRIC
+                    "nric": nric
                 },
                 "message": "An error occurred creating the patient account."
             }
@@ -105,9 +105,9 @@ def create_patient(NRIC):
     ), 201
 
 
-@app.route("/patient/<string:NRIC>", methods=['PUT'])
-def update_patient(NRIC):
-    patient = Patient.query.filter_by(NRIC=NRIC).first()
+@app.route("/patient/<string:nric>", methods=['PUT'])
+def update_patient(nric):
+    patient = Patient.query.filter_by(nric=nric).first()
     if patient:
         data = request.get_json()
         if data['patientName']:
@@ -129,16 +129,16 @@ def update_patient(NRIC):
         {
             "code": 404,
             "data": {
-                "NRIC": NRIC
+                "nric": nric
             },
             "message": "Patient not found."
         }
     ), 404
 
 
-@app.route("/patient/<string:NRIC>", methods=['DELETE'])
-def delete_patient(NRIC):
-    patient = Patient.query.filter_by(NRIC=NRIC).first()
+@app.route("/patient/<string:nric>", methods=['DELETE'])
+def delete_patient(nric):
+    patient = Patient.query.filter_by(nric=nric).first()
     if patient:
         db.session.delete(patient)
         db.session.commit()
@@ -146,7 +146,7 @@ def delete_patient(NRIC):
             {
                 "code": 200,
                 "data": {
-                    "NRIC": NRIC
+                    "nric": nric
                 }
             }
         )
@@ -154,7 +154,7 @@ def delete_patient(NRIC):
         {
             "code": 404,
             "data": {
-                "NRIC": NRIC
+                "nric": nric
             },
             "message": "Patient not found."
         }

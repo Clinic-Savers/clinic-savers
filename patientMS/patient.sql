@@ -30,18 +30,18 @@ USE `patient`;
 DROP TABLE IF EXISTS `patient`;
 CREATE TABLE IF NOT EXISTS `patient` (
   `patientName` char(64) NOT NULL,
-  `NRIC` varchar(9) NOT NULL,
+  `nric` varchar(9) NOT NULL,
   `mobileNumber` int(8) NOT NULL,
   `address` varchar(128) NOT NULL,
   `vaccinationStatus` char(64) NOT NULL,
-  PRIMARY KEY (`NRIC`)
+  PRIMARY KEY (`nric`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`patientName`,`NRIC`, `mobileNumber`, `address`, `vaccinationStatus`) VALUES
+INSERT INTO `patient` (`patientName`,`nric`, `mobileNumber`, `address`, `vaccinationStatus`) VALUES
 ('Mary Lim Mei Ling', 'S9812381D', '81327832', '9 BISHAN PLACE, #01-40', 'Vaccinated'),
 ('Alfred Tan Jun Jie','S9812382B', '91134712', '3023 Ubi Road 3 06-01', 'Vaccinated'),
 ('Nur Fatimah Binte Muhammad','S9812385G', '92821321', '50 Seletar Hills Drive', 'Unvaccinated'),

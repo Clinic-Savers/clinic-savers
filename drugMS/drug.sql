@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `drug` (
   `drugName` varchar(128) NOT NULL,
   `drugId` int(11) AUTO_INCREMENT NOT NULL ,
   `quantity` int(11) DEFAULT NULL,
-  PRIMARY KEY (`drugId`)
+  PRIMARY KEY (`drugId`, `drugName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

@@ -12,8 +12,8 @@ CORS(app)
 
 class Drug(db.Model):
     __tablename__ = 'drug'
-    drugId = db.Column(db.Integer, primary_key=True)
-    drugName = db.Column(db.String(128), nullable=False)
+    drugId = db.Column(db.Integer, nullable=False, primary_key=True)
+    drugName = db.Column(db.String(128), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
 
     def __init__(self, drugId, drugName, quantity):
@@ -45,9 +45,26 @@ def get_all():
     ), 404
 
 
-@app.route("/drug/<string:drugId>")
+@app.route("/drug/drugId/<string:drugId>")
 def find_by_drugId(drugId):
     drug = Drug.query.filter_by(drugId=drugId).first()
+    if drug:
+        return jsonify(
+            {
+                "code": 200,
+                "data": drug.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Drug not found."
+        }
+    ), 404
+    
+@app.route("/drug/drugName/<string:drugName>")
+def find_by_drugName(drugName):
+    drug = Drug.query.filter_by(drugName=drugName).first()
     if drug:
         return jsonify(
             {
@@ -154,4 +171,4 @@ def delete_drug(drugId):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5432, debug=True)
+    app.run(host='0.0.0.0', port=5422, debug=True)
