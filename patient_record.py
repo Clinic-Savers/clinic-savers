@@ -16,22 +16,22 @@ class Patient_Record(db.Model):
     __tablename__ = 'patient_record'
 
     nric = db.Column(db.String(9), primary_key=True, nullable=False)
-    patient_name = db.Column(db.String(64), nullable=False)
-    drug_name = db.Column(db.String(64), primary_key=True, nullable=False)
+    patientName = db.Column(db.String(64), nullable=False)
+    drugName = db.Column(db.String(128), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    refill_status = db.Column(db.Boolean, nullable=False)
+    refillStatus = db.Column(db.Boolean, nullable=False)
     date = db.Column(db.Date, primary_key=True, nullable=False)
 
-    def __init__(self, nric, patient_name, drug_name, quantity, refill_status, date):
+    def __init__(self, nric, patientName, drugName, quantity, refillStatus, date):
         self.nric = nric
-        self.patient_name = patient_name
-        self.drug_name = drug_name
+        self.patientName = patientName
+        self.drugName = drugName
         self.quantity = quantity
-        self.refill_status = refill_status
+        self.refillStatus = refillStatus
         self.date = date
 
     def json(self):
-        return {"nric": self.nric, "patient_name": self.patient_name, "drug_name": self.drug_name, "quantity": self.quantity, "refill_status": self.refill_status, "date": self.date}
+        return {"nric": self.nric, "patientName": self.patientName, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date}
 
 
 @app.route("/patient_record")
@@ -54,9 +54,9 @@ def get_all():
     ), 404
 
 
-@app.route("/patient_record/<string:nric>/<string:drug_name>")
-def find_by_nric_and_drug(nric,drug_name):
-    record = Patient_Record.query.filter_by(nric=nric,drug_name=drug_name).first()
+@app.route("/patient_record/<string:nric>/<string:drugName>")
+def find_by_nric_and_drug(nric,drugName):
+    record = Patient_Record.query.filter_by(nric=nric,drugName=drugName).first()
     if record:
         return jsonify(
             {
@@ -110,17 +110,17 @@ def create_patient_record(nric):
     ), 201
 
 
-@app.route("/patient_record/<string:nric>/<string:drug_name>/<string:date>", methods=['PUT'])
-def update_record(nric,drug_name,date):
-    record = Patient_Record.query.filter_by(nric=nric,drug_name=drug_name,date=date).first()
+@app.route("/patient_record/<string:nric>/<string:drugName>/<string:date>", methods=['PUT'])
+def update_record(nric,drugName,date):
+    record = Patient_Record.query.filter_by(nric=nric,drugName=drugName,date=date).first()
     if record:
         data = request.get_json()
-        if data['drug_name']:
-            record.drug_name = data['drug_name']
+        if data['drugName']:
+            record.drugName = data['drugName']
         if data['quantity']:
             record.quantity = data['quantity']
-        if data['refill_status']:
-            record.refill_status = data['refill_status'] 
+        if data['refillStatus']:
+            record.refillStatus = data['refillStatus'] 
         db.session.commit()
         return jsonify(
             {
@@ -133,7 +133,7 @@ def update_record(nric,drug_name,date):
             "code": 404,
             "data": {
                 "nric": nric,
-                "drug_name": drug_name,
+                "drugName": drugName,
                 "date": date
             },
             "message": "Patient record not found."
@@ -141,9 +141,9 @@ def update_record(nric,drug_name,date):
     ), 404
 
 
-@app.route("/patient_record/<string:nric>/<string:drug_name>/<string:date>", methods=['DELETE'])
-def delete_record(nric,drug_name,date):
-    record = Patient_Record.query.filter_by(nric=nric,drug_name=drug_name,date=date).first()
+@app.route("/patient_record/<string:nric>/<string:drugName>/<string:date>", methods=['DELETE'])
+def delete_record(nric,drugName,date):
+    record = Patient_Record.query.filter_by(nric=nric,drugName=drugName,date=date).first()
     if record:
         db.session.delete(record)
         db.session.commit()
@@ -152,7 +152,7 @@ def delete_record(nric,drug_name,date):
                 "code": 200,
                 "data": {
                     "nric": nric,
-                    "drug_name": drug_name,
+                    "drugName": drugName,
                     "date": date
                 }
             }
@@ -162,7 +162,7 @@ def delete_record(nric,drug_name,date):
             "code": 404,
             "data": {
                 "nric": nric,
-                "drug_name": drug_name,
+                "drugName": drugName,
                 "date": date
             },
             "message": "Patient record not found."
