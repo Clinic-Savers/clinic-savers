@@ -19,8 +19,8 @@ class Patient_Record(db.Model):
     patientName = db.Column(db.String(64), nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    refillStatus = db.Column(db.Boolean, nullable=False)
-    date = db.Column(db.Date, primary_key=True, nullable=False)
+    refillStatus = db.Column(db.String(64), nullable=False)
+    date = db.Column(db.String(64), primary_key=True, nullable=False)
 
     def __init__(self, nric, patientName, drugName, quantity, refillStatus, date):
         self.nric = nric

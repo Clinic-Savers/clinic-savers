@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `drug`
+-- Database: `patient_record`
 --
 CREATE DATABASE IF NOT EXISTS `patient_record` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `patient_record`;
@@ -25,7 +25,7 @@ USE `patient_record`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `drug`
+-- Table structure for table `patient_record`
 --
 
 DROP TABLE IF EXISTS `patient_record`;
@@ -34,18 +34,18 @@ CREATE TABLE IF NOT EXISTS `patient_record` (
   `patientName` char(64) NOT NULL,
   `drugName` varchar(128) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `refillStatus` BIT NOT NULL,
-  `date` date NOT NULL,
+  `refillStatus` char(64) NOT NULL,
+  `date` varchar(64) NOT NULL,
   PRIMARY KEY (`nric`,`drugName`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `drug`
+-- Dumping data for table `patient_record`
 --
 
 INSERT INTO `patient_record` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`) VALUES
-('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 0, `29/07/2010`),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 1, `29/07/2010`),
+('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, `non-refillable`, `29/07/2010`),
+('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, `refillable`, `29/07/2010`),
 ('Albendazole', 100),
 ('Baricitinib', 150),
 ('Calcium Acetate', 200),
