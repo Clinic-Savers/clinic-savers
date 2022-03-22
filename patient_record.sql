@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS `patient_record` (
 --
 
 INSERT INTO `patient_record` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`) VALUES
-('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, `non-refillable`, `29/07/2010`),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, `refillable`, `29/07/2010`),
+('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '29/07/2010'),
+('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '29/07/2010'),
 ('Albendazole', 100),
 ('Baricitinib', 150),
 ('Calcium Acetate', 200),
