@@ -12,51 +12,49 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-class PatientRecord(db.Model):
-    __tablename__ = 'patientRecord'
+class DrugRefill(db.Model):
+    __tablename__ = 'drugRefill'
 
-    nric = db.Column(db.String(9), primary_key=True, nullable=False)
-    patientName = db.Column(db.String(64), nullable=False)
-    drugName = db.Column(db.String(128), primary_key=True, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    refillStatus = db.Column(db.String(64), nullable=False)
-    date = db.Column(db.String(64), primary_key=True, nullable=False)
+    nric = db.Column(db.String(9), primary_key=True)
+    patientName = db.Column(db.String(128), nullable=False)
+    existingCondition = db.Column(db.String(64), nullable=False)
+    drugName = db.Column(db.String(64), nullable=False)
+    date = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, nric, patientName, drugName, quantity, refillStatus, date):
+    def __init__(self, nric, patientName, existingCondition, drugName, date):
         self.nric = nric
         self.patientName = patientName
+        self.existingCondition = existingCondition
         self.drugName = drugName
-        self.quantity = quantity
-        self.refillStatus = refillStatus
         self.date = date
 
     def json(self):
-        return {"nric": self.nric, "patientName": self.patientName, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date}
+        return {"nric": self.nric, "patientName": self.patientName, "existingCondition": self.existingCondition, "drugName": self.drugName, "date": self.date}
 
 
-@app.route("/patientRecord")
-def get_all_patient_record():
-    patient_record_list = PatientRecord.query.all()
-    if len(patient_record_list):
+@app.route("/drugRefill")
+def get_all_drug_refill_record():
+    refill_record = DrugRefill.query.all()
+    if len(refill_record):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "Patient Records": [record.json() for record in patient_record_list]
+                    "Drug Refill Records": [record.json() for record in refill_record]
                 }
             }
         )
     return jsonify(
         {
             "code": 404,
-            "message": "There are no patient records."
+            "message": "There are no drug refill records."
         }
     ), 404
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>")
-def find_patient_record_by_nric_and_drug(nric,drugName):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName).first()
+@app.route("/book/<string:nric>/<string:drugName>")
+def find_drug_refill_record_by_nric_and_drug(nric,drugName):
+    record = DrugRefill.query.filter_by(nric=nric,drugName=drugName).first()
     if record:
         return jsonify(
             {
@@ -67,26 +65,26 @@ def find_patient_record_by_nric_and_drug(nric,drugName):
     return jsonify(
         {
             "code": 404,
-            "message": "Patient record not found."
+            "message": "Drug refill record not found."
         }
     ), 404
 
 
-@app.route("/patientRecord/<string:nric>", methods=['POST'])
-def create_patient_record(nric):
-    # if (Patient_Record.query.filter_by(date=date).first()):
+@app.route("/book/<string:nric>", methods=['POST'])
+def create_drug_refill_record(nric):
+    # if (Book.query.filter_by(isbn13=isbn13).first()):
     #     return jsonify(
     #         {
     #             "code": 400,
     #             "data": {
-    #                 "date": date
+    #                 "isbn13": isbn13
     #             },
-    #             "message": "Create"
+    #             "message": "Book already exists."
     #         }
     #     ), 400
 
     data = request.get_json()
-    record = PatientRecord(nric, **data)
+    record = DrugRefill(nric, **data)
 
     try:
         db.session.add(record)
@@ -98,7 +96,7 @@ def create_patient_record(nric):
                 "data": {
                     "nric": nric
                 },
-                "message": "An error occurred creating the patient record."
+                "message": "An error occurred creating the drug refill record."
             }
         ), 500
 
@@ -110,17 +108,15 @@ def create_patient_record(nric):
     ), 201
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>", methods=['PUT'])
-def update_patient_record(nric,drugName,date):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date).first()
+@app.route("/book/<string:nric>/<string:drugName>/<string:date>", methods=['PUT'])
+def update_drug_refill_record(nric,drugName,date):
+    record = DrugRefill.query.filter_by(nric=nric,drugName=drugName,date=date).first()
     if record:
         data = request.get_json()
+        if data['existingCondition']:
+            record.existingCondition = data['existingCondition']
         if data['drugName']:
             record.drugName = data['drugName']
-        if data['quantity']:
-            record.quantity = data['quantity']
-        if data['refillStatus']:
-            record.refillStatus = data['refillStatus'] 
         db.session.commit()
         return jsonify(
             {
@@ -136,14 +132,14 @@ def update_patient_record(nric,drugName,date):
                 "drugName": drugName,
                 "date": date
             },
-            "message": "Patient record not found."
+            "message": "Drug Refill Record not found."
         }
     ), 404
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>", methods=['DELETE'])
-def delete_patient_record(nric,drugName,date):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date).first()
+@app.route("/book/<string:nric>/<string:drugName>/<string:date>", methods=['DELETE'])
+def delete_drug_refill_record(nric,drugName,date):
+    record = DrugRefill.query.filter_by(nric=nric,drugName=drugName,date=date).first()
     if record:
         db.session.delete(record)
         db.session.commit()
@@ -165,7 +161,7 @@ def delete_patient_record(nric,drugName,date):
                 "drugName": drugName,
                 "date": date
             },
-            "message": "Patient record not found."
+            "message": "Drug Refill Record not found."
         }
     ), 404
 
