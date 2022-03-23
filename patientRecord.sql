@@ -45,29 +45,12 @@ CREATE TABLE IF NOT EXISTS `patientRecord` (
 --
 
 INSERT INTO `patientRecord` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
-('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '2022-01-29','14:25:30'),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '2022-01-29','14:25:30'),
-('Albendazole', 100),
-('Baricitinib', 150),
-('Calcium Acetate', 200),
-('Diazepam', 210),
-('Etravirine', 130),
-('Fludrocortisone Acetate', 50),
-('Gliclazide', 60),
-('Hydrocortisone', 350),
-('Ibuprofen', 400),
-('Ketoprofen', 150),
-('Lidocaine', 50),
-('Methoxsalen', 190),
-('Nitrazepam', 30),
-('Olanzapine', 70),
-('Quetiapine', 40),
-('Rifampicin', 80),
-('Sodium Bicarbonate', 240),
-('Tamoxifen', 40),
-('Ursodeoxycholic Acid', 70),
-('Warfarin Sodium', 40),
-('Zidovudine', 160);
+('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '2022-01-27','13:30:00'),
+('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '2022-01-27','13:30:00'),
+('F1612347K','Tan Wei Ming', 'Aspirin', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
+('F1612347K','Tan Wei Ming', 'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
+('S9812385G', 'Nur Fatimah Binte Muhammad', 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
+('S9812382B', 'Alfred Tan Jun Jie', 'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00')
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
