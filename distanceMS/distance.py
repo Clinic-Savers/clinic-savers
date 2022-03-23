@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+import invokes 
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
@@ -11,6 +16,8 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app)
 
 CORS(app)
+
+api_key = "AIzaSyC1hytlrSzRCAMd4LK-A0hzQ85IoVZIJpg"
 
 class Distance(db.Model):
     __tablename__ = 'distance'
@@ -27,6 +34,27 @@ class Distance(db.Model):
     def json(self):
         return {"patientPostalCode": self.patientPostalCode, "clinicPostalCode": self.clinicPostalCode, "distanceAway": self.distanceAway}
 
+
+@app.route("/checkDist", methods = ["POST"])
+def get_distance():
+    data = request.get_json()
+    data = json.loads(data)
+    
+    patient = data["patient"]["patientPostalCode"]
+    clinics = data["clinics"]
+    print(clinics)
+
+    clinic_path = ""
+    for clinic in clinics:
+        clinic_path += "S" + clinic[1] + "%7C"
+    clinic_path = clinic_path[:-3]
+
+    print(patient, clinic_path)
+
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=S" + patient + "&region=sg&key=" + api_key
+    print(url)
+    result = invokes.invoke_http(url,"GET")
+    return jsonify(result)
 
 @app.route("/distance")
 def get_all_distance():

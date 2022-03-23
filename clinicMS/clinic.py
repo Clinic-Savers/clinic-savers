@@ -102,6 +102,7 @@ def find_by_clinicName(clinicName):
     ), 404
 
 
+#cannot create with just postal code
 @app.route("/clinic/<string:clinicPostalCode>", methods=['POST'])
 def create_clinic(clinicPostalCode):
     if (Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()):

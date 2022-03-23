@@ -1,3 +1,4 @@
+from operator import itemgetter
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -12,7 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 clinic_URL = "http://localhost:5002/clinic/"
-distance_URL = "http://localhost:5000/"
+distance_URL = "http://localhost:5001/checkDist"
 
 @app.route("/check_dist", methods=['POST'])
 def check_dist():
@@ -25,7 +26,7 @@ def check_dist():
             result = retrieveClinic(patientPostalCode)
             # print('\n------------------------')
             # print('\nresult: ', patientPostalCode)
-            return jsonify(patientPostalCode)
+            return result
 
         except Exception as e:
             # Unexpected error in code
@@ -55,10 +56,21 @@ def retrieveClinic(patientPostalCode):
     clinic_result = invoke_http(clinic_URL + patientPostalCode_str, method='GET', json=patientPostalCode)
     print('clinic_result:', clinic_result)
 
-    # Check the order result; if a failure, send it to the error microservice.
     code = clinic_result["code"]
-    message = json.dumps(clinic_result)
+    clinics = clinic_result["data"]["clinic"]
 
+    patient_clinic_postalCode = { 
+        "patient": patientPostalCode,
+        "clinics": [] }
+
+    for clinic in clinics:
+        patient_clinic_postalCode["clinics"].append([clinic["clinicName"],clinic["clinicPostalCode"]])
+
+    
+    #convert to JSON format
+    patient_clinic_postalCode = json.dumps(patient_clinic_postalCode)
+    print(patient_clinic_postalCode)
+    
     if code not in range(200, 300):
         return {
             "code": 500,
@@ -66,12 +78,27 @@ def retrieveClinic(patientPostalCode):
             "message": "Clinic search failure"
         }
 
-    # else:
-    #     #Invoke distance microservice - send the patientAddress and List of clinics
-    #     distance_result = invoke_http(distance_URL,method="GET",json= clinic_list)
-
-
-
+    else:
+        #Invoke distance microservice - send the patientAddress and List of clinics
+        distance_result = invoke_http(distance_URL,method="POST",json= patient_clinic_postalCode)
+        print("__________________________ /n")
+        print("distance result", distance_result)
+        print("________________________________________")
+        
+        distance_compare = distance_result["rows"][0]["elements"]
+        sort_dist = []
+        print(clinics)
+        for i in range(0,len(clinics)):
+            sort_dist.append([clinics[i]["clinicName"], clinics[i]["clinicPostalCode"], distance_compare[i]["distance"]["value"]])
+        
+        result = sorted(sort_dist, key=itemgetter(2))
+        print("__________________n______________",result)
+        
+        return {
+            "code":200,
+            "data": result
+        }
+        
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
