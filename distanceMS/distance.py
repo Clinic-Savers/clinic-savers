@@ -15,9 +15,9 @@ CORS(app)
 class Distance(db.Model):
     __tablename__ = 'distance'
 
-    patientPostalCode = db.Column(db.Integer, primary_key=True, nullable=False)
-    clinicPostalCode = db.Column(db.Integer, primary_key=True, nullable=False)
-    distanceAway = db.Column(db.Float(1), nullable=False)
+    patientPostalCode = db.Column(db.String(6), primary_key=True, nullable=False)
+    clinicPostalCode = db.Column(db.String(6), primary_key=True, nullable=False)
+    distanceAway = db.Column(db.String(5), nullable=False)
 
     def __init__(self, patientPostalCode, clinicPostalCode, distanceAway):
         self.patientPostalCode = patientPostalCode
