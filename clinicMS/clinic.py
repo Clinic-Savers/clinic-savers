@@ -27,137 +27,141 @@ class Clinic(db.Model):
         return {"clinicName": self.clinicName, "clinicAddress": self.clinicAddress, "clinicPostalCode": self.clinicPostalCode, "description": self.description}
 
 
-@app.route("/drug")
+@app.route("/clinic")
 def get_all():
-    druglist = Drug.query.all()
-    if len(druglist):
+    cliniclist = Clinic.query.all()
+    if len(cliniclist):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "drug": [drug.json() for drug in druglist]
+                    "clinic": [clinic.json() for clinic in cliniclist]
                 }
             }
         )
     return jsonify(
         {
             "code": 404,
-            "message": "There are no drugs."
+            "message": "There are no clinics."
         }
     ), 404
 
 
-@app.route("/drug/drugId/<string:drugId>")
-def find_by_drugId(drugId):
-    drug = Drug.query.filter_by(drugId=drugId).first()
-    if drug:
+@app.route("/clinic/clinicPostalCode/<string:clinicPostalCode>")
+def find_by_clinicPostalCode(clinicPostalCode):
+    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+    if clinic:
         return jsonify(
             {
                 "code": 200,
-                "data": drug.json()
+                "data": clinic.json()
             }
         )
     return jsonify(
         {
             "code": 404,
-            "message": "Drug not found."
+            "message": "Clinic not found."
         }
     ), 404
     
-@app.route("/drug/drugName/<string:drugName>")
-def find_by_drugName(drugName):
-    drug = Drug.query.filter_by(drugName=drugName).first()
-    if drug:
+@app.route("/clinic/clinicName/<string:clinicName>")
+def find_by_clinicName(clinicName):
+    clinic = Clinic.query.filter_by(clinicName=clinicName).first()
+    if clinic:
         return jsonify(
             {
                 "code": 200,
-                "data": drug.json()
+                "data": clinic.json()
             }
         )
     return jsonify(
         {
             "code": 404,
-            "message": "Drug not found."
+            "message": "Clinic not found."
         }
     ), 404
 
 
-@app.route("/drug/<string:drugId>", methods=['POST'])
-def create_drug(drugId):
-    if (Drug.query.filter_by(drugId=drugId).first()):
+@app.route("/clinic/<string:clinicPostalCode>", methods=['POST'])
+def create_clinic(clinicPostalCode):
+    if (Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "drugId": drugId
+                    "clinicPostalCode": clinicPostalCode
                 },
-                "message": "Drug already exists."
+                "message": "Clinic already exists."
             }
         ), 400
 
     data = request.get_json()
-    drug = Drug(drugId, **data)
+    clinic = Clinic(clinicPostalCode, **data)
 
     try:
-        db.session.add(drug)
+        db.session.add(clinic)
         db.session.commit()
     except:
         return jsonify(
             {
                 "code": 500,
                 "data": {
-                    "drugId": drugId
+                    "clinicPostalCode": clinicPostalCode
                 },
-                "message": "An error occurred creating the drug."
+                "message": "An error occurred creating the clinic."
             }
         ), 500
 
     return jsonify(
         {
             "code": 201,
-            "data": drug.json()
+            "data": clinic.json()
         }
     ), 201
 
 
-@app.route("/drug/<string:drugId>", methods=['PUT'])
-def update_drug(drugId):
-    drug = Drug.query.filter_by(drugId=drugId).first()
-    if drug:
+@app.route("/clinic/<string:clinicPostalCode>", methods=['PUT'])
+def update_drug(clinicPostalCode):
+    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+    if clinic:
         data = request.get_json()
-        if data['drugName']:
-            drug.drugName = data['drugName']
-        if data['quantity']:
-            drug.quantity = data['quantity'] 
+        if data['clinicName']:
+            clinic.clinicName = data['clinicName']
+        if data['clinicAddress']:
+            clinic.clinicAddress = data['clinicAddress'] 
+        if data['clinicPostalCode']:
+            clinic.clinicPostalCode = data['clinicPostalCode'] 
+        if data['description']:
+            clinic.description = data['description'] 
         db.session.commit()
         return jsonify(
             {
                 "code": 200,
-                "data": drug.json()
+                "data": clinic.json()
             }
         )
     return jsonify(
         {
             "code": 404,
             "data": {
-                "drugId": drugId
+                "clinicPostalCode": clinicPostalCode
             },
-            "message": "Drug not found."
+            "message": "Clinic not found."
         }
     ), 404
 
 
-@app.route("/drug/<string:drugId>", methods=['DELETE'])
-def delete_drug(drugId):
-    drug = Drug.query.filter_by(drugId=drugId).first()
-    if drug:
-        db.session.delete(drug)
+@app.route("/clinic/<string:clinicPostalCode>", methods=['DELETE'])
+def delete_clinic(clinicPostalCode):
+    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+    if clinic:
+        db.session.delete(clinic)
         db.session.commit()
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "drugId": drugId
+                    "clinicPostalCode": clinicPostalCode
                 }
             }
         )
@@ -165,12 +169,12 @@ def delete_drug(drugId):
         {
             "code": 404,
             "data": {
-                "drugId": drugId
+                "clinicPostalCode": clinicPostalCode
             },
-            "message": "Drug not found."
+            "message": "Clinic not found."
         }
     ), 404
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5422, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
