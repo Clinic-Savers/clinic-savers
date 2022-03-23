@@ -47,7 +47,7 @@ def get_all():
     ), 404
 
 
-@app.route("/clinic/clinicPostalCode/<string:clinicPostalCode>")
+@app.route("/clinic/<string:clinicPostalCode>")
 def find_by_clinicPostalCode(clinicPostalCode):
     clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
     if clinic:
@@ -64,7 +64,7 @@ def find_by_clinicPostalCode(clinicPostalCode):
         }
     ), 404
     
-@app.route("/clinic/clinicName/<string:clinicName>")
+@app.route("/clinic/<string:clinicName>")
 def find_by_clinicName(clinicName):
     clinic = Clinic.query.filter_by(clinicName=clinicName).first()
     if clinic:
