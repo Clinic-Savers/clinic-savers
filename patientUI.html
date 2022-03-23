@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="search">
+        <input type="text" name="postal_code" id="postalCode"/>
+        <input type="submit"/>
+    </form>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+
+    <script>
+        $('#search').submit( async (event) => {
+            event.preventDefault()
+            var postal_code = $('#postalCode').val();
+            console.log(postal_code)
+            var viewClinicURL = "http://192.168.1.108:5100/check_dist"
+
+            try{
+
+                const response =
+                await fetch(
+                    viewClinicURL, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({patientPostalCode: postal_code})
+                });
+
+                const data = await response.json();
+
+                return false;
+            } 
+            
+            catch (error) {
+            // Errors when calling the service; such as network error, 
+            // service offline, etc
+            showError
+                ("There is a problem signing in, please try again later. " + error);
+
+            } // error
+    });
+        
+    </script>
+</body>
+</html>

@@ -6,35 +6,26 @@ import os, sys
 import requests
 from invokes import invoke_http
 
-import pika
 import json
 
 app = Flask(__name__)
 CORS(app)
 
-clinic_URL = "http://localhost:5002/clinic"
+clinic_URL = "http://localhost:5002/clinic/"
 distance_URL = "http://localhost:5000/"
-#book_URL = "http://localhost:5000/book"
-# order_URL = "http://localhost:5001/order"
-# shipping_record_URL = "http://localhost:5002/shipping_record"
-#activity_log_URL = "http://localhost:5003/activity_log"
-#error_URL = "http://localhost:5004/error"
-
 
 @app.route("/check_dist", methods=['POST'])
 def check_dist():
     # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
-            patientAddress = request.get_json()
-            print("\nReceived an order in JSON:", patientAddress)
+            patientPostalCode = request.get_json()
+            print("\nReceived postal code in JSON:", patientPostalCode)
 
-            # do the actual work
-            # 1. Send order info {cart items}
-            result = retrieveClinic(patientAddress)
-            print('\n------------------------')
-            print('\nresult: ', result)
-            return jsonify(result), result["code"]
+            result = retrieveClinic(patientPostalCode)
+            # print('\n------------------------')
+            # print('\nresult: ', patientPostalCode)
+            return jsonify(patientPostalCode)
 
         except Exception as e:
             # Unexpected error in code
@@ -55,11 +46,13 @@ def check_dist():
     }), 400
 
 
-def retrieveClinic(patientAddress):
+def retrieveClinic(patientPostalCode):
     # 2. Send the patientAddress to clinic microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    clinic_result = invoke_http(clinic_URL, method='GET', json=patientAddress)
+    
+    patientPostalCode_str = patientPostalCode["patientPostalCode"]
+    clinic_result = invoke_http(clinic_URL + patientPostalCode_str, method='GET', json=patientPostalCode)
     print('clinic_result:', clinic_result)
 
     # Check the order result; if a failure, send it to the error microservice.
@@ -73,55 +66,11 @@ def retrieveClinic(patientAddress):
             "message": "Clinic search failure"
         }
 
-    else:
-        # Send the patientAddress to clinic microservice
-        # Invoke the clinic microservice
-        clinic_list = invoke_http(clinic_URL, method="GET", json=clinic_result)
-
-        print("clinic_list:", clinic_list)
-        # clinic_list is a json with two columns - name, postal cose
-        clinic_list = None
-
-        #Invoke distance microservice - send the patientAddress and List of clinics
-        distance_result = invoke_http(distance_URL,method="GET",json= clinic_list)
-
-        
+    # else:
+    #     #Invoke distance microservice - send the patientAddress and List of clinics
+    #     distance_result = invoke_http(distance_URL,method="GET",json= clinic_list)
 
 
-    # Check the shipping result;
-    # if a failure, send it to the error microservice.
-    code = shipping_result["code"]
-    if code not in range(200, 300):
-        # Inform the error microservice
-        #print('\n\n-----Invoking error microservice as shipping fails-----')
-        print('\n\n-----Publishing the (shipping error) message with routing_key=shipping.error-----')
-
-        # invoke_http(error_URL, method="POST", json=shipping_result)
-        message = json.dumps(shipping_result)
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="shipping.error", 
-            body=message, properties=pika.BasicProperties(delivery_mode = 2))
-
-        print("\nShipping status ({:d}) published to the RabbitMQ Exchange:".format(
-            code), shipping_result)
-
-        # 7. Return error
-        return {
-            "code": 400,
-            "data": {
-                "order_result": order_result,
-                "shipping_result": shipping_result
-            },
-            "message": "Simulated shipping record error sent for error handling."
-        }
-
-    # 7. Return created order, shipping record
-    return {
-        "code": 201,
-        "data": {
-            "order_result": order_result,
-            "shipping_result": shipping_result
-        }
-    }
 
 
 # Execute this program if it is run as a main script (not by 'import')
