@@ -30,9 +30,9 @@ USE `distance`;
 
 DROP TABLE IF EXISTS `distance`;
 CREATE TABLE IF NOT EXISTS `distance` (
-  `patientPostalCode` int(6) NOT NULL,
-  `clinicPostalCode` int(6) NOT NULL,
-  `distanceAway` float(1) NOT NULL,
+  `patientPostalCode` varchar(6) NOT NULL,
+  `clinicPostalCode` varchar(6) NOT NULL,
+  `distanceAway` varchar(5) NOT NULL,
   PRIMARY KEY (`patientPostalCode`,`clinicPostalCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -41,12 +41,12 @@ CREATE TABLE IF NOT EXISTS `distance` (
 --
 
 INSERT INTO `distance` (`patientPostalCode`,`clinicPostalCode`,`distanceAway`) VALUES
-(161003,161011,1.7),
-(640520,640498,0.9),
-(460508,529509,4.4),
-(520230,529509,3.3),
-(408663,529509,8.4)
-(579837,529509,13.5);
+('161003','161011','1.7'),
+('640520','640498','0.9'),
+('460508','529509','4.4'),
+('520230','529509','3.3'),
+('408663','529509','8.4')
+('579837','529509','13.5');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
