@@ -60,7 +60,7 @@ def find_by_patientPostalCode(patientPostalCode):
                     "clinic": [clinic.json() for clinic in clinicsListByDistrict]
                 }
             }
-        )
+        )  
     return jsonify(
         {
             "code": 404, 

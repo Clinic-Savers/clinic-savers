@@ -45,7 +45,8 @@ INSERT INTO `clinic` (`clinicName`,`clinicAddress`,`clinicPostalCode`, `descript
 ('Raffles Medical', '52 North Bridge Rd, #02 - 17', '179103', 'Our team of family physicians provides care for patients of all ages. Medical care includes treatment of acute and chronic conditions for adults and children, vaccinations, legal services and health screening.'),
 ('OneCare Medical Clinic Tiong Bahru', '11A Boon Tiong Rd, #01-08', '161011', 'OneCare Medical Clinics provide timely, affordable and professional healthcare. Our friendly team of general practitioners, family physicians, and nurses are always ready to help.'),
 ('Sunnyvale Clinic & Surgery', '498 Jurong West Street 41', '640498', 'nfmaslnasl'),
-('Dayspring Medical Clinic (Tampines)', '2 Tampines Central 5, #04-09 Century Square', '529509', 'Minmed clinic is a CHAS registered General Practitioner (GP) clinic. We provide both teleconsult and in-clinic medical services such as doctor consultation and prescription, vaccinations and managing of chronic illnesses.')
+('Dayspring Medical Clinic (Tampines)', '2 Tampines Central 5, #04-09 Century Square', '529509', 'Minmed clinic is a CHAS registered General Practitioner (GP) clinic. We provide both teleconsult and in-clinic medical services such as doctor consultation and prescription, vaccinations and managing of chronic illnesses.'), 
+('Mint Medical Centre', '107, #04-13A North Bridge Rd, Funan', '179105', 'We are a team of healthcare professionals who pride ourselves in delivering holistic general care, yet each having our own interests. We are bound by the mission to care for our patients with warmth, sincerity and concern from our heart. We the MINT healthcare team, are a family, and to us, so are you!')
 ;
 COMMIT;
 
