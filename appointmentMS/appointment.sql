@@ -33,19 +33,21 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `nric` varchar(9) NOT NULL,
   `patientName` char(64) NOT NULL,
   `symptoms` varchar(128) NOT NULL,
-  `potential_covid?` char(3) NOT NULL, 
-  PRIMARY KEY (`nric`)
+  `potentialCovid` char(3) NOT NULL,
+  `appointmentDate` varchar(64) NOT NULL,
+  `appointmentTime` varchar(64) NOT NULL,
+  PRIMARY KEY (`nric`,`appointmentDate`, `appointmentTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `appointment`
 --
 
-INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `potential_covid?`) VALUES
-('S9812381D', 'Mary Lim Mei Ling', 'runny nose, sore throat and fever', 'Yes'),
-('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 'No'),
-('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 'No'),
-('F1612347K', 'Tan Wei Ming', 'insomnia and headache', 'No');
+INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `potentialCovid`, `appointmentDate`, `appointmentTime`) VALUES
+('S9812381D', 'Mary Lim Mei Ling', 'runny nose, sore throat and fever', 'Yes', '2022-01-27','13:30:00'),
+('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 'No', '2022-02-01', '14:30:00'),
+('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 'No', '2022-03-12', '09:00:00'),
+('F1612347K', 'Tan Wei Ming', 'insomnia and headache', 'No', '2022-03-19', '08:00:00');
 
 COMMIT;
 
