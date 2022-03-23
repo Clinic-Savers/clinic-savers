@@ -36,16 +36,17 @@ CREATE TABLE IF NOT EXISTS `patientRecord` (
   `quantity` int(11) NOT NULL,
   `refillStatus` char(64) NOT NULL,
   `date` varchar(64) NOT NULL,
-  PRIMARY KEY (`nric`,`drugName`,`date`)
+  `time` varchar(64) NOT NULL,
+  PRIMARY KEY (`nric`,`drugName`,`date`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `patientRecord`
 --
 
-INSERT INTO `patientRecord` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`) VALUES
-('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '29/07/2010'),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '29/07/2010'),
+INSERT INTO `patientRecord` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
+('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '2022-01-29','14:25:30'),
+('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '2022-01-29','14:25:30'),
 ('Albendazole', 100),
 ('Baricitinib', 150),
 ('Calcium Acetate', 200),
