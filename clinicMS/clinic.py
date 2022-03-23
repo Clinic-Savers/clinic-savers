@@ -68,22 +68,22 @@ def find_by_patientPostalCode(patientPostalCode):
         }
     )
     
-@app.route("/clinic/<string:clinicPostalCode>")
-def find_by_clinicPostalCode(clinicPostalCode):
-    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
-    if clinic:
-        return jsonify(
-            {
-                "code": 200,
-                "data": clinic.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Clinic not found."
-        }
-    ), 404
+# @app.route("/clinic/<string:clinicPostalCode>")
+# def find_by_clinicPostalCode(clinicPostalCode):
+#     clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+#     if clinic:
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": clinic.json()
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "Clinic not found."
+#         }
+#     ), 404
     
 @app.route("/clinic/<string:clinicName>")
 def find_by_clinicName(clinicName):
