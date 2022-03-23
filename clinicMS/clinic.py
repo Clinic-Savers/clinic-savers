@@ -1,3 +1,4 @@
+from tokenize import String
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -15,7 +16,7 @@ class Clinic(db.Model):
     __tablename__ = 'clinic'
     clinicName = db.Column(db.String(128), nullable=False, primary_key=True)
     clinicAddress = db.Column(db.String(128), nullable=False)
-    clinicPostalCode = db.Column(db.Integer, nullable=False, primary_key=True)
+    clinicPostalCode = db.Column(db.String(6), nullable=False, primary_key=True)
     description = db.Column(db.String(128), nullable=False)
 
     def __init__(self, clinicName, clinicAddress, clinicPostalCode, description):
@@ -46,7 +47,27 @@ def get_all():
         }
     ), 404
 
+@app.route("/clinic/<string:patientPostalCode>")
+def find_by_patientPostalCode(patientPostalCode):
+    district = patientPostalCode[:2]
+    clinicsListByDistrict = Clinic.query.filter(Clinic.clinicPostalCode.startswith(district)).all()
 
+    if clinicsListByDistrict:
+        return jsonify(
+            {
+                "code": 200, 
+                "data": {
+                    "clinic": [clinic.json() for clinic in clinicsListByDistrict]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404, 
+            "message": "There are no matching clinics."
+        }
+    )
+    
 @app.route("/clinic/<string:clinicPostalCode>")
 def find_by_clinicPostalCode(clinicPostalCode):
     clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
