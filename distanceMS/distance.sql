@@ -41,10 +41,10 @@ CREATE TABLE IF NOT EXISTS `distance` (
 --
 
 INSERT INTO `distance` (`patientPostalCode`,`clinicPostalCode`,`distanceAway`) VALUES
-(123456,234567,3.2),
-(),
-(),
-();
+(161003,161011,1.7),
+(640520,640498,0.9),
+(460508,529509,4.4),
+(520230,529509,3.3);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
