@@ -16,16 +16,16 @@ CORS(app)
 class Appointment(db.Model):
     __tablename__ = 'appointment'
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
-    appointmentName = db.Column(db.String(64), nullable=False)
+    patientName = db.Column(db.String(64), nullable=False)
     symptoms = db.Column(db.String(128), nullable=False)
     potentialCovid = db.Column(db.String(3), nullable=False)
     appointmentDate = db.Column(db.String(64), nullable=False, primary_key=True)
     appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
 
 
-    def __init__(self, nric, appointmentName, symptoms, potentialCovid, appointmentDate, appointmentTime):
+    def __init__(self, nric, patientName, symptoms, potentialCovid, appointmentDate, appointmentTime):
         self.nric = nric
-        self.appointmentName = appointmentName
+        self.patientName = patientName
         self.symptoms = symptoms
         self.potentialCovid = potentialCovid
         self.appointmentDate = appointmentDate
@@ -33,7 +33,7 @@ class Appointment(db.Model):
         
         
     def json(self):
-        return {"appointmentName": self.appointmentName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+        return {"patientName": self.patientName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
 
 @app.route("/appointment")
@@ -74,7 +74,7 @@ def find_by_nric(nric):
     ), 404
     
 @app.route("/appointment/<string:nric>/<string:appointmentDate>")
-def find_by_nric(nric, appointmentDate):
+def find_by_appointmentDate(nric, appointmentDate):
     appointment = Appointment.query.filter_by(nric=nric, date=date).first()
     if appointment:
         return jsonify(
