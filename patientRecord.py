@@ -21,17 +21,19 @@ class PatientRecord(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     refillStatus = db.Column(db.String(64), nullable=False)
     date = db.Column(db.String(64), primary_key=True, nullable=False)
+    time = db.Column(db.String(64), primary_key=True, nullable=False)
 
-    def __init__(self, nric, patientName, drugName, quantity, refillStatus, date):
+    def __init__(self, nric, patientName, drugName, quantity, refillStatus, date, time):
         self.nric = nric
         self.patientName = patientName
         self.drugName = drugName
         self.quantity = quantity
         self.refillStatus = refillStatus
         self.date = date
+        self.time = time
 
     def json(self):
-        return {"nric": self.nric, "patientName": self.patientName, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date}
+        return {"nric": self.nric, "patientName": self.patientName, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
 
 
 @app.route("/patientRecord")
@@ -110,9 +112,9 @@ def create_patient_record(nric):
     ), 201
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>", methods=['PUT'])
-def update_patient_record(nric,drugName,date):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date).first()
+@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>", methods=['PUT'])
+def update_patient_record(nric,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
         if data['drugName']:
@@ -134,16 +136,17 @@ def update_patient_record(nric,drugName,date):
             "data": {
                 "nric": nric,
                 "drugName": drugName,
-                "date": date
+                "date": date,
+                "time" : time
             },
             "message": "Patient record not found."
         }
     ), 404
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>", methods=['DELETE'])
-def delete_patient_record(nric,drugName,date):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date).first()
+@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>", methods=['DELETE'])
+def delete_patient_record(nric,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
     if record:
         db.session.delete(record)
         db.session.commit()
@@ -153,7 +156,8 @@ def delete_patient_record(nric,drugName,date):
                 "data": {
                     "nric": nric,
                     "drugName": drugName,
-                    "date": date
+                    "date": date,
+                    "time" : time
                 }
             }
         )
@@ -163,7 +167,8 @@ def delete_patient_record(nric,drugName,date):
             "data": {
                 "nric": nric,
                 "drugName": drugName,
-                "date": date
+                "date": date,
+                "time" : time
             },
             "message": "Patient record not found."
         }
@@ -171,4 +176,4 @@ def delete_patient_record(nric,drugName,date):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5006, debug=True)
