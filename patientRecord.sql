@@ -50,7 +50,7 @@ INSERT INTO `patientRecord` (`nric`,`patientName`,`drugName`,`quantity`,`refillS
 ('F1612347K','Tan Wei Ming', 'Aspirin', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
 ('F1612347K','Tan Wei Ming', 'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
 ('S9812385G', 'Nur Fatimah Binte Muhammad', 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00')
+('S9812382B', 'Alfred Tan Jun Jie', 'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

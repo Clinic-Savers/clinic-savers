@@ -1,3 +1,4 @@
+import os, sys
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -89,6 +90,7 @@ def create_patient_record(nric):
 
     data = request.get_json()
     record = PatientRecord(nric, **data)
+    print(record)
 
     try:
         db.session.add(record)
@@ -176,4 +178,5 @@ def delete_patient_record(nric,drugName,date,time):
 
 
 if __name__ == '__main__':
+    print("This is flask for " + os.path.basename(__file__) + ": patient records ...")
     app.run(host='0.0.0.0', port=5006, debug=True)

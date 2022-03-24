@@ -1,3 +1,4 @@
+import os, sys
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -119,9 +120,9 @@ def create_drug(drugId):
     ), 201
 
 
-@app.route("/drug/<string:drugId>", methods=['PUT'])
-def update_drug(drugId):
-    drug = Drug.query.filter_by(drugId=drugId).first()
+@app.route("/drug/<string:drugName>", methods=['PUT'])
+def update_drug(drugName):
+    drug = Drug.query.filter_by(drugName=drugName).first()
     if drug:
         data = request.get_json()
         if data['drugName']:
@@ -139,7 +140,7 @@ def update_drug(drugId):
         {
             "code": 404,
             "data": {
-                "drugId": drugId
+                "drugName": drugName
             },
             "message": "Drug not found."
         }
@@ -172,4 +173,5 @@ def delete_drug(drugId):
 
 
 if __name__ == '__main__':
+    print("This is flask for " + os.path.basename(__file__) + ": manage drugs ...")
     app.run(host='0.0.0.0', port=5007, debug=True)
