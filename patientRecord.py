@@ -45,7 +45,7 @@ def get_all_patient_record():
             {
                 "code": 200,
                 "data": {
-                    "Patient Records": [record.json() for record in patient_record_list]
+                    "PatientRecords": [record.json() for record in patient_record_list]
                 }
             }
         )
@@ -59,12 +59,12 @@ def get_all_patient_record():
 
 @app.route("/patientRecord/<string:nric>/<string:drugName>")
 def find_patient_record_by_nric_and_drug(nric,drugName):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName).first()
-    if record:
+    record_list = PatientRecord.query.filter_by(nric=nric,drugName=drugName).all()
+    if len(record_list):
         return jsonify(
             {
                 "code": 200,
-                "data": record.json()
+                "PatientRecord": [record.json() for record in record_list]
             }
         )
     return jsonify(
