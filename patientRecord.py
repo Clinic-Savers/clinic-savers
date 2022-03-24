@@ -119,8 +119,6 @@ def update_patient_record(nric,drugName,date,time):
     record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
-        if data['drugName']:
-            record.drugName = data['drugName']
         if data['quantity']:
             record.quantity = data['quantity']
         if data['refillStatus']:
