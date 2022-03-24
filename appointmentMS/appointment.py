@@ -19,22 +19,41 @@ class Appointment(db.Model):
     patientName = db.Column(db.String(64), nullable=False)
     symptoms = db.Column(db.String(128), nullable=False)
     potentialCovid = db.Column(db.String(3), nullable=False)
+    clinicId = db.Column(db.Numeric(3), nullable=False)
     appointmentDate = db.Column(db.String(64), nullable=False, primary_key=True)
     appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
 
 
-    def __init__(self, nric, patientName, symptoms, potentialCovid, appointmentDate, appointmentTime):
+    def __init__(self, nric, patientName, symptoms, potentialCovid, clinicId, appointmentDate, appointmentTime):
         self.nric = nric
         self.patientName = patientName
         self.symptoms = symptoms
         self.potentialCovid = potentialCovid
+        self.clinicId = clinicId
         self.appointmentDate = appointmentDate
         self.appointmentTime = appointmentTime
         
         
     def json(self):
-        return {"patientName": self.patientName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+        return {"patientName": self.patientName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
+# get queue length of specified clinic id 
+@app.route("/appointment/<int:clinicId>")
+def get_queue_length(clinicId): 
+    queueLength = Appointment.query.filter(Appointment.clinicId.like(clinicId)).count()
+    if queueLength:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {"queueLength": queueLength}
+            }
+        )
+    return jsonify(
+        { 
+            "code": 404,
+            "message": "Queue length cannot be retrieved."
+        }
+    ), 404    
 
 @app.route("/appointment")
 def get_all():
