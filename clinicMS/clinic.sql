@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS `clinic` (
 --
 
 INSERT INTO `clinic` (`id`,`name`,`address`, `postalCode`, `email`, `queueLength`) VALUES
-(1, `Raffles Medical - Anchorvale`, `370 Alexandra Road #B1-41 Anchorpoint`, `159953`, `daryl.ang.2021@scis.smu.edu.sg`, 3), 
-(2, `Raffles Medical - Ang Mo Kio`, `Blk 722 Ang Mo Kio Avenue 8 #01-2825`, `560722`, `jann.chia.2020@scis.smu.edu.sg`, 2), 
-(3, `Raffles Medical - Anson Centre`, `51 Anson Road, #01-51 Anson Centre`, `079904`, `jannoying@hotmail.com`, 1), 
-(4, `Raffles Medical - Bishan`, `Blk 283 Bishan Street 22, #01-177`, `570283`, `janntravel@gmail.com`, 4), 
-(5, `Raffles Medical - Compass One`, `1 Sengkang Square, #04-09, Compass One`, `545078`, `jannlearns@gmail.com`, 2), 
-(6, `Raffles Medical - Rivervale Mall`, `11, Rivervale Crescent, #02-17 Rivervale Mall`, `545082`, `jannchia29@yahoo.com`, 1)
+(1, `Raffles Medical - Anchorvale`, `370 Alexandra Road #B1-41 Anchorpoint`, `159953`, `bryan.shing.2020@scis.smu.edu.sg`, 3), 
+(2, `Raffles Medical - Ang Mo Kio`, `Blk 722 Ang Mo Kio Avenue 8 #01-2825`, `560722`, `bryan.shing.2020@scis.smu.edu.sg`, 2), 
+(3, `Raffles Medical - Anson Centre`, `51 Anson Road, #01-51 Anson Centre`, `079904`, `bryan.shing.2020@scis.smu.edu.sg`, 1), 
+(4, `Raffles Medical - Bishan`, `Blk 283 Bishan Street 22, #01-177`, `570283`, `bryan.shing.2020@scis.smu.edu.sg`, 4), 
+(5, `Raffles Medical - Compass One`, `1 Sengkang Square, #04-09, Compass One`, `545078`, `bryan.shing.2020@scis.smu.edu.sg`, 2), 
+(6, `Raffles Medical - Rivervale Mall`, `11, Rivervale Crescent, #02-17 Rivervale Mall`, `545082`, `bryan.shing.2020@scis.smu.edu.sg`, 1)
 ;
 COMMIT;
 
