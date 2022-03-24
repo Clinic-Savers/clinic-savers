@@ -16,7 +16,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostname, po
 channel = connection.channel()
 # set up the exchange if the exchange doesn't exist
 exchangename="notify_direct"
-channel.exchange_declare(exchange=exchangename, exchange_type='topic', durable=True)
+channel.exchange_declare(exchange=exchangename, exchange_type='direct', durable=True)
 
 def restock_drug():
     # prepare a queue for receiving messages
