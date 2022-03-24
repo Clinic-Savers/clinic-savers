@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `patientName` char(64) NOT NULL,
   `symptoms` varchar(128) NOT NULL,
   `potentialCovid` char(3) NOT NULL,
+  `clinicId` int(3) NOT NULL, 
   `appointmentDate` varchar(64) NOT NULL,
   `appointmentTime` varchar(64) NOT NULL,
   PRIMARY KEY (`nric`,`appointmentDate`, `appointmentTime`)
@@ -43,11 +44,11 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 -- Dumping data for table `appointment`
 --
 
-INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `potentialCovid`, `appointmentDate`, `appointmentTime`) VALUES
-('S9812381D', 'Mary Lim Mei Ling', 'runny nose, sore throat and fever', 'Yes', '2022-01-27','13:30:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 'No', '2022-02-01', '14:30:00'),
-('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 'No', '2022-03-12', '09:00:00'),
-('F1612347K', 'Tan Wei Ming', 'insomnia and headache', 'No', '2022-03-19', '08:00:00');
+INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `potentialCovid`, `clinicID`, `appointmentDate`, `appointmentTime`) VALUES
+('S9812381D', 'Mary Lim Mei Ling', 'runny nose, sore throat and fever', 'Yes', 1, '2022-01-27','13:30:00'),
+('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 'No', 5, '2022-02-01', '14:30:00'),
+('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 'No', 5, '2022-03-12', '09:00:00'),
+('F1612347K', 'Tan Wei Ming', 'insomnia and headache', 'No', '2022-03-19', 6, '08:00:00');
 
 COMMIT;
 
