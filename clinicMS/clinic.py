@@ -13,18 +13,20 @@ CORS(app)
 
 class Clinic(db.Model):
     __tablename__ = 'clinic'
-    clinicName = db.Column(db.String(128), nullable=False, primary_key=True)
-    clinicAddress = db.Column(db.String(128), nullable=False)
-    clinicPostalCode = db.Column(db.String(6), nullable=False, primary_key=True)
-    description = db.Column(db.String(128), nullable=False)
+    id = db.Column(db.Numeric(3), nullable=False, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    address = db.Column(db.String(128), nullable=False, primary_key=True)
+    postalCode = db.Column(db.String(6), nullable=False)
+    email = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, clinicName, clinicAddress, clinicPostalCode, description):
-        self.clinicName = clinicName
-        self.clinicAddress = clinicAddress
-        self.clinicPostalCode = clinicPostalCode
-        self.description= description
+    def __init__(self, id, name, address, postalCode, email):
+        self.id = id
+        self.name = name
+        self.address = address
+        self.postalCode= postalCode
+        self.email = email
     def json(self):
-        return {"clinicName": self.clinicName, "clinicAddress": self.clinicAddress, "clinicPostalCode": self.clinicPostalCode, "description": self.description}
+        return {"id": self.id, "name": self.name, "address": self.address, "postalCode": self.postalCode, "email": self.email}
 
 
 @app.route("/clinic")
@@ -49,7 +51,7 @@ def get_all():
 @app.route("/clinic/<string:patientPostalCode>")
 def find_by_patientPostalCode(patientPostalCode):
     district = patientPostalCode[:2]
-    clinicsListByDistrict = Clinic.query.filter(Clinic.clinicPostalCode.startswith(district)).all()
+    clinicsListByDistrict = Clinic.query.filter(Clinic.postalCode.startswith(district)).all()
 
     if clinicsListByDistrict:
         return jsonify(
@@ -84,9 +86,9 @@ def find_by_patientPostalCode(patientPostalCode):
 #         }
 #     ), 404
     
-@app.route("/clinic/<string:clinicName>")
-def find_by_clinicName(clinicName):
-    clinic = Clinic.query.filter_by(clinicName=clinicName).first()
+@app.route("/clinic/<string:name>")
+def find_by_clinicName(name):
+    clinic = Clinic.query.filter_by(name=name).first()
     if clinic:
         return jsonify(
             {
@@ -103,21 +105,21 @@ def find_by_clinicName(clinicName):
 
 
 #cannot create with just postal code
-@app.route("/clinic/<string:clinicPostalCode>", methods=['POST'])
-def create_clinic(clinicPostalCode):
-    if (Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()):
+@app.route("/clinic/<int:id>", methods=['POST'])
+def create_clinic(id):
+    if (Clinic.query.filter_by(id=id).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "clinicPostalCode": clinicPostalCode
+                    "id": id
                 },
                 "message": "Clinic already exists."
             }
         ), 400
 
     data = request.get_json()
-    clinic = Clinic(clinicPostalCode, **data)
+    clinic = Clinic(id, **data)
 
     try:
         db.session.add(clinic)
@@ -127,7 +129,7 @@ def create_clinic(clinicPostalCode):
             {
                 "code": 500,
                 "data": {
-                    "clinicPostalCode": clinicPostalCode
+                    "id": id
                 },
                 "message": "An error occurred creating the clinic."
             }
@@ -141,19 +143,22 @@ def create_clinic(clinicPostalCode):
     ), 201
 
 
-@app.route("/clinic/<string:clinicPostalCode>", methods=['PUT'])
-def update_drug(clinicPostalCode):
-    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+# primary key is now clinicId, so this one need to change?
+@app.route("/clinic/<int:id>", methods=['PUT'])
+def update_clinic(id):
+    clinic = Clinic.query.filter_by(id=id).first()
     if clinic:
         data = request.get_json()
-        if data['clinicName']:
-            clinic.clinicName = data['clinicName']
-        if data['clinicAddress']:
-            clinic.clinicAddress = data['clinicAddress'] 
-        if data['clinicPostalCode']:
-            clinic.clinicPostalCode = data['clinicPostalCode'] 
-        if data['description']:
-            clinic.description = data['description'] 
+        if data['id']:
+            clinic.id = data['id']
+        if data['name']:
+            clinic.name = data['name'] 
+        if data['address']:
+            clinic.address = data['address'] 
+        if data['postalCode']:
+            clinic.postalCode = data['postalCode'] 
+        if data['email']:
+            clinic.email = data['email']
         db.session.commit()
         return jsonify(
             {
@@ -165,16 +170,16 @@ def update_drug(clinicPostalCode):
         {
             "code": 404,
             "data": {
-                "clinicPostalCode": clinicPostalCode
+                "id": id
             },
             "message": "Clinic not found."
         }
     ), 404
 
 
-@app.route("/clinic/<string:clinicPostalCode>", methods=['DELETE'])
-def delete_clinic(clinicPostalCode):
-    clinic = Clinic.query.filter_by(clinicPostalCode=clinicPostalCode).first()
+@app.route("/clinic/<int:id>", methods=['DELETE'])
+def delete_clinic(id):
+    clinic = Clinic.query.filter_by(id=id).first()
     if clinic:
         db.session.delete(clinic)
         db.session.commit()
@@ -182,7 +187,7 @@ def delete_clinic(clinicPostalCode):
             {
                 "code": 200,
                 "data": {
-                    "clinicPostalCode": clinicPostalCode
+                    "id": id
                 }
             }
         )
@@ -190,7 +195,7 @@ def delete_clinic(clinicPostalCode):
         {
             "code": 404,
             "data": {
-                "clinicPostalCode": clinicPostalCode
+                "id": id
             },
             "message": "Clinic not found."
         }
