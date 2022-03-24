@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `clinic` (
   `name` varchar(128) NOT NULL,
   `address` varchar(128) NOT NULL,
   `postalCode` varchar(6) NOT NULL,
-  `email` varchar(128) NOT NULL
+  `email` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
