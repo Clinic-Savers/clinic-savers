@@ -56,25 +56,6 @@ def get_distance():
     result = invokes.invoke_http(url,"GET")
     return jsonify(result)
 
-@app.route("/distance")
-def get_all_distance():
-    distance_list = Distance.query.all()
-    if len(distance_list):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "Distance Records": [record.json() for record in distance_list]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no distance records."
-        }
-    ), 404
-
 
 @app.route("/distance/<string:patientPostalCode>/<string:clinicPostalCode>")
 def find_distance_by_patient_and_clinic_postal(patientPostalCode,clinicPostalCode):
