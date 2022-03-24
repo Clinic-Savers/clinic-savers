@@ -12,13 +12,13 @@ data = {
       },
       "To": [
         {
-          "Email": "bryan.shing.2020@scis.smu.edu.sg",
+          "Email": "bryanshing21@gmail.com",
           "Name": "Bryan"
         }
       ],
-      "Subject": "Greetings from Mailjet.",
-      "TextPart": "My first Mailjet email",
-      "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+      "Subject": "Reorder Drug Supplies",
+      "TextPart": "Reorder Drugs",
+      "HTMLPart": "Dear <b>" + "Drug Supplier Name" + "</b>, <br> Our branch at <b>"+ "Clinic Name" + "</b> has low supplies of <b><u>" + "Drug Name" + "</u></b>. We would like to place an order of <b><u>" + "Quantity" + "</u></b>. Please make the delivery to <b><u>" + "Clinic Address" + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + "Clinic Name",
       "CustomID": "AppGettingStartedTest"
     }
   ]

@@ -18,14 +18,13 @@ channel = connection.channel()
 exchangename="notify_direct"
 channel.exchange_declare(exchange=exchangename, exchange_type='topic', durable=True)
 
-def receive_booking():
+def restock_drug():
     # prepare a queue for receiving messages
     queue_name = "notification"
     channel.queue_declare(queue=queue_name, durable=True)
-    channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='notification.booking')
+    channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='notification.restock')
 
     # set up a consumer and start to wait for coming messages
-    channel.basic_qos(prefetch_count=1) # The "Quality of Service" setting makes the broker distribute only one message to a consumer if the consumer is available (i.e., having finished processing and acknowledged all previous messages that it receives)
     channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True) # 'auto_ack=True' acknowledges the reception of a message to the broker automatically, so that the broker can assume the message is received and processed and remove it from the queue
     channel.start_consuming() # an implicit loop waiting to receive messages; it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
@@ -41,6 +40,7 @@ def callback(channel, method, properties, body): # required signature for the ca
 def send_email(message):
     supplierEmail = message['supplierEmail']
     supplierName = message['supplierName']
+    drugName = ['drugName']
     reorderQuantity = message['reorderQuantity']
     clinicEmail = message['clinicEmail']
     clinicName = message['clinicName']
@@ -61,7 +61,7 @@ def send_email(message):
         ],
         "Subject": "Reorder Drug Supplies",
         "TextPart": "Reorder Drugs",
-        "HTMLPart": "<img style='display:block;margin-left:auto;margin-right:auto;width:50%;' src='https://i.gifer.com/JFi.gif'><h2 style='text-align:center'>Thank you for choosing our service!</h2> Your flight number is <b>" + "</b> will take part on <b>" + departDate + "</b> at <b>" + deptTime + "</b>.<br> Please show your reference code: <b>" + refCode + "</b> upon checking in. <br><br> Thank you for travelling with us during this period! Stay safe 😊 <br><br>Warm Regards, <br> <i>Fly Like T6</i>",
+        "HTMLPart": "Dear <b>" + supplierName + "</b>, <br> Our branch at <b>"+ clinicName + "</b> has low supplies of <b><u>" + drugName + "</u></b>. We would like to place an order of <b><u>" + reorderQuantity + "</u></b>. Please make the delivery to <b><u>" + clinicAddress + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + clinicName,
         "CustomID": "AppGettingStartedTest"
         }
     ]
@@ -73,4 +73,4 @@ def send_email(message):
 
 if __name__ == "__main__": 
     print("This is " + os.path.basename(__file__) + ": sending an email...")
-    receive_booking()
+    restock_drug()
