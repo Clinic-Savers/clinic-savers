@@ -8,17 +8,23 @@ data = {
     {
       "From": {
         "Email": "bryan.shing.2020@scis.smu.edu.sg",
-        "Name": "Bryan"
+        "Name": "The Clinic"
       },
       "To": [
         {
           "Email": "bryanshing21@gmail.com",
-          "Name": "Bryan"
+          "Name": "Drug Supplier"
         }
+      ],
+      "Bcc": [
+          {
+            "Email": "bryan.shing.2020@scis.smu.edu.sg",
+            "Name": "The Clinic"
+          }
       ],
       "Subject": "Reorder Drug Supplies",
       "TextPart": "Reorder Drugs",
-      "HTMLPart": "Dear <b>" + "Drug Supplier Name" + "</b>, <br> Our branch at <b>"+ "Clinic Name" + "</b> has low supplies of <b><u>" + "Drug Name" + "</u></b>. We would like to place an order of <b><u>" + "Quantity" + "</u></b>. Please make the delivery to <b><u>" + "Clinic Address" + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + "Clinic Name",
+      "HTMLPart": "Dear <b>" + "Drug Supplier Name" + "</b>, <br><br> Our branch at <b>"+ "Clinic Name" + "</b> has low supplies of <b><u>" + "Drug Name" + "</u></b>. We would like to place an order of <b><u>" + "Quantity" + "</u></b>. Please make the delivery to <b><u>" + "Clinic Address" + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + "Clinic Name",
       "CustomID": "AppGettingStartedTest"
     }
   ]

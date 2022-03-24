@@ -59,9 +59,15 @@ def send_email(message):
             "Name": supplierName
             }
         ],
+        "Bcc": [
+            {
+                "Email": clinicEmail,
+                "Name": clinicName
+            }
+        ],
         "Subject": "Reorder Drug Supplies",
         "TextPart": "Reorder Drugs",
-        "HTMLPart": "Dear <b>" + supplierName + "</b>, <br> Our branch at <b>"+ clinicName + "</b> has low supplies of <b><u>" + drugName + "</u></b>. We would like to place an order of <b><u>" + reorderQuantity + "</u></b>. Please make the delivery to <b><u>" + clinicAddress + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + clinicName,
+        "HTMLPart": "Dear <b>" + supplierName + "</b>, <br><br> Our branch at <b>"+ clinicName + "</b> has low supplies of <b><u>" + drugName + "</u></b>. We would like to place an order of <b><u>" + reorderQuantity + "</u></b>. Please make the delivery to <b><u>" + clinicAddress + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + clinicName,
         "CustomID": "AppGettingStartedTest"
         }
     ]
