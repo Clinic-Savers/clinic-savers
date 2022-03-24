@@ -1,9 +1,10 @@
-from datetime import date
+from datetime import date, time, datetime
 from sqlite3 import Date
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
+from sqlalchemy import func 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
@@ -40,12 +41,15 @@ class Appointment(db.Model):
 # get queue length of specified clinic id 
 @app.route("/appointment/<int:clinicId>")
 def get_queue_length(clinicId): 
-    queueLength = Appointment.query.filter(Appointment.clinicId.like(clinicId)).count()
-    if queueLength:
+    #queueLength = Appointment.query.filter(Appointment.clinicId.like(clinicId)).count()
+    now = datetime.now()
+    current_time = time(now.hour, now.minute, now.second)
+    this = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today(), func.time(Appointment.appointmentTime)>=current_time).count()
+    if this:
         return jsonify(
             {
                 "code": 200,
-                "data": {"queueLength": queueLength}
+                "data": {"queueLength": this}
             }
         )
     return jsonify(
