@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `clinic` (
 -- Dumping data for table `clinic`
 --
 
-INSERT INTO `clinic` (`id`,`name`,`address`, `postalCode`, `email`, `queueLength`) VALUES
+INSERT INTO `clinic` (`id`,`name`,`address`, `postalCode`, `email`) VALUES
 (1, `Raffles Medical - Anchorvale`, `370 Alexandra Road #B1-41 Anchorpoint`, `159953`, `bryan.shing.2020@scis.smu.edu.sg`), 
 (2, `Raffles Medical - Ang Mo Kio`, `Blk 722 Ang Mo Kio Avenue 8 #01-2825`, `560722`, `bryan.shing.2020@scis.smu.edu.sg`), 
 (3, `Raffles Medical - Anson Centre`, `51 Anson Road, #01-51 Anson Centre`, `079904`, `bryan.shing.2020@scis.smu.edu.sg`), 
