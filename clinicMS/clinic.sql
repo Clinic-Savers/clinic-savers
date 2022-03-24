@@ -30,23 +30,26 @@ USE `clinic`;
 
 DROP TABLE IF EXISTS `clinic`;
 CREATE TABLE IF NOT EXISTS `clinic` (
-  `clinicName` varchar(128) NOT NULL,
-  `clinicAddress` varchar(128) NOT NULL,
-  `clinicPostalCode` varchar(6) NOT NULL,
-  `description` varchar(128) NOT NULL,
-  PRIMARY KEY (`clinicName`,`clinicPostalCode`)
+  `id` int(3) NOT NULL, 
+  `name` varchar(128) NOT NULL,
+  `address` varchar(128) NOT NULL,
+  `postalCode` varchar(6) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `queueLength` int(3) NOT NULL
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `clinic`
 --
 
-INSERT INTO `clinic` (`clinicName`,`clinicAddress`,`clinicPostalCode`, `description`) VALUES
-('Raffles Medical', '52 North Bridge Rd, #02 - 17', '179103', 'Our team of family physicians provides care for patients of all ages. Medical care includes treatment of acute and chronic conditions for adults and children, vaccinations, legal services and health screening.'),
-('OneCare Medical Clinic Tiong Bahru', '11A Boon Tiong Rd, #01-08', '161011', 'OneCare Medical Clinics provide timely, affordable and professional healthcare. Our friendly team of general practitioners, family physicians, and nurses are always ready to help.'),
-('Sunnyvale Clinic & Surgery', '498 Jurong West Street 41', '640498', 'nfmaslnasl'),
-('Dayspring Medical Clinic (Tampines)', '2 Tampines Central 5, #04-09 Century Square', '529509', 'Minmed clinic is a CHAS registered General Practitioner (GP) clinic. We provide both teleconsult and in-clinic medical services such as doctor consultation and prescription, vaccinations and managing of chronic illnesses.'), 
-('Mint Medical Centre', '107, #04-13A North Bridge Rd, Funan', '179105', 'We are a team of healthcare professionals who pride ourselves in delivering holistic general care, yet each having our own interests. We are bound by the mission to care for our patients with warmth, sincerity and concern from our heart. We the MINT healthcare team, are a family, and to us, so are you!')
+INSERT INTO `clinic` (`id`,`name`,`address`, `postalCode`, `email`, `queueLength`) VALUES
+(1, `Raffles Medical - Anchorvale`, `370 Alexandra Road #B1-41 Anchorpoint`, `159953`, `daryl.ang.2021@scis.smu.edu.sg`, 3), 
+(2, `Raffles Medical - Ang Mo Kio`, `Blk 722 Ang Mo Kio Avenue 8 #01-2825`, `560722`, `jann.chia.2020@scis.smu.edu.sg`, 2), 
+(3, `Raffles Medical - Anson Centre`, `51 Anson Road, #01-51 Anson Centre`, `079904`, `jannoying@hotmail.com`, 1), 
+(4, `Raffles Medical - Bishan`, `Blk 283 Bishan Street 22, #01-177`, `570283`, `janntravel@gmail.com`, 4), 
+(5, `Raffles Medical - Compass One`, `1 Sengkang Square, #04-09, Compass One`, `545078`, `jannlearns@gmail.com`, 2), 
+(6, `Raffles Medical - Rivervale Mall`, `11, Rivervale Crescent, #02-17 Rivervale Mall`, `545082`, `jannchia29@yahoo.com`, 1)
 ;
 COMMIT;
 
