@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 patientRecord_URL = "http://localhost:5006/patientRecord/"
-drug_URL ="http://localhost:5007/drug/drugName/"
+drug_URL ="http://localhost:5007/drug/"
 @app.route("/create_record", methods=['POST'])
 def create_record():
     # Simple check of input format and data of the request are JSON
@@ -66,10 +66,14 @@ def processPatientRecord(patientRecord):
         
     print('\n-----Invoking drug microservice-----')
     patient_drug_qty = patientRecord['quantity']
+    print(patient_drug_qty)
     patient_drugName = patientRecord['drugName']
     drug = invoke_http(drug_URL + patient_drugName , method='GET')
-    drug_qty = drug['quantity']
+    print(drug)
+    drug_qty = drug["data"]['quantity']
+    print(drug_qty)
     new_qty = drug_qty - patient_drug_qty
+    print(new_qty)
     drug_result = invoke_http(drug_URL + patient_drugName , method='PUT', json={"quantity": new_qty})
     
     code = drug_result["code"]

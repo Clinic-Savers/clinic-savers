@@ -64,7 +64,7 @@ def find_by_drugId(drugId):
         }
     ), 404
     
-@app.route("/drug/drugName/<string:drugName>")
+@app.route("/drug/<string:drugName>")
 def find_by_drugName(drugName):
     drug = Drug.query.filter_by(drugName=drugName).first()
     if drug:
@@ -125,8 +125,6 @@ def update_drug(drugName):
     drug = Drug.query.filter_by(drugName=drugName).first()
     if drug:
         data = request.get_json()
-        if data['drugName']:
-            drug.drugName = data['drugName']
         if data['quantity']:
             drug.quantity = data['quantity'] 
         db.session.commit()
