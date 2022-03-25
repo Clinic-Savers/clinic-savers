@@ -133,6 +133,7 @@ def set_appointment():
     
     format = "%H:%M:%S"
     last_timing = datetime.strptime(last_appt.appointmentTime,format)
+    # might be after the current time so its an issue
     new_timing= last_timing + timedelta(minutes=30)
     new_timing = new_timing.strftime(format)
 
@@ -141,7 +142,6 @@ def set_appointment():
     try:
         db.session.add(appointment)
         db.session.commit()
-        print("done")
     except:
         return jsonify(
             {
