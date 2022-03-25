@@ -12,7 +12,7 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-clinic_URL = "http://localhost:5002/clinic/"
+clinic_URL = "http://localhost:5002/clinic/postal/"
 distance_URL = "http://192.168.1.108:5001/checkDist"
 appointment_URL = "http://localhost:5003/appointment/"
 
