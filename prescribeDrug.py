@@ -68,14 +68,17 @@ def processPatientRecordAdd(patientRecord):
     patient_drug_qty = patientRecord['quantity']
     #print(patient_drug_qty)
     patient_drugName = patientRecord['drugName']
-    patient_clinicId = patientRecord['clinicId']
+    patient_clinicId = str(patientRecord['clinicId'])
+    print(patient_clinicId)
+    print(type(patient_clinicId))
     drug = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName , method='GET')
     #print(drug)
     drug_qty = drug["data"]['quantity']
     #print(drug_qty)
     new_qty = drug_qty - patient_drug_qty
-    #print(new_qty)
+    print(new_qty)
     drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"quantity": new_qty})
+    print(drug_result)
 
     code = drug_result["code"]
     if code not in range(200, 300):
@@ -130,7 +133,7 @@ def processPatientRecordDelete(patientRecord):
     # Invoke the order microservice
     print('\n-----Invoking patientRecord microservice-----')
     patient_nric_str = patientRecord['nric']
-    patient_clinic_str = patientRecord['clinicId']
+    patient_clinic_str = str(patientRecord['clinicId'])
     patient_drug_str = patientRecord['drugName']
     patient_date_str = patientRecord['date']
     patient_time_str = patientRecord['time']
@@ -209,7 +212,7 @@ def processPatientRecordUpdate(patientRecord):
     # Invoke the order microservice
     print('\n-----Invoking patientRecord microservice-----')
     patient_nric_str = patientRecord['nric']
-    patient_clinic_str = patientRecord['clinicId']
+    patient_clinic_str = str(patientRecord['clinicId'])
     patient_drug_str = patientRecord['drugName']
     patient_date_str = patientRecord['date']
     patient_time_str = patientRecord['time']

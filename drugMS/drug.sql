@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS `drug`;
 CREATE TABLE IF NOT EXISTS `drug` (
   `clinicId` int(3) NOT NULL, 
   `drugName` varchar(128) NOT NULL,
-  `drugId` int(11) AUTO_INCREMENT NOT NULL ,
+  `drugId` int(11) NOT NULL ,
   `quantity` int(11) NOT NULL,
   `restockStatus` char(3) NOT NULL,
   PRIMARY KEY (`clinicId`,`drugId`, `drugName`)
