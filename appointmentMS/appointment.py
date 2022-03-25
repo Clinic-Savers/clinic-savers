@@ -41,7 +41,6 @@ class Appointment(db.Model):
 # get queue length of specified clinic id 
 @app.route("/appointment/<int:clinicId>")
 def get_queue_length(clinicId): 
-    #queueLength = Appointment.query.filter(Appointment.clinicId.like(clinicId)).count()
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     this = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today(), func.time(Appointment.appointmentTime)>=current_time).count()
@@ -95,7 +94,7 @@ def find_by_nric(nric):
             "message": "Appointment not found."
         }
     ), 404
-    
+
 @app.route("/appointment/<string:nric>/<string:appointmentDate>")
 def find_by_appointmentDate(nric, appointmentDate):
     appointment = Appointment.query.filter_by(nric=nric, date=date).first()
@@ -117,16 +116,6 @@ def find_by_appointmentDate(nric, appointmentDate):
 @app.route("/appointment/<string:nric>", methods=['POST'])
 def create_appointment(nric):
     appointment = Appointment.query.filter_by(nric=nric).first()
-    # if (appointment.query.filter_by(nric=nric).first()):
-    #     return jsonify(
-    #         {
-    #             "code": 400,
-    #             "data": {
-    #                 "nric": nric
-    #             },
-    #             "message": "Appointment already exists."
-    #         }
-    #     ), 400
 
     data = request.get_json()
     appointment = Appointment(nric, **data)
