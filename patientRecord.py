@@ -18,15 +18,17 @@ class PatientRecord(db.Model):
 
     nric = db.Column(db.String(9), primary_key=True, nullable=False)
     patientName = db.Column(db.String(64), nullable=False)
+    clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     refillStatus = db.Column(db.String(64), nullable=False)
     date = db.Column(db.String(64), primary_key=True, nullable=False)
     time = db.Column(db.String(64), primary_key=True, nullable=False)
 
-    def __init__(self, nric, patientName, drugName, quantity, refillStatus, date, time):
+    def __init__(self, nric, patientName, clinicId, drugName, quantity, refillStatus, date, time):
         self.nric = nric
         self.patientName = patientName
+        self.clinicId = clinicId
         self.drugName = drugName
         self.quantity = quantity
         self.refillStatus = refillStatus
@@ -34,7 +36,7 @@ class PatientRecord(db.Model):
         self.time = time
 
     def json(self):
-        return {"nric": self.nric, "patientName": self.patientName, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
+        return {"nric": self.nric, "patientName": self.patientName,  "clinicId": self.clinicId, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
 
 
 @app.route("/patientRecord")
@@ -76,9 +78,9 @@ def find_patient_record_by_nric_and_drug(nric,drugName):
         }
     ), 404
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>")
-def find_patient_record_by_nric_drug_date_time(nric,drugName,date,time):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
+@app.route("/patientRecord/<string:nric>/<string:clinicId>/<string:drugName>/<string:date>/<string:time>")
+def find_patient_record_by_nric_clinic_drug_date_time(nric,clinicId,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         return jsonify(
             {
@@ -133,14 +135,14 @@ def create_patient_record(nric):
     ), 201
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>", methods=['PUT'])
-def update_patient_record(nric,drugName,date,time):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
+@app.route("/patientRecord/<string:nric>/<string:clinicId>/<string:drugName>/<string:date>/<string:time>", methods=['PUT'])
+def update_patient_record(nric,clinicId,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
-        if data['quantity']:
+        if "quantity" in data:
             record.quantity = data['quantity']
-        if data['refillStatus']:
+        if "refillStatus" in data:
             record.refillStatus = data['refillStatus'] 
         db.session.commit()
         return jsonify(
@@ -154,6 +156,7 @@ def update_patient_record(nric,drugName,date,time):
             "code": 404,
             "data": {
                 "nric": nric,
+                "clinicId": clinicId,
                 "drugName": drugName,
                 "date": date,
                 "time" : time
@@ -163,9 +166,9 @@ def update_patient_record(nric,drugName,date,time):
     ), 404
 
 
-@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>", methods=['DELETE'])
-def delete_patient_record(nric,drugName,date,time):
-    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
+@app.route("/patientRecord/<string:nric>/<string:clinicId>/<string:drugName>/<string:date>/<string:time>", methods=['DELETE'])
+def delete_patient_record(nric,clinicId,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         db.session.delete(record)
         db.session.commit()
@@ -174,6 +177,7 @@ def delete_patient_record(nric,drugName,date,time):
                 "code": 200,
                 "data": {
                     "nric": nric,
+                    "clinicId": clinicId,
                     "drugName": drugName,
                     "date": date,
                     "time" : time
@@ -185,6 +189,7 @@ def delete_patient_record(nric,drugName,date,time):
             "code": 404,
             "data": {
                 "nric": nric,
+                "clinicId": clinicId,
                 "drugName": drugName,
                 "date": date,
                 "time" : time
