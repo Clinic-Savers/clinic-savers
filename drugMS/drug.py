@@ -101,7 +101,7 @@ def create_drug(clinicId,drugId):
         ), 400
 
     data = request.get_json()
-    drug = Drug(drugId, **data)
+    drug = Drug(clinicId,drugId, **data)
 
     try:
         db.session.add(drug)
@@ -131,9 +131,9 @@ def update_drug(clinicId,drugName):
     drug = Drug.query.filter_by(clinicId=clinicId,drugName=drugName).first()
     if drug:
         data = request.get_json()
-        if data['quantity']:
+        if "quantity" in data:
             drug.quantity = data['quantity'] 
-        if data['restockStatus']:
+        if 'restockStatus' in data:
             drug.restockStatus = data['restockStatus']
         db.session.commit()
         return jsonify(
