@@ -30,10 +30,10 @@ USE `subsidy`;
 DROP TABLE IF EXISTS `subsidy`;
 CREATE TABLE IF NOT EXISTS `subsidy` (
   `nric` varchar(9) NOT NULL,
-  `cardNumber` int(16) NOT NULL,
+  `cardNumber` varchar(8) NOT NULL,
   `cardType` char(128) NOT NULL,
   `organisationType` char(64) NULL,
-  `expiryDate` varchar(8) NOT NULL
+  `expiryDate` varchar(8) NOT NULL,
   PRIMARY KEY (`nric`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS `subsidy` (
 --
 
 INSERT INTO `patient` (`nric`, `cardNumber`, `cardType`, `organisationType`, `expiryDate`) VALUES
-('S9812381D', '11237623', 'GreenCHAS', '29/03/2019'),
-('S9812382B', '78045522', 'Merdeka', '05/09/2020'),
-('S9812385G', '01148732', 'BlueCHAS', '15/12/2023'),
-('G1612350T', '90348226', 'Pioneer', '26/01/2025'),
+('S9812381D', '11237623', 'GreenCHAS', NULL, '29/03/2019'),
+('S9812382B', '78045522', 'Merdeka', NULL, '05/09/2020'),
+('S9812385G', '01148732', 'BlueCHAS', NULL, '15/12/2023'),
+('G1612350T', '90348226', 'Pioneer', NULL, '26/01/2025'),
 ('F1612347K', '55230598', 'Company', 'DBS', '08/07/2022');
 COMMIT;
 
