@@ -12,20 +12,17 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-appt_URL = "http://localhost:5003"
+appt_URL = "http://localhost:5003/set_appointment/"
 
 @app.route("/set_appt", methods=['POST'])
-def check_dist():
-    print('hello')
+def receive_clinic():
     # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
-            patientPostalCode = request.get_json()
-            print("\nReceived postal code in JSON:", patientPostalCode)
+            selected_clinic = request.get_json()
+            print("\nReceived postal code in JSON:", selected_clinic)
 
-            result = retrieveClinic(patientPostalCode)
-            # print('\n------------------------')
-            # print('\nresult: ', patientPostalCode)
+            result = set_appt(selected_clinic)
             return result
 
         except Exception as e:
@@ -47,59 +44,25 @@ def check_dist():
     }), 400
 
 
-def retrieveClinic(patientPostalCode):
-    # 2. Send the patientAddress to clinic microservice
-    
-    patientPostalCode_str = patientPostalCode["patientPostalCode"]
-    clinic_result = invoke_http(clinic_URL + patientPostalCode_str, method='GET', json=patientPostalCode)
-    print('clinic_result:', clinic_result)
+def set_appt(selectedClinic):
+    print("Setting appointment...")
+    result = invoke_http(appt_URL + str(selectedClinic["clinic"]))
 
-    print(type(clinic_result))
-
-    code = clinic_result["code"]
-    clinics = clinic_result["data"]["clinic"]
-
-    print("clinics: ", clinics)
-
-    patient_clinic_postalCode = { 
-        "patient": patientPostalCode,
-        "clinics": [] }
-
-
-    for clinic in clinics:
-        patient_clinic_postalCode["clinics"].append([clinic["clinicName"],clinic["clinicPostalCode"]])
-
-    
-    #convert to JSON format
-    patient_clinic_postalCode = json.dumps(patient_clinic_postalCode)
-    print(patient_clinic_postalCode)
-    
+    print(result)
+    code = result["code"]
+    data = result["data"]
     if code not in range(200, 300):
         return {
             "code": 500,
-            "data": {"clinic_result": clinic_result},
+            "data": {"set_appt result": result },
             "message": "Clinic search failure"
         }
 
     else:
-        #Invoke distance microservice - send the patientAddress and List of clinics
-        distance_result = invoke_http(distance_URL,method="POST",json= patient_clinic_postalCode)
-        print("__________________________ /n")
-        print("distance result", distance_result)
-        print("________________________________________")
-        
-        distance_compare = distance_result["rows"][0]["elements"]
-        sort_dist = []
-        print(clinics)
-        for i in range(0,len(clinics)):
-            sort_dist.append([clinics[i]["clinicName"], clinics[i]["clinicPostalCode"], distance_compare[i]["distance"]["value"]])
-        
-        result = sorted(sort_dist, key=itemgetter(2))
-        print("__________________n______________",result)
         
         return {
             "code":200,
-            "data": result
+            "data": data
         }
         
 

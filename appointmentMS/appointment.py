@@ -1,4 +1,4 @@
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 from sqlite3 import Date
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -115,13 +115,20 @@ def find_by_appointmentDate(nric, appointmentDate):
     ), 404
 
 
-@app.route("/appointment/<string:nric>", methods=['POST'])
-def create_appointment(nric):
-    appointment = Appointment.query.filter_by(nric=nric).first()
+@app.route("/set_appointment/<string:clinicId>")
+def create_appointment(clinicId):
+    clinicId = int(clinicId)
+    now = datetime.now()
+    current_time = time(now.hour, now.minute, now.second)
+    last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
+    
+    format = "%H:%M:%S"
+    last_timing = datetime.strptime(last_appt.appointmentTime,format)
+    new_timing= last_timing + timedelta(minutes=30)
+    new_timing = new_timing.strftime(format)
 
-    data = request.get_json()
-    appointment = Appointment(nric, **data)
-
+    appointment = Appointment("T0030000I", "Wog", "stupidity", "positive", clinicId, last_appt.appointmentDate, new_timing)
+    
     try:
         db.session.add(appointment)
         db.session.commit()
@@ -129,9 +136,6 @@ def create_appointment(nric):
         return jsonify(
             {
                 "code": 500,
-                "data": {
-                    "nric": nric
-                },
                 "message": "An error occurred creating the appointment."
             }
         ), 500
