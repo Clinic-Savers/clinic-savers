@@ -11,6 +11,7 @@ CORS(app)
 
 patientRecord_URL = "http://localhost:5006/patientRecord/"
 drug_URL ="http://localhost:5007/drug/"
+clinic_URL = "http://localhost:5002/clinic/"
 @app.route("/create_record", methods=['POST'])
 def create_record():
     # Simple check of input format and data of the request are JSON
@@ -269,6 +270,27 @@ def processPatientRecordUpdate(patientRecord):
             "drug_result": drug_result
         }
     }
+
+def processNotification(drug_record):
+    print('\n-----Invoking clinic microservice-----')
+    clinicId = str(drug_record['clinicId'])
+    clinic_record = invoke_http(clinic_URL + clinicId, method='GET')
+    clinic_name = clinic_record['name']
+    clinic_address = clinic_record['address']
+    clinic_postalCode = clinic_record['postalCode']
+    clinic_email = clinic_record['email']
+
+    # Check the clinic result if error;
+    code = clinic_record["code"]
+    if code not in range(200, 300):
+        # 7. Return error
+        return {
+            "code": 500,
+            "data": {"record_result": clinic_record},
+            "message": "Clinic record search failure."
+        }
+    
+    
 
 
 # Execute this program if it is run as a main script (not by 'import')

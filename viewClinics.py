@@ -80,6 +80,7 @@ def retrieveClinic(patientPostalCode):
         #Invoke distance microservice - send the patientAddress and List of clinics
         distance_result = invoke_http(distance_URL,method="POST",json= patient_clinic_postalCode)
         
+        print("\ndistance result:", distance_result)
         code = distance_result["code"]
 
         if code not in range(200, 300):
@@ -92,31 +93,32 @@ def retrieveClinic(patientPostalCode):
         else:
             data = distance_result["data"]
             distance_compare = data["rows"][0]["elements"]
-            sort_dist = []
+            sort_dist = {}
 
             for i in range(0,len(clinics)):
-                sort_dist.append( {clinics[i]["id"]: [clinics[i]["name"], clinics[i]["postalCode"], distance_compare[i]["distance"]["value"]]} )
+                sort_dist[clinics[i]["id"]] = [clinics[i]["name"], clinics[i]["postalCode"], distance_compare[i]["distance"]["value"]] 
             
-            result = sorted(sort_dist, key=itemgetter(2))
+            print("\nsort dist", sort_dist)
+            # sort_dist = sorted(sort_dist, key=itemgetter(2))
 
             for clinic in clinics:
                 url = appointment_URL + str(clinic["id"])
-                result = invoke_http(url)
-                queueLength = result["data"]["queueLength"]
-                sort_dist[clinic["id"]]
+                appointment_result = invoke_http(url)
+                print("\nqueue",appointment_result)
 
-            code = distance_result["code"]
+                code = appointment_result["code"]
 
-            if code not in range(200, 300):
-                return {
-                    "code": 500,
-                    "data": {"distance_result": distance_result},
-                    "message": "Distance search fail"
-                }
+                if code in range(200, 300):
+                    queueLength = appointment_result["data"]["queueLength"]
+                    sort_dist[clinic["id"]].append(queueLength)
+                else:
+                    sort_dist[clinic["id"]].append(0)
+
+            sort_dist = sorted(sort_dist.items(), key= lambda x: x[1][2] )
         
             return {
                 "code":200,
-                "data": result
+                "data": sort_dist
             }
         
 
