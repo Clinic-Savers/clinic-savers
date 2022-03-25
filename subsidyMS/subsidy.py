@@ -13,8 +13,8 @@ CORS(app)
 
 class Subsidy(db.Model):
     __tablename__ = 'subsidy'
-    nric = db.Column(db.String(9), nullable=False, primary_key=True)
-    cardNumber = db.Column(db.String(64), nullable=False)
+    cardNumber = db.Column(db.String(64), nullable=False, primary_key=True)
+    nric = db.Column(db.String(9), nullable=False)
     cardType = db.Column(db.Integer, nullable=False)
     organisationType = db.Column(db.String(128), nullable=True)
     expiryDate = db.Column(db.String(64), nullable=False)

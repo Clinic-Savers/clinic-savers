@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
 from sqlalchemy import func 
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/appointment'
@@ -115,9 +116,17 @@ def find_by_appointmentDate(nric, appointmentDate):
     ), 404
 
 
-@app.route("/set_appointment/<string:clinicId>")
-def create_appointment(clinicId):
-    clinicId = int(clinicId)
+@app.route("/set_appointment", methods=["POST"])
+def set_appointment():
+    data = request.get_json()
+    data = json.loads(data)
+    
+    nric = data["nric"]
+    name = data["name"]
+    symptoms = data["symptoms"]
+    potentialCovid = data["potentialCovid"]
+    clinicId = int(data["clinicId"])
+
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
@@ -127,11 +136,12 @@ def create_appointment(clinicId):
     new_timing= last_timing + timedelta(minutes=30)
     new_timing = new_timing.strftime(format)
 
-    appointment = Appointment("T0030000I", "Wog", "stupidity", "positive", clinicId, last_appt.appointmentDate, new_timing)
+    appointment = Appointment(nric, name, symptoms, potentialCovid, clinicId, last_appt.appointmentDate, new_timing)
     
     try:
         db.session.add(appointment)
         db.session.commit()
+        print("done")
     except:
         return jsonify(
             {

@@ -12,7 +12,8 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-appt_URL = "http://localhost:5003/set_appointment/"
+appt_URL = "http://192.168.1.108:5003/set_appointment"
+patient_URL = "http://192.168.1.108:5000/patient/"
 
 @app.route("/set_appt", methods=['POST'])
 def receive_clinic():
@@ -46,25 +47,42 @@ def receive_clinic():
 
 def set_appt(selectedClinic):
     print("Setting appointment...")
-    result = invoke_http(appt_URL + str(selectedClinic["clinic"]))
+    patient_info = invoke_http(patient_URL + str(selectedClinic["nric"]))
 
-    print(result)
-    code = result["code"]
-    data = result["data"]
+    code = patient_info["code"]
     if code not in range(200, 300):
         return {
-            "code": 500,
-            "data": {"set_appt result": result },
-            "message": "Clinic search failure"
+            patient_info
         }
 
     else:
+        create_appt = {"nric": patient_info["data"]["nric"], 
+                        "name": patient_info["data"]["patientName"],
+                        "symptoms": "NIL",
+                        "potentialCovid": "NIL",
+                        "clinicId": selectedClinic["clinic"]
+                        }
+
+        create_appt = json.dumps(create_appt)
+
+        appt_result = invoke_http(appt_URL, method = "POST", json=create_appt)
+
+        code = appt_result["code"]
         
-        return {
-            "code":200,
-            "data": data
-        }
-        
+        if code not in range(200, 300):
+            return {
+                "code": 500,
+                "data": {"set_appt result": appt_result },
+                "message": "Clinic search failure"
+            }
+
+        else:
+            
+            data = appt_result["data"]
+            return {
+                "code":200,
+                "data": data
+            }        
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":

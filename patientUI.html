@@ -26,6 +26,9 @@
     </script>
 
     <script>
+        nric = sessionStorage.setItem('nric',"S9812381D");
+        nric = sessionStorage.getItem('nric');
+
         $('#search').submit( async (event) => {
             event.preventDefault()
             var postal_code = $('#postalCode').val();
