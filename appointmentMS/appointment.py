@@ -7,7 +7,7 @@ from flask_cors import CORS
 from sqlalchemy import func 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/appointment'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -39,11 +39,13 @@ class Appointment(db.Model):
         return {"patientName": self.patientName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
 # get queue length of specified clinic id 
-@app.route("/appointment/<int:clinicId>")
+@app.route("/appointment/<string:clinicId>")
 def get_queue_length(clinicId): 
+    clinicId = int(clinicId)
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     this = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today(), func.time(Appointment.appointmentTime)>=current_time).count()
+    
     if this:
         return jsonify(
             {
@@ -97,7 +99,7 @@ def find_by_nric(nric):
 
 @app.route("/appointment/<string:nric>/<string:appointmentDate>")
 def find_by_appointmentDate(nric, appointmentDate):
-    appointment = Appointment.query.filter_by(nric=nric, date=date).first()
+    appointment = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate).first()
     if appointment:
         return jsonify(
             {
