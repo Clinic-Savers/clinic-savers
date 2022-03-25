@@ -140,9 +140,9 @@ def update_patient_record(nric,clinicId,drugName,date,time):
     record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
-        if data['quantity']:
+        if "quantity" in data:
             record.quantity = data['quantity']
-        if data['refillStatus']:
+        if "refillStatus" in data:
             record.refillStatus = data['refillStatus'] 
         db.session.commit()
         return jsonify(
