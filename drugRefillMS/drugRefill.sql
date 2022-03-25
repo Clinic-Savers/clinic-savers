@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `drugRefill` (
 --
 
 INSERT INTO `drugRefill` (`nric`,`patientName`,`existingCondition`,`drugName`,`date`) VALUES
-('S9812381D','Mary Lim Mei Ling','refill vitamins','Vitamin A', '2022-02-27'),
+('S9812381D','Tricia Tan Xiao Hui','refill vitamins','Vitamin A', '2022-02-27'),
 ('Albendazole', 100),
 ('Baricitinib', 150),
 ('Calcium Acetate', 200),
