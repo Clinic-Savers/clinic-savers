@@ -32,25 +32,26 @@ DROP TABLE IF EXISTS `patientRecord`;
 CREATE TABLE IF NOT EXISTS `patientRecord` (
   `nric` varchar(9) NOT NULL,
   `patientName` char(64) NOT NULL,
+  `clinicId` int(3) NOT NULL, 
   `drugName` varchar(128) NOT NULL,
   `quantity` int(11) NOT NULL,
   `refillStatus` char(64) NOT NULL,
   `date` varchar(64) NOT NULL,
   `time` varchar(64) NOT NULL,
-  PRIMARY KEY (`nric`,`drugName`,`date`,`time`)
+  PRIMARY KEY (`nric`,`clinicId`,`drugName`,`date`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `patientRecord`
 --
 
-INSERT INTO `patientRecord` (`nric`,`patientName`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
-('S9812381D','Mary Lim Mei Ling','Paracetamol', 20, 'non-refillable', '2022-01-27','13:30:00'),
-('S9812381D','Mary Lim Mei Ling','Vitamin A', 25, 'refillable', '2022-01-27','13:30:00'),
-('F1612347K','Tan Wei Ming', 'Aspirin', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
-('F1612347K','Tan Wei Ming', 'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
-('S9812385G', 'Nur Fatimah Binte Muhammad', 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00');
+INSERT INTO `patientRecord` (`nric`,`patientName`,`clinicId`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
+('S9812381D','Mary Lim Mei Ling',1,'Paracetamol', 20, 'non-refillable', '2022-01-27','13:30:00'),
+('S9812381D','Mary Lim Mei Ling',1,'Vitamin A', 25, 'refillable', '2022-01-27','13:30:00'),
+('F1612347K','Tan Wei Ming', 2,'Aspirin', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
+('F1612347K','Tan Wei Ming', 2,'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
+('S9812385G', 'Nur Fatimah Binte Muhammad',5, 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
+('S9812382B', 'Alfred Tan Jun Jie', 4,'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
