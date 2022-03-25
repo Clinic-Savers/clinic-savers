@@ -9,12 +9,6 @@ import invokes
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
-
-db = SQLAlchemy(app)
-
 CORS(app)
 
 api_key = "AIzaSyC1hytlrSzRCAMd4LK-A0hzQ85IoVZIJpg"
@@ -29,10 +23,13 @@ def get_distance():
     patient = data["patient"]["patientPostalCode"]
     clinics = data["clinics"]
 
-    clinic_path = ""
-    for clinic in clinics:
-        clinic_path += "S" + clinic[1] + "%7C"
-    clinic_path = clinic_path[:-3]
+    print(patient)
+
+    clinic_path = "S" + patient 
+    if len(clinics) > 1:
+        for clinic in clinics:
+            clinic_path += "S" + clinic[1] + "%7C"
+        clinic_path = clinic_path[:-3]
 
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=S" + patient + "&region=sg&key=" + api_key
 
