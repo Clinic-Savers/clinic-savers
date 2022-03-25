@@ -11,7 +11,17 @@
         <input type="text" name="postal_code" id="postalCode"/>
         <input type="submit"/>
     </form>
+
+    <h2 id="result">empty</h2>
+
+    <form id="choose_clinic">
+        <input type="radio" value="5" name="clinic"/>
+        <input type="radio" value="6" name="clinic"/>
+        <input type="submit"/>
+    </form>
     
+    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
 
@@ -33,6 +43,39 @@
                 });
 
                 const data = await response.json();
+
+                return false;
+            } 
+            
+            catch (error) {
+            // Errors when calling the service; such as network error, 
+            // service offline, etc
+            showError
+                ("There is a problem signing in, please try again later. " + error);
+
+            } // error
+    });
+
+    $('#choose_clinic').submit( async (event) => {
+            event.preventDefault()
+            var postal_code = $('#postalCode').val();
+            var choose_clinic = "http://192.168.1.108:5008"
+
+            try{
+
+                const response =
+                await fetch(
+                    viewClinicURL, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({patientPostalCode: postal_code})
+                });
+
+                const data = await response.json();
+
+                result = JSON.stringify(data)
+
+                document.getElementById("result").innerText = result
 
                 return false;
             } 
