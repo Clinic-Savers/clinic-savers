@@ -42,11 +42,11 @@ CREATE TABLE IF NOT EXISTS `subsidy` (
 --
 
 INSERT INTO `patient` (`nric`, `cardNumber`, `cardType`, `organisationType`, `expiryDate`) VALUES
-('S9812381D', '11237623', 'GreenCHAS', 'Valid'),
-('S9812382B', '78045522', 'Merdeka', 'Valid'),
-('S9812385G', '01148732', 'BlueCHAS', 'Invalid'),
-('G1612350T', '90348226', 'Pioneer', 'Valid'),
-('F1612347K', '55230598', 'Company', 'DBS', 'Invalid');
+('S9812381D', '11237623', 'GreenCHAS', '29/03/2019'),
+('S9812382B', '78045522', 'Merdeka', '05/09/2020'),
+('S9812385G', '01148732', 'BlueCHAS', '15/12/2023'),
+('G1612350T', '90348226', 'Pioneer', '26/01/2025'),
+('F1612347K', '55230598', 'Company', 'DBS', '08/07/2022');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
