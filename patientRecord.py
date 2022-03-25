@@ -64,7 +64,26 @@ def find_patient_record_by_nric_and_drug(nric,drugName):
         return jsonify(
             {
                 "code": 200,
-                "PatientRecord": [record.json() for record in record_list]
+                "data":{
+                    "PatientRecords": [record.json() for record in record_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Patient record not found."
+        }
+    ), 404
+
+@app.route("/patientRecord/<string:nric>/<string:drugName>/<string:date>/<string:time>")
+def find_patient_record_by_nric_drug_date_time(nric,drugName,date,time):
+    record = PatientRecord.query.filter_by(nric=nric,drugName=drugName,date=date,time=time).first()
+    if record:
+        return jsonify(
+            {
+                "code": 200,
+                "data": record.json()
             }
         )
     return jsonify(
