@@ -68,13 +68,14 @@ def processPatientRecordAdd(patientRecord):
     patient_drug_qty = patientRecord['quantity']
     #print(patient_drug_qty)
     patient_drugName = patientRecord['drugName']
-    drug = invoke_http(drug_URL + patient_drugName , method='GET')
+    patient_clinicId = patientRecord['clinicId']
+    drug = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName , method='GET')
     #print(drug)
     drug_qty = drug["data"]['quantity']
     #print(drug_qty)
     new_qty = drug_qty - patient_drug_qty
     #print(new_qty)
-    drug_result = invoke_http(drug_URL + patient_drugName , method='PUT', json={"quantity": new_qty})
+    drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"quantity": new_qty})
 
     code = drug_result["code"]
     if code not in range(200, 300):
@@ -150,10 +151,10 @@ def processPatientRecordDelete(patientRecord):
         
     print('\n-----Invoking drug microservice-----')
     patient_drug_qty = patientRecord['quantity']
-    drug = invoke_http(drug_URL + patient_drug_str , method='GET')
+    drug = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='GET')
     drug_qty = drug["data"]['quantity']
     new_qty = drug_qty + patient_drug_qty
-    drug_result = invoke_http(drug_URL + patient_drug_str , method='PUT', json={"quantity": new_qty})
+    drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"quantity": new_qty})
 
     code = drug_result["code"]
     if code not in range(200, 300):
@@ -243,10 +244,10 @@ def processPatientRecordUpdate(patientRecord):
     print('\n-----Invoking drug microservice-----')
     patient_drug_qty = record_result['data']['quantity']
     new_patient_drug_qty = new_record_result['data']['quantity']
-    drug = invoke_http(drug_URL + patient_drug_str , method='GET')
+    drug = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='GET')
     drug_qty = drug["data"]['quantity']
     new_qty = drug_qty + patient_drug_qty - new_patient_drug_qty
-    drug_result = invoke_http(drug_URL + patient_drug_str , method='PUT', json={"quantity": new_qty})
+    drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"quantity": new_qty})
 
     code = drug_result["code"]
     if code not in range(200, 300):
