@@ -97,7 +97,7 @@ def find_by_nric(nric):
 
 @app.route("/appointment/<string:nric>/<string:appointmentDate>")
 def find_by_appointmentDate(nric, appointmentDate):
-    appointment = Appointment.query.filter_by(nric=nric, date=date).first()
+    appointment = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate).first()
     if appointment:
         return jsonify(
             {
