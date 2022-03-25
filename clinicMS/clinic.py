@@ -86,6 +86,23 @@ def find_by_clinicName(name):
         }
     ), 404
 
+@app.route("/clinic/id/<string:id>")
+def find_by_clinicId(id):
+    id = int(id)
+    clinic = Clinic.query.filter_by(id=id).first()
+    if clinic:
+        return jsonify(
+            {
+                "code": 200,
+                "data": clinic.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Clinic cannot be found."
+        }
+    ), 404
 
 #cannot create with just postal code
 @app.route("/clinic/<int:id>", methods=['POST'])
