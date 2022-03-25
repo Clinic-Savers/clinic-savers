@@ -15,7 +15,7 @@ port = 5672
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostname, port=port))
 channel = connection.channel()
 # set up the exchange if the exchange doesn't exist
-exchangename="notify_direct"
+exchangename="restock_direct"
 channel.exchange_declare(exchange=exchangename, exchange_type='direct', durable=True)
 
 def restock_drug():
@@ -23,13 +23,16 @@ def restock_drug():
     queue_name = "notification"
     channel.queue_declare(queue=queue_name, durable=True)
     channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='notification.restock')
-
+    channel.basic_qos(prefetch_count=1)
     # set up a consumer and start to wait for coming messages
     channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True) # 'auto_ack=True' acknowledges the reception of a message to the broker automatically, so that the broker can assume the message is received and processed and remove it from the queue
     channel.start_consuming() # an implicit loop waiting to receive messages; it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
 def callback(channel, method, properties, body): # required signature for the callback; no return
     print("Received an booking by " + __file__)
+    print("This is body:========")
+    print(json.loads(body))
+    print("this is end of body ========")
     result = send_email(json.loads(body))
     # print processing result; not really needed
     json.dump(result, sys.stdout, default=str) # convert the JSON object to a string and print out on screen
@@ -40,11 +43,12 @@ def callback(channel, method, properties, body): # required signature for the ca
 def send_email(message):
     supplierEmail = message['supplierEmail']
     supplierName = message['supplierName']
-    drugName = ['drugName']
-    reorderQuantity = message['reorderQuantity']
+    drugName = message['drugName']
+    reorderQuantity = str(message['reorderQuantity'])
     clinicEmail = message['clinicEmail']
     clinicName = message['clinicName']
     clinicAddress = message['clinicAddress']
+    clinicPostalCode = message['clinicPostalCode']
     msg = ''
     data = {
     'Messages': [
@@ -67,7 +71,7 @@ def send_email(message):
         ],
         "Subject": "Reorder Drug Supplies",
         "TextPart": "Reorder Drugs",
-        "HTMLPart": "Dear <b>" + supplierName + "</b>, <br><br> Our branch at <b>"+ clinicName + "</b> has low supplies of <b><u>" + drugName + "</u></b>. We would like to place an order of <b><u>" + reorderQuantity + "</u></b>. Please make the delivery to <b><u>" + clinicAddress + "</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + clinicName,
+        "HTMLPart": "Dear <b>" + supplierName + "</b>, <br><br> Our branch at <b>"+ clinicName + "</b> has low supplies of <b><u>" + drugName + "</u></b>. We would like to place an order of <b><u>" + reorderQuantity + "</u></b>. Please make the delivery to <b><u>" + clinicAddress + ' (S' + clinicPostalCode + ")</u></b>.<br><br> Thank you for doing business with us! <br><br>Warm Regards, <br>" + clinicName,
         "CustomID": "AppGettingStartedTest"
         }
     ]

@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import os, sys
-
+import pika
 import requests
+import json
 from invokes import invoke_http
 
 app = Flask(__name__)
@@ -67,17 +68,11 @@ def processPatientRecordAdd(patientRecord):
         
     print('\n-----Invoking drug microservice-----')
     patient_drug_qty = patientRecord['quantity']
-    #print(patient_drug_qty)
     patient_drugName = patientRecord['drugName']
     patient_clinicId = str(patientRecord['clinicId'])
-    print(patient_clinicId)
-    print(type(patient_clinicId))
     drug = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName , method='GET')
-    #print(drug)
     drug_qty = drug["data"]['quantity']
-    #print(drug_qty)
     new_qty = drug_qty - patient_drug_qty
-    print(new_qty)
     drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"quantity": new_qty})
     print(drug_result)
 
@@ -88,6 +83,14 @@ def processPatientRecordAdd(patientRecord):
             "code": 500,
             "data": {"drug_result": drug_result},
             "message": "Drug record update failure."
+        }
+    if new_qty < 100 and drug_result["data"]["restockStatus"] == "no":
+        message = createNotificationMessage(drug_result["data"])
+        new_drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"restockStatus": "yes"})
+        send_restock(message)
+        return {
+            "code": 201,
+            "message": "Successfully restocked! Email send to supplier!"
         }
         
     # 7. Return created order, shipping record
@@ -271,14 +274,14 @@ def processPatientRecordUpdate(patientRecord):
         }
     }
 
-def processNotification(drug_record):
+def createNotificationMessage(drug_record):
     print('\n-----Invoking clinic microservice-----')
     clinicId = str(drug_record['clinicId'])
-    clinic_record = invoke_http(clinic_URL + clinicId, method='GET')
-    clinic_name = clinic_record['name']
-    clinic_address = clinic_record['address']
-    clinic_postalCode = clinic_record['postalCode']
-    clinic_email = clinic_record['email']
+    clinic_record = invoke_http(clinic_URL + 'id/' + clinicId, method='GET')
+    clinicName = clinic_record['data']['name']
+    clinicAddress = clinic_record['data']['address']
+    clinicPostalCode = clinic_record['data']['postalCode']
+    clinicEmail = clinic_record['data']['email']
 
     # Check the clinic result if error;
     code = clinic_record["code"]
@@ -289,7 +292,40 @@ def processNotification(drug_record):
             "data": {"record_result": clinic_record},
             "message": "Clinic record search failure."
         }
-    
+    supplierName = drug_record['supplierName']
+    supplierEmail = drug_record['supplierEmail']
+    reorderQuantity = drug_record['reorderQuantity']
+    drugName = drug_record['drugName']
+    message = {"supplierName":supplierName,"supplierEmail":supplierEmail,"reorderQuantity":reorderQuantity,"drugName":drugName,"clinicName":clinicName,"clinicAddress":clinicAddress,"clinicPostalCode":clinicPostalCode,"clinicEmail":clinicEmail}
+    return message
+
+# send Restock to Notification through AMQP
+def send_restock(message):
+    """send supplier, clinic, drug information to Notification """
+    hostname = "localhost"
+    port = 5672
+    # connect to the broker and set up a communication channel in the connection
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostname, port=port))
+    channel = connection.channel()
+ 
+    # set up the exchange if the exchange doesn't exist
+    exchangename="restock_direct"
+    channel.exchange_declare(exchange=exchangename, exchange_type='direct', durable=True)
+
+    # prepare the message body content
+    message = json.dumps(message, default=str) # convert a JSON object to a string
+
+    # send message to Notifications
+    # prepare the channel and send a message to Notifications
+    channel.queue_declare(queue='notification', durable=True)
+    # make sure the queue is bound to the exchange
+    channel.queue_bind(exchange=exchangename, queue='notification', routing_key='notification.restock')
+    channel.basic_publish(exchange=exchangename, routing_key="notification.restock", body=message,
+        properties=pika.BasicProperties(delivery_mode = 2, 
+        )
+    )
+    # close the connection to the broker
+    connection.close()
     
 
 
