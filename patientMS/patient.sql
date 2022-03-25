@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
 --
 
 INSERT INTO `patient` (`patientName`,`nric`, `mobileNumber`, `address`, `vaccinationStatus`) VALUES
-('Mary Lim Mei Ling', 'S9812381D', '81327832', '9 BISHAN PLACE, #01-40', 'Vaccinated'),
+('Tricia Tan Xiao Hui', 'S9812381D', '81327832', '9 BISHAN PLACE, #01-40', 'Vaccinated'),
 ('Alfred Tan Jun Jie','S9812382B', '91134712', '3023 Ubi Road 3 06-01', 'Vaccinated'),
 ('Nur Fatimah Binte Muhammad','S9812385G', '92821321', '50 Seletar Hills Drive', 'Unvaccinated'),
 ('Simon Deyes','G1612350T', '81312554', '50 1003 Bukit Merah Central #02-10', 'Vaccinated'),
