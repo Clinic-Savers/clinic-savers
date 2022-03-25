@@ -19,16 +19,23 @@ class Drug(db.Model):
     drugName = db.Column(db.String(128), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     restockStatus = db.Column(db.String(3), nullable=False)
+    supplierName = db.Column(db.String(128), nullable=False)
+    supplierEmail = db.Column(db.String(128), nullable=False)
+    reorderQuantity = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, clinicId, drugId, drugName, quantity, restockStatus):
+
+    def __init__(self, clinicId, drugId, drugName, quantity, restockStatus, supplierName, supplierEmail, reorderQuantity):
         self.clinicId = clinicId
         self.drugId = drugId
         self.drugName = drugName
         self.quantity = quantity
         self.restockStatus = restockStatus
+        self.supplierName = supplierName
+        self.supplierEmail = supplierEmail
+        self.reorderQuantity = reorderQuantity
         
     def json(self):
-        return {"clinicId": self.clinicId, "drugName": self.drugName, "drugId": self.drugId, "quantity": self.quantity, "restockStatus": self.restockStatus}
+        return {"clinicId": self.clinicId, "drugName": self.drugName, "drugId": self.drugId, "quantity": self.quantity, "restockStatus": self.restockStatus, "supplierName": self.supplierName, "supplierEmail": self.supplierEmail, "reorderQuantity": self.reorderQuantity}
 
 
 @app.route("/drug")
@@ -94,6 +101,7 @@ def create_drug(clinicId,drugId):
             {
                 "code": 400,
                 "data": {
+                    "clinicId": clinicId,
                     "drugId": drugId
                 },
                 "message": "Drug already exists."
@@ -135,6 +143,12 @@ def update_drug(clinicId,drugName):
             drug.quantity = data['quantity'] 
         if 'restockStatus' in data:
             drug.restockStatus = data['restockStatus']
+        if 'supplierName' in data:
+            drug.supplierName = data['supplierName']
+        if 'supplierEmail' in data:
+            drug.supplierEmail = data['supplierEmail']
+        if 'reorderQuantity' in data:
+            drug.reorderQuantity = data['reorderQuantity']
         db.session.commit()
         return jsonify(
             {
