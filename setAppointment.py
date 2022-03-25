@@ -13,8 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 clinic_URL = "http://localhost:5002/clinic/"
-distance_URL = "http://192.168.1.108:5001/checkDist"
-appointment_URL = "http://localhost:5003/appointment/"
+distance_URL = "http://localhost:5001/checkDist"
 
 @app.route("/check_dist", methods=['POST'])
 def check_dist():
@@ -55,19 +54,25 @@ def retrieveClinic(patientPostalCode):
     clinic_result = invoke_http(clinic_URL + patientPostalCode_str, method='GET', json=patientPostalCode)
     print('clinic_result:', clinic_result)
 
+    print(type(clinic_result))
+
     code = clinic_result["code"]
     clinics = clinic_result["data"]["clinic"]
-    
+
+    print("clinics: ", clinics)
+
     patient_clinic_postalCode = { 
         "patient": patientPostalCode,
         "clinics": [] }
 
 
     for clinic in clinics:
-        patient_clinic_postalCode["clinics"].append([clinic["id"], clinic["name"] ,clinic["postalCode"]])
+        patient_clinic_postalCode["clinics"].append([clinic["clinicName"],clinic["clinicPostalCode"]])
 
+    
     #convert to JSON format
     patient_clinic_postalCode = json.dumps(patient_clinic_postalCode)
+    print(patient_clinic_postalCode)
     
     if code not in range(200, 300):
         return {
@@ -79,51 +84,29 @@ def retrieveClinic(patientPostalCode):
     else:
         #Invoke distance microservice - send the patientAddress and List of clinics
         distance_result = invoke_http(distance_URL,method="POST",json= patient_clinic_postalCode)
+        print("__________________________ /n")
+        print("distance result", distance_result)
+        print("________________________________________")
         
-        code = distance_result["code"]
-
-        if code not in range(200, 300):
-            return {
-                "code": 500,
-                "data": {"distance_result": distance_result},
-                "message": "Distance search fail"
-            }
-
-        else:
-            data = distance_result["data"]
-            distance_compare = data["rows"][0]["elements"]
-            sort_dist = []
-
-            for i in range(0,len(clinics)):
-                sort_dist.append( {clinics[i]["id"]: [clinics[i]["name"], clinics[i]["postalCode"], distance_compare[i]["distance"]["value"]]} )
-            
-            result = sorted(sort_dist, key=itemgetter(2))
-
-            for clinic in clinics:
-                url = appointment_URL + str(clinic["id"])
-                result = invoke_http(url)
-                queueLength = result["data"]["queueLength"]
-                sort_dist[clinic["id"]]
-
-            code = distance_result["code"]
-
-            if code not in range(200, 300):
-                return {
-                    "code": 500,
-                    "data": {"distance_result": distance_result},
-                    "message": "Distance search fail"
-                }
+        distance_compare = distance_result["rows"][0]["elements"]
+        sort_dist = []
+        print(clinics)
+        for i in range(0,len(clinics)):
+            sort_dist.append([clinics[i]["clinicName"], clinics[i]["clinicPostalCode"], distance_compare[i]["distance"]["value"]])
         
-            return {
-                "code":200,
-                "data": result
-            }
+        result = sorted(sort_dist, key=itemgetter(2))
+        print("__________________n______________",result)
+        
+        return {
+            "code":200,
+            "data": result
+        }
         
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for placing an order...")
-    app.run(host="0.0.0.0", port=5100, debug=True)
+    app.run(host="0.0.0.0", port=5008, debug=True)
     # Notes for the parameters: 
     # - debug=True will reload the program automatically if a change is detected;
     #   -- it in fact starts two instances of the same flask program, and uses one of the instances to monitor the program changes;
