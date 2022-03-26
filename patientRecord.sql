@@ -55,7 +55,14 @@ INSERT INTO `patientRecord` (`nric`,`patientName`,`clinicId`,`drugName`,`quantit
 ('S9812382B', 'Alfred Tan Jun Jie', 4,'Sodium Bicarbonate', 15,'non-refillable', '2022-02-01', '14:30:00'),
 ('G1612350T','Simon Deyes', 3, 'Nitrazepam', 20, 'refillable', '2022-02-19', '18:00:00'),
 ('G1612350T','Simon Deyes', 3, 'Baricitinib',15, 'non-refillable', '2022-02-19', '18:00:00'),
-
+('S9912374E','Devi Agarwal',6, 'Fludrocortisone Acetate', 30, 'refillable','2022-02-07', '13:00:00'),
+('S9912374E','Devi Agarwal',6, 'Vitamin A', 30, 'refillable','2022-02-07', '13:00:00'),
+('S6005053H', 'Randall Ang Wei Jie', 1, 'Zidovudine', 30, 'refillable', '2022-02-27', '16:00:00'),
+('S6005053H', 'Randall Ang Wei Jie', 1, 'Ibuprofen', 30, 'non-refillable', '2022-02-27', '16:00:00'),
+('S6005053H', 'Randall Ang Wei Jie', 1, 'Etravirine', 30, 'refillable', '2022-02-27', '16:00:00'),
+('S6005055','Adam Bin Aid', 2, 'Gliclazide', 30, 'refillable', '2022-02-11', '16:30:00'),
+('G1612348Q', 'Ryan Lim Pei Cai', 1, 'Methoxsalen', 30, 'refillable', '2022-01-15', '08:00:00'),
+('G1612348Q', 'Ryan Lim Pei Cai', 1, 'Hydrocortisone', 2, 'refillable', '2022-01-15', '08:00:00')
 ;
 COMMIT;
 

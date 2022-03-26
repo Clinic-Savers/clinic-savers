@@ -46,7 +46,12 @@ INSERT INTO `patient` (`patientName`,`nric`, `mobileNumber`, `address`, `vaccina
 ('Alfred Tan Jun Jie','S9812382B', '91134712', '3023 Ubi Road 3 06-01', 'Vaccinated'),
 ('Nur Fatimah Binte Muhammad','S9812385G', '92821321', '50 Seletar Hills Drive', 'Unvaccinated'),
 ('Simon Deyes','G1612350T', '81312554', '50 1003 Bukit Merah Central #02-10', 'Vaccinated'),
-('Tan Wei Ming','F1612347K', '92233223', '9010 Tampines St 93 #04-109', 'Vaccinated');
+('Tan Wei Ming','F1612347K', '92233223', '9010 Tampines St 93 #04-109', 'Vaccinated'),
+('Devi Agarwal', 'S9912374E', '92323218', '609 Ang Mo Kio Avenue 4 #02-1153', 'Vaccinated'),
+('Randall Ang Wei Jie', 'S6005053H', '82103101','1003 Bukit Merah Central ,04-11', 'Vaccinated'),
+('Adam Bin Aid','S6005055', '91234573', '132 MARSILING RISE, #01-232', 'Vaccinated'),
+('Ryan Lim Pei Cai', 'G1612348Q', '82374619', '996 BENDEEMER ROAD 03-04', 'Vaccinated')
+;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
