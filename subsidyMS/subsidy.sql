@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `subsidy` (
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`nric`, `cardNumber`, `cardType`, `organisationType`, `expiryDate`) VALUES
+INSERT INTO `subsidy` (`nric`, `cardNumber`, `cardType`, `organisationType`, `expiryDate`) VALUES
 ('S9812381D', '11237623', 'GreenCHAS', NULL, '29/03/2019'),
 ('S9812382B', '78045522', 'Merdeka', NULL, '05/09/2020'),
 ('S9812385G', '01148732', 'BlueCHAS', NULL, '15/12/2023'),

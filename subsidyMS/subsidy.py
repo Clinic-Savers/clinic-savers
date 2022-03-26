@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import date
+from os import environ
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/subsidy'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -13,8 +14,8 @@ CORS(app)
 
 class Subsidy(db.Model):
     __tablename__ = 'subsidy'
-    nric = db.Column(db.String(9), nullable=False, primary_key=True)
-    cardNumber = db.Column(db.String(64), nullable=False)
+    cardNumber = db.Column(db.String(64), nullable=False, primary_key=True)
+    nric = db.Column(db.String(9), nullable=False)
     cardType = db.Column(db.Integer, nullable=False)
     organisationType = db.Column(db.String(128), nullable=True)
     expiryDate = db.Column(db.String(64), nullable=False)
@@ -44,24 +45,18 @@ def verify_subsidy(nric):
         expiryday = patient.expiryDate[0:2]
         
         if (int(expiryyear) + int(expirymonth) + int(expiryday)) <= (int(currentyear) + int(currentmonth) + int(currentday)):
-            return False #Subsidy card has expired, not valid
+            return jsonify (
+                {
+                    "code": 200,
+                    "data" : False #Subsidy card has expired, not valid
+                })
         else:
-            return True #Subsidy card still valid
+            return jsonify (
+                {
+                    "code": 404,
+                    "data": True #Subsidy card still valid
+                })
 
-        """ 
-        return jsonify(
-            {
-                "code": 200,
-                "data": patient.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Patient not found."
-        }
-    ), 404
-"""  
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)

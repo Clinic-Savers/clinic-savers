@@ -4,7 +4,7 @@ from os import environ
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -53,6 +53,7 @@ def get_all():
 @app.route("/patient/<string:nric>")
 def find_by_nric(nric):
     patient = Patient.query.filter_by(nric=nric).first()
+
     if patient:
         return jsonify(
             {
