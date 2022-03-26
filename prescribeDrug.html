@@ -64,6 +64,18 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
+          <h1>Delete record</h1>
+          <h3>Search for patient record</h3>
+          <form action="/delete_record", method="post">
+            <div class="form-group">
+              <label for="nric">NRIC</label>
+              <input type="text" class="form-control" name="nric">
+            </div>
+            <div class="form-group">
+                <label for="drugName">Drug Name</label>
+                <input type="text" class="form-control" name="drugName">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
     </div>
 
     <!-- Bootstrap Javascript -->
