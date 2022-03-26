@@ -86,11 +86,17 @@ def processPatientRecordAdd(patientRecord):
         }
     if new_qty < 100 and drug_result["data"]["restockStatus"] == "no":
         message = createNotificationMessage(drug_result["data"])
-        new_drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"restockStatus": "yes"})
         send_restock(message)
+        new_drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"restockStatus": "yes"})
         return {
             "code": 201,
-            "message": "Successfully restocked! Email send to supplier!"
+            "message": "Successfully restocked! Email send to supplier! Patient Record Created Successfully!",
+            "data": {
+                "record_result": record_result,
+                "drug_result": drug_result,
+                "new_drug_result": new_drug_result,
+                "message": message
+            }
         }
         
     # 7. Return created order, shipping record
@@ -263,6 +269,20 @@ def processPatientRecordUpdate(patientRecord):
             "code": 500,
             "data": {"drug_result": drug_result},
             "message": "Drug record update failure."
+        }
+    if new_qty < 100 and drug_result["data"]["restockStatus"] == "no":
+        message = createNotificationMessage(drug_result["data"])
+        send_restock(message)
+        new_drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"restockStatus": "yes"})
+        return {
+            "code": 201,
+            "message": "Successfully restocked! Email send to supplier! Patient Record Updated Successfully!",
+            "data": {
+                "record_result": record_result,
+                "drug_result": drug_result,
+                "new_drug_result": new_drug_result,
+                "message": message
+            }
         }
         
     # 7. Return created order, shipping record
