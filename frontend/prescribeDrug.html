@@ -21,77 +21,253 @@
 </head>
 
 <body>
+  <body>
     <div id="app" class="container">
-        <h1>Prescribe Drugs</h1>
-        <form action="/create_record", method="post">
-            <div class="form-group">
-              <label for="nric">NRIC</label>
-              <input type="text" class="form-control" name="nric">
-            </div>
-            <div class="form-group">
-              <label for="patientName">Patient Name</label>
-              <input type="text" class="form-control" name="patientName">
-            </div>
-            <div class="form-group">
-                <label for="drugName">Drug Name</label>
-                <input type="text" class="form-control" name="drugName">
-            </div>
-            <div class="form-group">
-                <label for="quantity">Quantity</label>
-                <input type="number" class="form-control" name="quantity">
-            </div>
-            Refill option
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="refillable" id="refillable" value="refillable" checked>
-                <label class="form-check-label" for="refillable">
-                  Refillable
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="refillable" id="non-refillable" value="non-refillable">
-                <label class="form-check-label" for="non-refillable">
-                  Non-refillable
-                </label>
-              </div>
-            <div class="form-group">
-                <label for="time">Current Time</label>
-                <input type="text" id="time" disabled>
-            </div>
-            <div class="form-group">
-                <label for="date">Current Date</label>
-                <input type="text" id="date" disabled>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
+        <h1>Precribe Drugs</h1>
+        <div class="row" v-show="!prescribed">
+            <div id="main" class="col-8">
+                Search by Drug Name: <input v-model="drugName" placeholder="Drug Name">
+                <button @click="findDrug()" type="button"
+                    class="my-1 btn btn-sm btn-primary">Search</button><br>
 
-          <h1>Delete record</h1>
-          <h3>Search for patient record</h3>
-          <form action="/delete_record", method="post">
-            <div class="form-group">
-              <label for="nric">NRIC</label>
-              <input type="text" class="form-control" name="nric">
+                <table class="table table-striped" v-if="hasDrugs">
+                    <!-- <table class="table table-striped"> -->
+                    <thead>
+                        <tr>
+                            <th>clinicId</th>
+                            <th>drugName</th>
+                            <th>quantity</th>
+                            <th>restockStatus</th>
+                            <th>supplierName</th>
+                            <th>supplierEmail</th>
+                            <th>reorderQuantity</th>
+                            <th>prescribed quantity</th>
+                        </tr>
+                        <tr v-for="drug in drugs">
+                            <td>{{ drug.clinicId }}</td>
+                            <td>{{ drug.drugName }}</td>
+                            <td>{{ drug.quantity }}</td>
+                            <td>{{ drug.restockStatus }}</td>
+                            <td>{{ drug.supplierName }}</td>
+                            <td>{{ drug.supplierEmail }}</td>
+                            <td>{{ drug.reorderQuantity }}</td>
+                            <td>
+                              <form>
+                                <input type="number" id="quantity" name="quantity" step=5 v-model="prescribedQuantity">
+                              </form>
+                            </td>
+                            <td><button @click="prescribeDrug(drug)" type="button"
+                                    class="btn btn-primary">Prescribe</button>
+                            </td>
+
+                        </tr>
+                    </thead>
+                </table>
+                <div class="text-danger" v-if="!hasDrugs">{{ message }}</div>
+            </div> <!-- main & col -->
+        </div> <!-- row -->
+
+        <div id="prescribe_drug" v-show="prescribed">
+            <h3>Prescribe Drugs</h3>
+            <table class="table table-striped" v-if="hasBooks">
+                <!-- <table class="table table-striped"> -->
+                <thead>
+                    <tr>
+                      <th>clinicId</th>
+                      <th>drugName</th>
+                      <th>quantity</th>
+                      <th>restockStatus</th>
+                      <th>supplierName</th>
+                      <th>supplierEmail</th>
+                      <th>reorderQuantity</th>
+                    </tr>
+                    <tr>
+                      <td>{{ drug.clinicId }}</td>
+                      <td>{{ drug.drugName }}</td>
+                      <td>{{ drug.quantity }}</td>
+                      <td>{{ drug.restockStatus }}</td>
+                      <td>{{ drug.supplierName }}</td>
+                      <td>{{ drug.supplierEmail }}</td>
+                      <td>{{ drug.reorderQuantity }}</td>
+                    </tr>
+                </thead>
+            </table>
+            <div class="text-success" v-if="orderSuccessful">
+                The drug has been successfully prescribed! <br>
+                <br>
             </div>
-            <div class="form-group">
-                <label for="drugName">Drug Name</label>
-                <input type="text" class="form-control" name="drugName">
+            <div class="text-danger" v-else>
+                There is a problem with placing this order, please check with the store for more
+                details.<br>
+                <br>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-    </div>
+            <button @click="prescribed = false; prescribeSuccessful = false"
+                class="btn btn-primary">Return to home
+                page</button>
+        </div> <!-- place order -->
+    </div> <!-- app: container -->
+    <script>
+        const drug_URL ="http://localhost:5007/drug/"
+        const prescribeDrug_URL ="http://localhost:5120/create_record"
+
+
+        const app = Vue.createApp({
+            computed: {
+                hasDrugs: function () {
+                    return this.drugs.length > 0;
+                }
+            },
+            data() {
+                return {
+                    drugName: "",
+                    "drugs": [],
+                    message: "There is a problem retrieving books data, please try again later.",
+                    clinicId: "",
+                    drugName: "",
+                    quantity: "",
+                    restockStatus: "",
+                    supplierName: "",
+                    supplierEmail: "",
+                    reorderQuantity: "",
+                    prescribedQuantity: 0,
+                    prescribedDrugs: "",
+                    prescribed: false,
+                    prescribeSuccessful: false,
+                };
+            },
+            methods: {
+                getAllDrugs () {
+                    // on Vue instance created, load the book list
+                    const response =
+                        fetch(drug_URL)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(response);
+                                if (data.code === 404) {
+                                    // no book in db
+                                    this.message = data.message;
+                                } else {
+                                    this.drugs = data.data.drugs;
+                                }
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(this.message + error);
+
+                            });
+
+                },
+                findDrug () {
+                    console.log(this.drugName);
+                    const response =
+                        fetch(`${drug_URL}1/${this.drugName}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(response);
+                                if (data.code === 404) {
+                                    // no book in db
+                                    this.message = data.message;
+                                    this.drugs = [];
+                                } else {
+                                    this.drugs = [data.data];
+                                }
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(this.message + error);
+
+                            });
+
+                },
+                prescribeDrug(drug){
+                  this.prescribedDrugs = drug;
+                  fetch(prescribeDrug_URL,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json"
+                            },
+                            body: JSON.stringify(
+                                {
+                                    "clinicId": clinicId,
+                                    "drugName": drugName,
+                                    "quantity": quantity,
+                                    "restockStatus": restockStatus,
+                                    "supplierName": supplierName,
+                                    "supplierEmail": supplierEmail,
+                                    "reorderQuantity": reorderQuantity
+
+                                })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            result = data.data;
+                            console.log(result);
+                            // 3 cases
+                            switch (data.code) {
+                                case 201:
+                                    // 201
+                                    this.prescribeSuccessful = true;
+                                    orderMessage =
+                                        `Drug prescribed
+                                        Prescribed:
+                                        ${result.record_result.code}:${result.record_result.data.status}
+
+                                        Drug Result:
+                                        ${result.drug_result.code}:${result.drug_result.message}`;
+                                    break;
+
+                                case 400:
+                                    // 400 
+                                    this.prescribeSuccessful = true;
+                                    orderMessage =
+                                        `Drug prescribed
+                                        Prescribed:
+                                        ${result.order_result.code}:${result.order_result.data.status}
+
+                                        Drug Result:
+                                        ${result.drug_result.code}:${result.drug_result.message}
+`;
+                                    break;
+                                case 500:
+                                    // 500 
+                                    prescriptionMessage =
+                                        `Order placed with error:
+                                        Order Result:
+                                        ${result.order_result.code}:${result.order_result.message}`;
+                                    break;
+                                default:
+                                    orderMessage = `Unexpected error: ${data.code}`;
+                                    console.log(`Unknown error code : ${data.code}`);
+                                    break;
+
+                            } // switch
+                            console.log(prescriptionMessage);
+                            this.prescribed = true;
+                        })
+                        .catch(error => {
+                            console.log("Problem in placing an order. " + error);
+                        })
+              
+                }
+            },
+            created () {
+                // on Vue instance created, load the book list
+                this.getAllDrugs();
+            }
+        });
+        const vm = app.mount('#app');
+    </script>
 
     <!-- Bootstrap Javascript -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'
         integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM'
-        crossorigin='anonymous'></script>
-        <script>
-            var today = new Date();
-            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            document.getElementById("time").placeholder = time;
+        crossorigin='anonymous'>
+    </script>
 
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            document.getElementById("date").value = date;
-
-        </script>
 </body>
 
 </html>
