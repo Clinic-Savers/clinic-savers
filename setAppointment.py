@@ -36,7 +36,7 @@ def check_appointment():
 
             return jsonify({
                 "code": 500,
-                "message": "setAppointmeent.py internal error: " + ex_str
+                "message": "setAppointment.py internal error: " + ex_str
             }), 500
 
     # if reached here, not a JSON request.
@@ -72,6 +72,7 @@ def set_appointment(appointment_details):
     appt_result = invoke_http(appt_URL, method = "POST", json = appointment)
     
     code = appt_result["code"]
+    print("appt result", appt_result)
     if code not in range(200, 300):
         return {
             "code": 500,
@@ -79,8 +80,8 @@ def set_appointment(appointment_details):
         }
 
     else:
+        nric = appointment_details["nric"]
         check_subsidy = invoke_http(subsidy_URL + str(nric))
-        print(type(check_subsidy))
 
         if check_subsidy["data"]:
             appt_result["data"]["subsidy_status"] = True

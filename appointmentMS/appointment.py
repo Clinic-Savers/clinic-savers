@@ -131,15 +131,24 @@ def set_appointment():
     current_time = time(now.hour, now.minute, now.second)
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
 
-    #format datetime
-    format = "%H:%M:%S"
-    last_timing = datetime.strptime(last_appt.appointmentTime,format)
+    if last_appt == None:
+        if current_time.minute > 30:
+            newTiming = time(current_time.hour + 1,0,0)
+        else: 
+            newTiming = time(current_time.hour,30,0)
 
-    # might be after the current time so its an issue
-    new_timing= last_timing + timedelta(minutes=30)
-    new_timing = new_timing.strftime(format)
+        appointmentDate = date.today()
+    else:
+        #format datetime
+        format = "%H:%M:%S"
+        last_timing = datetime.strptime(last_appt.appointmentTime,format)
 
-    appointment = Appointment(nric, symptoms, potentialCovid, clinicId, last_appt.appointmentDate, new_timing)
+        newTiming= last_timing + timedelta(minutes=30)
+        newTiming = newTiming.strftime(format)
+
+        appointmentDate = last_appt.appointmentDate
+
+    appointment = Appointment(nric, symptoms, potentialCovid, clinicId, appointmentDate, newTiming)
     
     try:
         db.session.add(appointment)
@@ -148,7 +157,7 @@ def set_appointment():
         return jsonify(
             {
                 "code": 500,
-                "message": "An error occurred creating the appointment."
+                "message": "Appointment made"
             }
         ), 500
 
