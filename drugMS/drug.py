@@ -15,6 +15,7 @@ CORS(app)
 class Drug(db.Model):
     __tablename__ = 'drug'
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
+    #remove drugId
     drugId = db.Column(db.Integer, nullable=False, primary_key=True)
     drugName = db.Column(db.String(128), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)

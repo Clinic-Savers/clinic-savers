@@ -13,6 +13,10 @@ CORS(app)
 patientRecord_URL = "http://localhost:5006/patientRecord/"
 drug_URL ="http://localhost:5007/drug/"
 clinic_URL = "http://localhost:5002/clinic/"
+
+# searching of patient records / see history to delete patient record
+# search by nric & clinicID?
+
 @app.route("/create_record", methods=['POST'])
 def create_record():
     # Simple check of input format and data of the request are JSON
