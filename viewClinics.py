@@ -13,7 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 clinic_URL = "http://localhost:5002/clinic/postal/"
-distance_URL = "http://192.168.1.108:5001/checkDist"
+distance_URL = "http://localhost:5001/checkDist"
 appointment_URL = "http://localhost:5003/appointment/"
 
 @app.route("/check_dist", methods=['POST'])
@@ -124,7 +124,6 @@ def retrieveClinic(patientPostalCode):
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for placing an order...")
     app.run(host="0.0.0.0", port=5100, debug=True)
     # Notes for the parameters: 
     # - debug=True will reload the program automatically if a change is detected;
