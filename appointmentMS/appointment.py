@@ -18,7 +18,6 @@ CORS(app)
 class Appointment(db.Model):
     __tablename__ = 'appointment'
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
-    patientName = db.Column(db.String(64), nullable=False)
     symptoms = db.Column(db.String(128), nullable=False)
     potentialCovid = db.Column(db.String(3), nullable=False)
     clinicId = db.Column(db.Numeric(3), nullable=False)
@@ -26,9 +25,8 @@ class Appointment(db.Model):
     appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
 
 
-    def __init__(self, nric, patientName, symptoms, potentialCovid, clinicId, appointmentDate, appointmentTime):
+    def __init__(self, nric, symptoms, potentialCovid, clinicId, appointmentDate, appointmentTime):
         self.nric = nric
-        self.patientName = patientName
         self.symptoms = symptoms
         self.potentialCovid = potentialCovid
         self.clinicId = clinicId
@@ -37,7 +35,7 @@ class Appointment(db.Model):
         
         
     def json(self):
-        return {"patientName": self.patientName, "nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+        return {"nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
 # get queue length of specified clinic id 
 @app.route("/appointment/<string:clinicId>")
@@ -57,7 +55,7 @@ def get_queue_length(clinicId):
     return jsonify(
         { 
             "code": 404,
-            "message": "Queue length cannot be retrieved."
+            "message": "No queue."
         }
     ), 404    
 
@@ -118,26 +116,30 @@ def find_by_appointmentDate(nric, appointmentDate):
 
 @app.route("/set_appointment", methods=["POST"])
 def set_appointment():
+    #convert JSON to python
     data = request.get_json()
     data = json.loads(data)
-    
+
+    #retrieve the details
     nric = data["nric"]
-    name = data["name"]
     symptoms = data["symptoms"]
-    potentialCovid = data["potentialCovid"]
+    potentialCovid = data["covid"]
     clinicId = int(data["clinicId"])
 
+    #Find the available appointment timing
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
-    
+
+    #format datetime
     format = "%H:%M:%S"
     last_timing = datetime.strptime(last_appt.appointmentTime,format)
+
     # might be after the current time so its an issue
     new_timing= last_timing + timedelta(minutes=30)
     new_timing = new_timing.strftime(format)
 
-    appointment = Appointment(nric, name, symptoms, potentialCovid, clinicId, last_appt.appointmentDate, new_timing)
+    appointment = Appointment(nric, symptoms, potentialCovid, clinicId, last_appt.appointmentDate, new_timing)
     
     try:
         db.session.add(appointment)

@@ -16,59 +16,24 @@ clinic_URL = "http://localhost:5002/clinic/postal/"
 distance_URL = "http://localhost:5001/checkDist"
 appointment_URL = "http://localhost:5003/appointment/"
 
-@app.route("/check_dist", methods=['POST'])
-def check_dist():
-    # Simple check of input format and data of the request are JSON
-    if request.is_json:
-        try:
-            patientPostalCode = request.get_json()
-            print("\nReceived postal code in JSON:", patientPostalCode)
+@app.route("/viewClinics/<string:patientPostalCode>")
+def viewClinics(patientPostalCode):
+    # patientPostalCode is in string type
+    print("\nReceived postal code in JSON:", patientPostalCode)
 
-            result = retrieveClinic(patientPostalCode)
-            # print('\n------------------------')
-            # print('\nresult: ', patientPostalCode)
-            return result
-
-        except Exception as e:
-            # Unexpected error in code
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
-            print(ex_str)
-
-            return jsonify({
-                "code": 500,
-                "message": "check_dist.py internal error: " + ex_str
-            }), 500
-
-    # if reached here, not a JSON request.
-    return jsonify({
-        "code": 400,
-        "message": "Invalid JSON input: " + str(request.get_data())
-    }), 400
-
-
-def retrieveClinic(patientPostalCode):
-    # 2. Send the patientAddress to clinic microservice
+    listOfClinics = retrieveClinics(patientPostalCode)
     
-    patientPostalCode_str = patientPostalCode["patientPostalCode"]
-    clinic_result = invoke_http(clinic_URL + patientPostalCode_str, method='GET', json=patientPostalCode)
+    return listOfClinics
+
+
+def retrieveClinics(patientPostalCode):
+    # 2. Send the patientPostalCode to clinicMS to get all the clinics in the region
+    clinic_result = invoke_http(clinic_URL + patientPostalCode)
     print('clinic_result:', clinic_result)
 
     code = clinic_result["code"]
-    clinics = clinic_result["data"]["clinic"]
     
-    patient_clinic_postalCode = { 
-        "patient": patientPostalCode,
-        "clinics": [] }
-
-
-    for clinic in clinics:
-        patient_clinic_postalCode["clinics"].append([clinic["id"], clinic["name"] ,clinic["postalCode"]])
-
-    #convert to JSON format
-    patient_clinic_postalCode = json.dumps(patient_clinic_postalCode)
-    
+    #check if it is able to retrieve clinics
     if code not in range(200, 300):
         return {
             "code": 500,
@@ -76,11 +41,25 @@ def retrieveClinic(patientPostalCode):
             "message": "Clinic search failure"
         }
 
+    # clinics retrieved
     else:
-        #Invoke distance microservice - send the patientAddress and List of clinics
-        distance_result = invoke_http(distance_URL,method="POST",json= patient_clinic_postalCode)
+        clinics = clinic_result["data"]["clinic"]
+    
+        #create Python object to send to distanceMS
+        check_distance = { 
+            "patient": patientPostalCode,
+            "clinics": [] 
+            }
+        for clinic in clinics:
+            check_distance["clinics"].append([clinic["id"], clinic["name"] ,clinic["postalCode"]])
+
+        #convert Python to JSON format
+        check_distance = json.dumps(check_distance)
         
+        #Invoke distance microservice
+        distance_result = invoke_http(distance_URL, method="POST", json = check_distance)
         print("\ndistance result:", distance_result)
+
         code = distance_result["code"]
 
         if code not in range(200, 300):
@@ -93,32 +72,34 @@ def retrieveClinic(patientPostalCode):
         else:
             data = distance_result["data"]
             distance_compare = data["rows"][0]["elements"]
-            sort_dist = {}
 
+            #rearrange the data retrieved
+            sort_dist = {}
             for i in range(0,len(clinics)):
                 sort_dist[clinics[i]["id"]] = [clinics[i]["name"], clinics[i]["postalCode"], distance_compare[i]["distance"]["value"]] 
-            
-            print("\nsort dist", sort_dist)
-            # sort_dist = sorted(sort_dist, key=itemgetter(2))
+            print("\nClinic's distance", sort_dist)
 
+            #Invoke appointmentMS to get the queue length for each clinic
             for clinic in clinics:
                 url = appointment_URL + str(clinic["id"])
                 appointment_result = invoke_http(url)
-                print("\nqueue",appointment_result)
 
                 code = appointment_result["code"]
 
-                if code in range(200, 300):
+                #No queue 
+                if code not in range(200, 300):
+                    sort_dist[clinic["id"]].append(0)
+                #Have queue
+                else:
                     queueLength = appointment_result["data"]["queueLength"]
                     sort_dist[clinic["id"]].append(queueLength)
-                else:
-                    sort_dist[clinic["id"]].append(0)
 
-            sort_dist = sorted(sort_dist.items(), key= lambda x: x[1][2] )
-        
+            #sort by distance
+            sorted_dist = sorted(sort_dist.items(), key= lambda x: x[1][2] )
+            
             return {
                 "code":200,
-                "data": sort_dist
+                "data": sorted_dist
             }
         
 

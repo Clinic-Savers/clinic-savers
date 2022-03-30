@@ -12,19 +12,19 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-appt_URL = "http://192.168.1.108:5003/set_appointment"
-patient_URL = "http://192.168.1.108:5000/patient/"
-subsidy_URL = "http://192.168.1.108:5004/subsidy/"
+appt_URL = "http://localhost:5003/set_appointment"
+patient_URL = "http://localhost:5000/patient/"
+subsidy_URL = "http://localhost:5004/subsidy/"
 
-@app.route("/set_appt", methods=['POST'])
-def receive_clinic():
+@app.route("/set_appointment", methods=['POST'])
+def check_appointment():
     # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
-            selected_clinic = request.get_json()
-            print("\nReceived postal code in JSON:", selected_clinic)
+            appointment_details = request.get_json()
+            print("\nAppointment info in JSON:", appointment_details)
 
-            result = set_appt(selected_clinic)
+            result = set_appointment(appointment_details)
             return result
 
         except Exception as e:
@@ -36,7 +36,7 @@ def receive_clinic():
 
             return jsonify({
                 "code": 500,
-                "message": "check_dist.py internal error: " + ex_str
+                "message": "setAppointmeent.py internal error: " + ex_str
             }), 500
 
     # if reached here, not a JSON request.
@@ -46,53 +46,53 @@ def receive_clinic():
     }), 400
 
 
-def set_appt(selectedClinic):
-    print("Setting appointment...")
-    nric = selectedClinic["nric"]
-    symptoms = selectedClinic["symptoms"]
-    covid = selectedClinic["covid"]
+def set_appointment(appointment_details):
+    # nric = appointment_details["nric"]
+    # clinicId = appointment_details["clinicId"]
+    # symptoms = appointment_details["symptoms"]
+    # covid = appointment_details["covid"]
 
-    patient_info = invoke_http(patient_URL + str(nric))
-    code = patient_info["code"]
+    # patient_info = invoke_http(patient_URL + str(nric))
+    # code = patient_info["code"]
 
+    # if code not in range(200, 300):
+    #     return {
+    #         patient_info
+    #     }
+
+    # else:
+    #rearrange appointment
+    # create_appt = {"nric": appointment_details["data"]["nric"], 
+    #                 "symptoms": symptoms,
+    #                 "potentialCovid": covid,
+    #                 "clinicId": clinicId
+    #                 }
+
+    appointment = json.dumps(appointment_details)
+    appt_result = invoke_http(appt_URL, method = "POST", json = appointment)
+    
+    code = appt_result["code"]
     if code not in range(200, 300):
         return {
-            patient_info
+            "code": 500,
+            "message": "Create appointment fail"
         }
 
     else:
-        create_appt = {"nric": patient_info["data"]["nric"], 
-                        "name": patient_info["data"]["patientName"],
-                        "symptoms": symptoms,
-                        "potentialCovid": covid,
-                        "clinicId": selectedClinic["clinic"]
-                        }
+        check_subsidy = invoke_http(subsidy_URL + str(nric))
+        print(type(check_subsidy))
 
-        create_appt = json.dumps(create_appt)
-        appt_result = invoke_http(appt_URL, method = "POST", json=create_appt)
-        code = appt_result["code"]
-        
-        if code not in range(200, 300):
-            return {
-                "code": 500,
-                "message": "Create appt failure"
-            }
-
+        if check_subsidy["data"]:
+            appt_result["data"]["subsidy_status"] = True
+            
         else:
-            check_subsidy = invoke_http(subsidy_URL + str(nric))
-            print(type(check_subsidy))
+            appt_result["data"]["subsidy_status"] = False
 
-            if check_subsidy["data"]:
-                appt_result["data"]["subsidy_status"] = True
-                
-            else:
-                appt_result["data"]["subsidy_status"] = False
-
-            data = appt_result["data"]
-            return {
-                "code":200,
-                "data": data
-            }      
+        data = appt_result["data"]
+        return {
+            "code":200,
+            "data": data
+        }      
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":

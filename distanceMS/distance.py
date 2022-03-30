@@ -16,26 +16,24 @@ api_key = "AIzaSyC1hytlrSzRCAMd4LK-A0hzQ85IoVZIJpg"
 
 @app.route("/checkDist", methods = ["POST"])
 def get_distance():
+    #converts JSON object into python
     data = request.get_json()
     data = json.loads(data)
-    print(data)
     
-    patient = data["patient"]["patientPostalCode"]
+    patient = data["patient"]
     clinics = data["clinics"]
 
-    print(patient)
-
-    clinic_path = "S" + patient 
+    clinic_path = ""
     if len(clinics) > 1:
         for clinic in clinics:
-            clinic_path += "S" + clinic[1] + "%7C"
+            clinic_path += "S" + clinic[2] + "%7C"
         clinic_path = clinic_path[:-3]
+    else:
+        clinic_path = "S" + clinics[0][2]
 
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=S" + patient + "&region=sg&key=" + api_key
 
     result = invokes.invoke_http(url,"GET")
-
-    print(result)
 
     if result["rows"][0]["elements"][0]["status"] != 'NOT_FOUND':
         return jsonify(
