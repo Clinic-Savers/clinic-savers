@@ -31,7 +31,6 @@ USE `patientRecord`;
 DROP TABLE IF EXISTS `patientRecord`;
 CREATE TABLE IF NOT EXISTS `patientRecord` (
   `nric` varchar(9) NOT NULL,
-  `patientName` char(64) NOT NULL,
   `clinicId` int(3) NOT NULL, 
   `drugName` varchar(128) NOT NULL,
   `quantity` int(11) NOT NULL,
@@ -45,24 +44,24 @@ CREATE TABLE IF NOT EXISTS `patientRecord` (
 -- Dumping data for table `patientRecord`
 --
 
-INSERT INTO `patientRecord` (`nric`,`patientName`,`clinicId`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
-('S9812381D','Tricia Tan Xiao Hui',1,'Paracetamol', 20, 'non-refillable', '2022-01-27','13:30:00'),
-('S9812381D','Tricia Tan Xiao Hui',1,'Vitamin A', 25, 'refillable', '2022-01-27','13:30:00'),
-('F1612347K','Tan Wei Ming', 2,'Baricitinib', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
-('F1612347K','Tan Wei Ming', 2,'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
-('S9812385G', 'Nur Fatimah Binte Muhammad',5, 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 4,'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 4,'Sodium Bicarbonate', 15,'non-refillable', '2022-02-01', '14:30:00'),
-('G1612350T','Simon Deyes', 3, 'Nitrazepam', 20, 'refillable', '2022-02-19', '18:00:00'),
-('G1612350T','Simon Deyes', 3, 'Baricitinib',15, 'non-refillable', '2022-02-19', '18:00:00'),
-('S9912374E','Devi Agarwal',6, 'Fludrocortisone Acetate', 30, 'refillable','2022-02-07', '13:00:00'),
-('S9912374E','Devi Agarwal',6, 'Vitamin A', 30, 'refillable','2022-02-07', '13:00:00'),
-('S6005053H', 'Randall Ang Wei Jie', 1, 'Zidovudine', 30, 'refillable', '2022-02-27', '16:00:00'),
-('S6005053H', 'Randall Ang Wei Jie', 1, 'Ibuprofen', 30, 'non-refillable', '2022-02-27', '16:00:00'),
-('S6005053H', 'Randall Ang Wei Jie', 1, 'Etravirine', 30, 'refillable', '2022-02-27', '16:00:00'),
-('S6005055','Adam Bin Aid', 2, 'Gliclazide', 30, 'refillable', '2022-02-11', '16:30:00'),
-('G1612348Q', 'Ryan Lim Pei Cai', 1, 'Methoxsalen', 30, 'refillable', '2022-01-15', '08:00:00'),
-('G1612348Q', 'Ryan Lim Pei Cai', 1, 'Hydrocortisone', 2, 'refillable', '2022-01-15', '08:00:00')
+INSERT INTO `patientRecord` (`nric`,`clinicId`,`drugName`,`quantity`,`refillStatus`,`date`,`time`) VALUES
+('S9812381D',1,'Paracetamol', 20, 'non-refillable', '2022-01-27','13:30:00'),
+('S9812381D',1,'Vitamin A', 25, 'refillable', '2022-01-27','13:30:00'),
+('F1612347K',2,'Baricitinib', 20, 'non-refillable',  '2022-03-19', '08:00:00'),
+('F1612347K',2,'Hydrocortisone', 1, 'refillable',  '2022-03-19', '08:00:00'),
+('S9812385G',5, 'Hydrocortisone', 1, 'refillable', '2022-03-12', '09:00:00'),
+('S9812382B',4,'Calcium Acetate', 20,'non-refillable', '2022-02-01', '14:30:00'),
+('S9812382B',4,'Sodium Bicarbonate', 15,'non-refillable', '2022-02-01', '14:30:00'),
+('G1612350T',3, 'Nitrazepam', 20, 'refillable', '2022-02-19', '18:00:00'),
+('G1612350T',3, 'Baricitinib',15, 'non-refillable', '2022-02-19', '18:00:00'),
+('S9912374E',6, 'Fludrocortisone Acetate', 30, 'refillable','2022-02-07', '13:00:00'),
+('S9912374E',6, 'Vitamin A', 30, 'refillable','2022-02-07', '13:00:00'),
+('S6005053H',1, 'Zidovudine', 30, 'refillable', '2022-02-27', '16:00:00'),
+('S6005053H',1, 'Ibuprofen', 30, 'non-refillable', '2022-02-27', '16:00:00'),
+('S6005053H',1, 'Etravirine', 30, 'refillable', '2022-02-27', '16:00:00'),
+('S6005055',2, 'Gliclazide', 30, 'refillable', '2022-02-11', '16:30:00'),
+('G1612348Q',1, 'Methoxsalen', 30, 'refillable', '2022-01-15', '08:00:00'),
+('G1612348Q',1, 'Hydrocortisone', 2, 'refillable', '2022-01-15', '08:00:00')
 ;
 COMMIT;
 

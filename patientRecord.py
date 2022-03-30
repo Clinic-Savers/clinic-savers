@@ -17,7 +17,6 @@ class PatientRecord(db.Model):
     __tablename__ = 'patientRecord'
 
     nric = db.Column(db.String(9), primary_key=True, nullable=False)
-    patientName = db.Column(db.String(64), nullable=False)
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
@@ -25,9 +24,8 @@ class PatientRecord(db.Model):
     date = db.Column(db.String(64), primary_key=True, nullable=False)
     time = db.Column(db.String(64), primary_key=True, nullable=False)
 
-    def __init__(self, nric, patientName, clinicId, drugName, quantity, refillStatus, date, time):
+    def __init__(self, nric, clinicId, drugName, quantity, refillStatus, date, time):
         self.nric = nric
-        self.patientName = patientName
         self.clinicId = clinicId
         self.drugName = drugName
         self.quantity = quantity
@@ -36,7 +34,7 @@ class PatientRecord(db.Model):
         self.time = time
 
     def json(self):
-        return {"nric": self.nric, "patientName": self.patientName,  "clinicId": self.clinicId, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
+        return {"nric": self.nric, "clinicId": self.clinicId, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
 
 
 @app.route("/patientRecord")
