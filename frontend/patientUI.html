@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="search">
+        <input type="text" name="postal_code" id="postalCode"/>
+        <input type="submit"/>
+    </form>
+
+    <h2 id="result">empty</h2>
+
+    <form id="choose_clinic">
+        <input type="radio" value="5" name="clinic"/>5
+        <input type="radio" value="6" name="clinic"/>6
+        <input type="text" name="symptoms" id="symptoms">
+        <input type="text" name="covid" id="covid">
+        <input type="submit"/>
+    </form>
+
+    <h2 id="lame">empty</h2>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+
+    <script>
+        nric = sessionStorage.setItem('nric',"S9812381D");
+        nric = sessionStorage.getItem('nric');
+
+        $('#search').submit( async (event) => {
+            event.preventDefault()
+            var postal_code = $('#postalCode').val();
+            console.log(postal_code)
+            var viewClinicURL = "http://192.168.1.108:5100/check_dist"
+
+            try{
+
+                const response =
+                await fetch(
+                    viewClinicURL, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({patientPostalCode: postal_code})
+                });
+
+                const data = await response.json();
+
+                result = JSON.stringify(data)
+                
+                document.getElementById("result").innerText = result
+
+                return false;
+            } 
+            
+            catch (error) {
+            // Errors when calling the service; such as network error, 
+            // service offline, etc
+                console.log(error)
+        } // error
+    });
+        
+    $('#choose_clinic').submit( async (event) => {
+            event.preventDefault()
+            var selected_clinic = document.getElementsByName("clinic")[0].value
+            var selected_clinic_url = "http://192.168.1.108:5008/set_appt"
+            var symptoms = document.getElementById("symptoms").value
+            var covid = document.getElementById("covid").value
+
+            try{
+
+                const response =
+                await fetch(
+                    selected_clinic_url, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({nric: nric, clinic: selected_clinic, symptoms: symptoms, covid:covid})
+                });
+
+                const data = await response.json();
+
+                result = JSON.stringify(data)
+
+                document.getElementById("lame").innerText = result
+
+                return false;
+            } 
+            
+            catch (error) {
+                console.log(error)
+            }
+            // Errors when calling the service; such as network error, 
+            // service offline, etc
+            // error
+    });
+    </script>
+</body>
+</html>
