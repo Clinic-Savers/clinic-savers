@@ -31,7 +31,6 @@ USE `appointment`;
 DROP TABLE IF EXISTS `appointment`;
 CREATE TABLE IF NOT EXISTS `appointment` (
   `nric` varchar(9) NOT NULL,
-  `patientName` char(64) NOT NULL,
   `symptoms` varchar(128) NOT NULL,
   `clinicId` int(3) NOT NULL, 
   `appointmentDate` varchar(64) NOT NULL,
@@ -43,11 +42,11 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 -- Dumping data for table `appointment`
 --
 
-INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `clinicID`, `appointmentDate`, `appointmentTime`) VALUES
-('S9812381D', 'Tricia Tan Xiao Hui', 'runny nose, sore throat and fever', 1, '2022-01-27','13:30:00'),
-('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 5, '2022-03-25', '23:30:00'),
-('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 5, '2022-03-25', '23:00:00'),
-('F1612347K', 'Tan Wei Ming', 'insomnia and headache', '2022-03-19', 6, '08:00:00'); 
+INSERT INTO `appointment` (`nric`,`symptoms`, `clinicID`, `appointmentDate`, `appointmentTime`) VALUES
+('S9812381D', 'runny nose, sore throat and fever', 1, '2022-01-27','13:30:00'),
+('S9812382B', 'stomach pain, nausea and heartburn', 5, '2022-03-25', '23:30:00'),
+('S9812385G', 'rashes on my body', 5, '2022-03-25', '23:00:00'),
+('F1612347K', 'insomnia and headache', '2022-03-19', 6, '08:00:00'); 
 
 COMMIT;
 
