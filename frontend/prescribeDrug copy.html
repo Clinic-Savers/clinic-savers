@@ -152,7 +152,7 @@
                                     </td>
                                     <td>
                                        
-                                        <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                        <input type="number" id="${result['drugName']},quantity" name="quantity" step=5>
                                         
                                     </td>
                                         <td><button type="button"
@@ -163,7 +163,7 @@
                                 
                                 document.getElementById('all').innerHTML = message_str
 
-                                return data.data.drug
+                                return data.data
                             })
                             .catch(error => {
                                 // Errors when calling the service; such as network error, 
