@@ -87,7 +87,7 @@
                                 console.log(result)
                                 for (const record of result) {
                                     message_str += `
-                                    <tr id ="${record['drugName']},${record['clinicId']}">
+                                    <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
                                         <td>
                                             ${record['clinicId']}
                                         </td>
@@ -108,12 +108,12 @@
                                         </td>
                                         <td>
                                             <button type="button"
-                                            class="btn btn-danger" id="${record['nric']}" onclick="delete_record(this)">Delete
+                                            class="btn btn-danger" id="delete,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="delete_record(this)">Delete
                                             </button>
                                         </td>
                                         <td>
                                             <button type="button"
-                                            class="btn btn-primary" id="${record['nric']}" onclick="update_record(this)">Edit
+                                            class="btn btn-primary" id="update,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="update_record(this)">Edit
                                             </button>
                                         </td>
                                     </tr>`
@@ -198,48 +198,13 @@
                             });
         }
 
-        async function prescribe_drug(item){
-            var nric = document.getElementById("nric").value
-            var time = currTime
-            var date = currDate
-            var clinicId = 1
-            var drugName = item.id
-            var prescribeQuantity = parseInt(document.getElementById(drugName+",quantity").value)
-            console.log([nric, time, date, clinicId, drugName, prescribeQuantity])
-            fetch(prescribeDrug_URL, {
-                method: 'POST', // or 'PUT'
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}),
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Success:', data);
-                if (data.code === 201) {
-                    document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
-                    document.getElementById(`${drugName},quantity`).value = ""
-                    alert(`${drugName} successfully prescribed!`)
-                }
-                
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
-            //await fetch(prescribeDrug_URL,{
-                //method: 'POST',
-                //body: {"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}
-            //})
-                
-        }
-
         async function delete_record(item){
-            var nric = find_out_nric
-            var time = find_out_time
-            var date = find_out_date
-            var clinicId = 1
-            var drugName = item.id
-            var prescribeQuantity = find_out_qty
+            var nric = item.id.split(",")[2]
+            var time = item.id.split(",")[6]
+            var date = item.id.split(",")[5]
+            var clinicId = parseInt(item.id.split(",")[1])
+            var drugName = item.id.split(",")[3]
+            var prescribeQuantity = parseInt(item.id.split(",")[4])
             console.log([nric, time, date, clinicId, drugName, prescribeQuantity])
             fetch(deleteRecord_URL, {
                 method: 'POST', // or 'PUT'
@@ -252,20 +217,99 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 201) {
-                    document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
-                    document.getElementById(`${drugName},quantity`).value = ""
-                    alert(`${drugName} successfully deleted record!`)
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).remove()
+                    alert(`${clinicId},${nric},${drugName},${date},${time} successfully deleted record!`)
                 }
                 
               })
               .catch((error) => {
                 console.error('Error:', error);
-              });
-            //await fetch(prescribeDrug_URL,{
-                //method: 'POST',
-                //body: {"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}
-            //})
+              });   
+        }
+        function update_record(item){
+            var nric = item.id.split(",")[2]
+            var time = item.id.split(",")[6]
+            var date = item.id.split(",")[5]
+            var clinicId = parseInt(item.id.split(",")[1])
+            var drugName = item.id.split(",")[3]
+            var prescribeQuantity = parseInt(item.id.split(",")[4])
+            update_btn = `
+                <button type="button"
+                class="btn btn-warning" id="save,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="save_record(this)">Update
+                </button>
+            `
+            item.parentElement.parentElement.children[6].innerHTML = update_btn
+            qty_input = `
+                <input type = "text" id="qty,${clinicId},${nric},${drugName},${date},${time}" value="${prescribeQuantity}">
+            `
+            item.parentElement.parentElement.children[3].innerHTML = qty_input
+            cancel_btn = `
+                <button type="button"
+                class="btn btn-light" id="cancel,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="cancel_record(this)">Cancel
+                </button>
+            `
+            item.parentElement.parentElement.children[7].innerHTML = cancel_btn
+        }
+        function cancel_record(item){
+            var nric = item.id.split(",")[2]
+            var time = item.id.split(",")[6]
+            var date = item.id.split(",")[5]
+            var clinicId = parseInt(item.id.split(",")[1])
+            var drugName = item.id.split(",")[3]
+            var prescribeQuantity = parseInt(item.id.split(",")[4])
+            delete_btn = `
+                <button type="button"
+                class="btn btn-danger" id="delete,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="delete_record(this)">Delete
+                </button>
+            `
+            item.parentElement.parentElement.children[6].innerHTML = delete_btn
+            item.parentElement.parentElement.children[3].innerHTML = prescribeQuantity
+            edit_btn = `
+                <button type="button"
+                class="btn btn-primary" id="update,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="update_record(this)">Edit
+                </button>
+            `
+            item.parentElement.parentElement.children[7].innerHTML = edit_btn
+        }
+        async function save_record(item){
+            var nric = item.id.split(",")[2]
+            var time = item.id.split(",")[6]
+            var date = item.id.split(",")[5]
+            var clinicId = parseInt(item.id.split(",")[1])
+            var drugName = item.id.split(",")[3]
+            var prescribeQuantity = parseInt(document.getElementById(`qty,${clinicId},${nric},${drugName},${date},${time}`).value)
+            console.log([nric, time, date, clinicId, drugName, prescribeQuantity])
+            fetch(updateRecord_URL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}),
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Success:', data);
+                if (data.code === 201) {
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[3].innerText = prescribeQuantity
+                    delete_btn = `
+                        <button type="button"
+                        class="btn btn-danger" id="delete,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="delete_record(this)">Delete
+                        </button>
+                    `
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[6].innerHTML = delete_btn
+                    edit_btn = `
+                        <button type="button"
+                        class="btn btn-primary" id="update,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="update_record(this)">Edit
+                        </button>
+                    `
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[7].innerHTML = edit_btn
+                    alert(`${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time} successfully updated record!`)
+                }
                 
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });   
         }
     </script>
 
