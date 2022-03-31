@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 --
 
 INSERT INTO `appointment` (`nric`,`patientName`,`symptoms`, `clinicID`, `appointmentDate`, `appointmentTime`) VALUES
-()
 ('S9812381D', 'Tricia Tan Xiao Hui', 'runny nose, sore throat and fever', 1, '2022-01-27','13:30:00'),
 ('S9812382B', 'Alfred Tan Jun Jie', 'stomach pain, nausea and heartburn', 5, '2022-03-25', '23:30:00'),
 ('S9812385G', 'Nur Fatimah Binte Muhammad', 'rashes on my body', 5, '2022-03-25', '23:00:00'),
