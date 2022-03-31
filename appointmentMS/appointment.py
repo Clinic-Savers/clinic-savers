@@ -12,8 +12,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-CORS(app)  
+ 
+CORS(app) 
 
 class Appointment(db.Model):
     __tablename__ = 'appointment'
