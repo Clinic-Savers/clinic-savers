@@ -12,13 +12,14 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-clinic_URL = "http://localhost:5002/clinic"
-distance_URL = "http://localhost:5001/checkDist"
-appointment_URL = "http://localhost:5003/appointment"
+clinic_URL = "http://192.168.1.108:5002/clinic"
+distance_URL = "http://192.168.1.108:5001/checkDist"
+appointment_URL = "http://192.168.1.108:5003/appointment"
 patient_URL = "http://192.168.1.108:5000/patient/"
 
 @app.route("/viewClinics", methods=["POST"])
 def viewClinics():
+    # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
             patientLocation = request.get_json()

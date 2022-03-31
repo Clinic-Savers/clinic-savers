@@ -116,12 +116,10 @@ def find_by_appointmentDate(nric, appointmentDate):
 def set_appointment():
     #convert JSON to python
     data = request.get_json()
-    data = json.loads(data)
 
     #retrieve the details
     nric = data["nric"]
     symptoms = data["symptoms"]
-    potentialCovid = data["covid"]
     clinicId = int(data["clinicId"])
 
     #Find the available appointment timing
@@ -146,7 +144,7 @@ def set_appointment():
 
         appointmentDate = last_appt.appointmentDate
 
-    appointment = Appointment(nric, symptoms, potentialCovid, clinicId, appointmentDate, newTiming)
+    appointment = Appointment(nric, symptoms, clinicId, appointmentDate, newTiming)
     
     try:
         db.session.add(appointment)
@@ -214,7 +212,7 @@ def delete_appointment(nric,appointmentDate,appointmentTime):
         )
     return jsonify(
         {
-           "code": 404,
+            "code": 404,
             "data": {
                 "nric": nric,
                 "appointmentDate": appointmentDate,

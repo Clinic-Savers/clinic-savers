@@ -12,20 +12,20 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-appt_URL = "http://localhost:5003/set_appointment"
-patient_URL = "http://localhost:5000/patient/"
-subsidy_URL = "http://localhost:5004/subsidy/"
+appt_URL = "http://192.168.1.108:5003/set_appointment"
+patient_URL = "http://192.168.1.108:5000/patient/"
+subsidy_URL = "http://192.168.1.108:5004/subsidy/"
 
 @app.route("/set_appointment", methods=['POST'])
 def check_appointment():
     # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
-            appointment_details = request.get_json()
-            print("\nAppointment info in JSON:", appointment_details)
+            appt_details = request.get_json()
+            print("\n Appointment info in JSON:", appt_details)
 
-            result = set_appointment(appointment_details)
-            return result
+            appt_result = set_appointment(appt_details)
+            return appt_result
 
         except Exception as e:
             # Unexpected error in code
@@ -46,30 +46,8 @@ def check_appointment():
     }), 400
 
 
-def set_appointment(appointment_details):
-    # nric = appointment_details["nric"]
-    # clinicId = appointment_details["clinicId"]
-    # symptoms = appointment_details["symptoms"]
-    # covid = appointment_details["covid"]
-
-    # patient_info = invoke_http(patient_URL + str(nric))
-    # code = patient_info["code"]
-
-    # if code not in range(200, 300):
-    #     return {
-    #         patient_info
-    #     }
-
-    # else:
-    #rearrange appointment
-    # create_appt = {"nric": appointment_details["data"]["nric"], 
-    #                 "symptoms": symptoms,
-    #                 "potentialCovid": covid,
-    #                 "clinicId": clinicId
-    #                 }
-
-    appointment = json.dumps(appointment_details)
-    appt_result = invoke_http(appt_URL, method = "POST", json = appointment)
+def set_appointment(appt_details):
+    appt_result = invoke_http(appt_URL, method = "POST", json = appt_details)
     
     code = appt_result["code"]
     print("appt result", appt_result)
@@ -80,7 +58,7 @@ def set_appointment(appointment_details):
         }
 
     else:
-        nric = appointment_details["nric"]
+        nric = appt_details["nric"]
         check_subsidy = invoke_http(subsidy_URL + str(nric))
 
         if check_subsidy["data"]:
