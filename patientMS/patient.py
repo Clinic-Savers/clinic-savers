@@ -16,18 +16,20 @@ class Patient(db.Model):
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
     patientName = db.Column(db.String(64), nullable=False)
     mobileNumber = db.Column(db.Integer, nullable=False)
+    postalCode = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String(128), nullable=False)
     vaccinationStatus = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, nric, patientName, mobileNumber, address, vaccinationStatus):
+    def __init__(self, nric, patientName, mobileNumber, postalCode, address, vaccinationStatus):
         self.nric = nric
         self.patientName = patientName
         self.mobileNumber = mobileNumber
+        self.postalCode = postalCode
         self.address = address
         self.vaccinationStatus = vaccinationStatus
         
     def json(self):
-        return {"patientName": self.patientName, "nric": self.nric, "mobileNumber": self.mobileNumber, "address": self.address, "vaccinationStatus": self.vaccinationStatus}
+        return {"patientName": self.patientName, "nric": self.nric, "mobileNumber": self.mobileNumber, "postalCode": self.postalCode, "address": self.address, "vaccinationStatus": self.vaccinationStatus}
 
 
 @app.route("/patient")
