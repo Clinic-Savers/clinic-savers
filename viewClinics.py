@@ -55,7 +55,6 @@ def retrieveClinics(patientLocation):
         patientNRIC = patientLocation["nric"]
 
         #invoke patientMS to get the home address 
-        print(patient_URL + str(patientNRIC))
         patient_result = invoke_http(patient_URL + str(patientNRIC))
         print(patient_result)
         code = patient_result["code"]
@@ -128,6 +127,8 @@ def retrieveClinics(patientLocation):
         final_clinic = sorted(final_clinic.values(), key= lambda x: x["distance"])
     else:
         final_clinic = list(final_clinic.values())
+
+    print(final_clinic)
 
     return {
         "code":200,

@@ -114,7 +114,6 @@ def find_by_appointmentDate(nric, appointmentDate):
 
 @app.route("/set_appointment", methods=["POST"])
 def set_appointment():
-    #convert JSON to python
     data = request.get_json()
 
     #retrieve the details
@@ -122,11 +121,12 @@ def set_appointment():
     symptoms = data["symptoms"]
     clinicId = int(data["clinicId"])
 
-    #Find the available appointment timing
+    #Check the lastest appointment time
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
 
+    #No appointment made after the current timing
     if last_appt == None:
         if current_time.minute > 30:
             newTiming = time(current_time.hour + 1,0,0)
@@ -134,8 +134,9 @@ def set_appointment():
             newTiming = time(current_time.hour,30,0)
 
         appointmentDate = date.today()
+
+    #Find next available timing
     else:
-        #format datetime
         format = "%H:%M:%S"
         last_timing = datetime.strptime(last_appt.appointmentTime,format)
 
@@ -153,7 +154,7 @@ def set_appointment():
         return jsonify(
             {
                 "code": 500,
-                "message": "Appointment made"
+                "message": "Appointment made already"
             }
         ), 500
 

@@ -24,6 +24,7 @@ def check_appointment():
             appt_details = request.get_json()
             print("\n Appointment info in JSON:", appt_details)
 
+            #1. Send appt details to set appointment
             appt_result = set_appointment(appt_details)
             return appt_result
 
@@ -47,25 +48,30 @@ def check_appointment():
 
 
 def set_appointment(appt_details):
+    #2. Invoke appointmentMS
     appt_result = invoke_http(appt_URL, method = "POST", json = appt_details)
-    
+    print("\n Appointment result", appt_result)
+
     code = appt_result["code"]
-    print("appt result", appt_result)
     if code not in range(200, 300):
         return {
             "code": 500,
-            "message": "Create appointment fail"
+            "message": "Appointment created already"
         }
 
     else:
         nric = appt_details["nric"]
-        check_subsidy = invoke_http(subsidy_URL + str(nric))
 
-        if check_subsidy["data"]:
-            appt_result["data"]["subsidy_status"] = True
+        #3. Invoke subsidyMS to check for subsidy card
+        subsidy_result = invoke_http(subsidy_URL + str(nric))
+        print("\n Subsidy result:", subsidy_result)
+        
+        code = subsidy_result["code"]
+        if code not in range(200,300):
+            appt_result["data"]["subsidy_status"] = "No subsidy"
             
         else:
-            appt_result["data"]["subsidy_status"] = False
+            appt_result["data"]["subsidy_status"] = subsidy_result["data"]
 
         data = appt_result["data"]
         return {
@@ -77,10 +83,3 @@ def set_appointment(appt_details):
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for placing an order...")
     app.run(host="0.0.0.0", port=5008, debug=True)
-    # Notes for the parameters: 
-    # - debug=True will reload the program automatically if a change is detected;
-    #   -- it in fact starts two instances of the same flask program, and uses one of the instances to monitor the program changes;
-    # - host="0.0.0.0" allows the flask program to accept requests sent from any IP/host (in addition to localhost),
-    #   -- i.e., it gives permissions to hosts with any IP to access the flask program,
-    #   -- as long as the hosts can already reach the machine running the flask program along the network;
-    #   -- it doesn't mean to use http://0.0.0.0 to access the flask program.
