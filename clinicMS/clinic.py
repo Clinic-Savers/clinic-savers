@@ -19,7 +19,7 @@ class Clinic(db.Model):
     postalCode = db.Column(db.String(6), nullable=False)
     email = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, clinicId, name, address, postalCode, email):
+    def __init__(self, clinicId, clinicName, address, postalCode, email):
         self.clinicId = clinicId
         self.clinicName = clinicName
         self.address = address
@@ -69,9 +69,9 @@ def find_by_patientPostalCode(patientPostalCode):
         }
     )
     
-@app.route("/clinic/<string:name>")
-def find_by_clinicName(name):
-    clinic = Clinic.query.filter_by(name=name).first()
+@app.route("/clinic/<string:clinicName>")
+def find_by_clinicName(clinicName):
+    clinic = Clinic.query.filter_by(clinicName=clinicName).first()
     if clinic:
         return jsonify(
             {
@@ -86,10 +86,10 @@ def find_by_clinicName(name):
         }
     ), 404
 
-@app.route("/clinic/id/<string:id>")
-def find_by_clinicId(id):
-    id = int(id)
-    clinic = Clinic.query.filter_by(id=id).first()
+@app.route("/clinic/id/<string:clinicId>")
+def find_by_clinicId(clinicId):
+    clinicId = int(clinicId)
+    clinic = Clinic.query.filter_by(clinicId=clinicId).first()
     if clinic:
         return jsonify(
             {
@@ -105,21 +105,21 @@ def find_by_clinicId(id):
     ), 404
 
 #cannot create with just postal code
-@app.route("/clinic/<int:id>", methods=['POST'])
-def create_clinic(id):
-    if (Clinic.query.filter_by(id=id).first()):
+@app.route("/clinic/<int:clinicId>", methods=['POST'])
+def create_clinic(clinicId):
+    if (Clinic.query.filter_by(clinicId=clinicId).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "id": id
+                    "clinicId": clinicId
                 },
                 "message": "Clinic already exists."
             }
         ), 400
 
     data = request.get_json()
-    clinic = Clinic(id, **data)
+    clinic = Clinic(clinicId, **data)
 
     try:
         db.session.add(clinic)
@@ -129,7 +129,7 @@ def create_clinic(id):
             {
                 "code": 500,
                 "data": {
-                    "id": id
+                    "clinicId": clinicId
                 },
                 "message": "An error occurred creating the clinic."
             }
@@ -144,15 +144,15 @@ def create_clinic(id):
 
 
 # primary key is now clinicId, so this one need to change?
-@app.route("/clinic/<int:id>", methods=['PUT'])
-def update_clinic(id):
-    clinic = Clinic.query.filter_by(id=id).first()
+@app.route("/clinic/<int:clinicId>", methods=['PUT'])
+def update_clinic(clinicId):
+    clinic = Clinic.query.filter_by(clinicId=clinicId).first()
     if clinic:
         data = request.get_json()
-        if data['id']:
-            clinic.id = data['id']
-        if data['name']:
-            clinic.name = data['name'] 
+        if data['clinicId']:
+            clinic.clinicId = data['clinicId']
+        if data['clinicName']:
+            clinic.clinicName = data['clinicName'] 
         if data['address']:
             clinic.address = data['address'] 
         if data['postalCode']:
@@ -177,9 +177,9 @@ def update_clinic(id):
     ), 404
 
 
-@app.route("/clinic/<int:id>", methods=['DELETE'])
-def delete_clinic(id):
-    clinic = Clinic.query.filter_by(id=id).first()
+@app.route("/clinic/<int:clinicId>", methods=['DELETE'])
+def delete_clinic(clinicId):
+    clinic = Clinic.query.filter_by(clinicId=clinicId).first()
     if clinic:
         db.session.delete(clinic)
         db.session.commit()
@@ -187,7 +187,7 @@ def delete_clinic(id):
             {
                 "code": 200,
                 "data": {
-                    "id": id
+                    "clinicId": clinicId
                 }
             }
         )
@@ -195,7 +195,7 @@ def delete_clinic(id):
         {
             "code": 404,
             "data": {
-                "id": id
+                "clinicId": clinicId
             },
             "message": "Clinic not found."
         }
