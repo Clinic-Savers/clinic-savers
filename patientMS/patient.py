@@ -54,6 +54,7 @@ def get_all():
 
 @app.route("/patient/<string:nric>")
 def find_by_nric(nric):
+    print("HELLO")
     patient = Patient.query.filter_by(nric=nric).first()
 
     if patient:

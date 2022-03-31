@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `clinic` (
   `address` varchar(128) NOT NULL,
   `postalCode` varchar(6) NOT NULL,
   `email` varchar(128) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`clinicId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -50,7 +50,7 @@ INSERT INTO `clinic` (`clinicId`,`clinicName`,`address`, `postalCode`, `email`) 
 (5, 'Raffles Medical Compass One', '1 Sengkang Square, #04-09, Compass One', '545078', 'bryan.shing.2020@scis.smu.edu.sg'), 
 (6, 'Raffles Medical Rivervale Mall', '11, Rivervale Crescent, #02-17 Rivervale Mall', '545082', 'bryan.shing.2020@scis.smu.edu.sg'), 
 (7, 'Raffles Medical Toa Payoh', 'Blk 177 Toa Payoh Central, #01-170', '310177', 'bryan.shing.2020@scis.smu.edu.sg'), 
-(8, 'Raffles Medical Hillion Mall', '17 Petir Road, Hillion Mall, #02-07', '678278', 'bryan.shing.2020@scis.smu.edu.sg')
+(8, 'Raffles Medical Hillion Mall', '17 Petir Road, Hillion Mall, #02-07', '678278', 'bryan.shing.2020@scis.smu.edu.sg'),
 (9, 'Raffles Medical Tampines 1', '10 Tampines Central 1, #03-28', '529536', 'bryan.shing.2020@scis.smu.edu.sg')
 ;
 COMMIT;

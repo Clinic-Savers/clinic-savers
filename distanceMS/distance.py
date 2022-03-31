@@ -16,26 +16,22 @@ api_key = "AIzaSyC1hytlrSzRCAMd4LK-A0hzQ85IoVZIJpg"
 
 @app.route("/checkDist", methods = ["POST"])
 def get_distance():
-    #converts JSON object into python
     data = request.get_json()
-    data = json.loads(data)
     
-    patient = data["patient"]
+    patient = data["patientAddress"]
     clinics = data["clinics"]
+    print(patient)
 
     clinic_path = ""
-    if len(clinics) > 1:
-        for clinic in clinics:
-            clinic_path += "S" + clinic[2] + "%7C"
-        clinic_path = clinic_path[:-3]
-    else:
-        clinic_path = "S" + clinics[0][2]
+    for postal in clinics:
+        clinic_path += "Singapore " + postal + "%7C"
+    clinic_path = clinic_path[:-3]
 
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=S" + patient + "&region=sg&key=" + api_key
-
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=" + patient + "&region=sg&key=" + api_key
     result = invokes.invoke_http(url,"GET")
-
-    if result["rows"][0]["elements"][0]["status"] != 'NOT_FOUND':
+    print(url)
+    
+    if result["status"] == 'OK':
         return jsonify(
             {
                 "code": 200,
@@ -46,7 +42,7 @@ def get_distance():
     return jsonify(
         { 
             "code": 404,
-            "message": "Patient Postal Code cannot be found"
+            "message": "Patient Postal Code not found"
         }
     ), 404    
 
