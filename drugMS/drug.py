@@ -15,8 +15,7 @@ CORS(app)
 class Drug(db.Model):
     __tablename__ = 'drug'
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
-    #remove drugId
-    drugId = db.Column(db.Integer, nullable=False, primary_key=True)
+    #remove drugId (DONE)
     drugName = db.Column(db.String(128), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     restockStatus = db.Column(db.String(3), nullable=False)
@@ -25,9 +24,8 @@ class Drug(db.Model):
     reorderQuantity = db.Column(db.Integer, nullable=False)
 
 
-    def __init__(self, clinicId, drugId, drugName, quantity, restockStatus, supplierName, supplierEmail, reorderQuantity):
+    def __init__(self, clinicId, drugName, quantity, restockStatus, supplierName, supplierEmail, reorderQuantity):
         self.clinicId = clinicId
-        self.drugId = drugId
         self.drugName = drugName
         self.quantity = quantity
         self.restockStatus = restockStatus
@@ -36,7 +34,7 @@ class Drug(db.Model):
         self.reorderQuantity = reorderQuantity
         
     def json(self):
-        return {"clinicId": self.clinicId, "drugName": self.drugName, "drugId": self.drugId, "quantity": self.quantity, "restockStatus": self.restockStatus, "supplierName": self.supplierName, "supplierEmail": self.supplierEmail, "reorderQuantity": self.reorderQuantity}
+        return {"clinicId": self.clinicId, "drugName": self.drugName, "quantity": self.quantity, "restockStatus": self.restockStatus, "supplierName": self.supplierName, "supplierEmail": self.supplierEmail, "reorderQuantity": self.reorderQuantity}
 
 
 @app.route("/drug")
@@ -95,22 +93,22 @@ def find_by_clinic_drug(clinicId,drugName):
     ), 404
 
 
-@app.route("/drug/<string:clinicId>/<string:drugId>", methods=['POST'])
-def create_drug(clinicId,drugId):
-    if (Drug.query.filter_by(clinicId=clinicId,drugId=drugId).first()):
+@app.route("/drug/<string:clinicId>/<string:drugName>", methods=['POST'])
+def create_drug(clinicId,drugName):
+    if (Drug.query.filter_by(clinicId=clinicId,drugName=drugName).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
                     "clinicId": clinicId,
-                    "drugId": drugId
+                    "drugName": drugName
                 },
                 "message": "Drug already exists."
             }
         ), 400
 
     data = request.get_json()
-    drug = Drug(clinicId,drugId, **data)
+    drug = Drug(clinicId,drugName, **data)
 
     try:
         db.session.add(drug)
@@ -121,7 +119,7 @@ def create_drug(clinicId,drugId):
                 "code": 500,
                 "data": {
                     "clinicId": clinicId,
-                    "drugId": drugId
+                    "drugName": drugName
                 },
                 "message": "An error occurred creating the drug."
             }

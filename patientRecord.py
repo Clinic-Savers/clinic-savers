@@ -13,9 +13,8 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-# add search by nric & clinicId
-# try to sort by time
-# patientRecord ID auto-increment .sort() .reverse()
+# add search by nric & clinicId (DONE)
+# patientRecord ID auto-increment .sort() .reverse() (DONE)
 
 class PatientRecord(db.Model):
     __tablename__ = 'patientRecord'
@@ -25,7 +24,7 @@ class PatientRecord(db.Model):
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
     #change quantity to prescribeQuantity (DONE)
-    #remove refillStatus
+    #remove refillStatus (DONE)
     prescribeQuantity = db.Column(db.Integer, nullable=False)
     date = db.Column(db.String(64), primary_key=True, nullable=False)
     time = db.Column(db.String(64), primary_key=True, nullable=False)
