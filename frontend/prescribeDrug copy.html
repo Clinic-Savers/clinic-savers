@@ -27,49 +27,34 @@
     CA Page: Search Drug, Edit button (make Supplier info into input text and reorderQuantity), "Restock Completed" button -->
   <body>
     <div id="app" class="container">
-        <h1>Precribe Drugs</h1>
+        <h1>Prescribe Drugs</h1>
         <div class="row">
             <div id="main" class="col-8">
-                Current Time:
-                <input type="text" v-model="time" :placeholder =getTime() disabled>
-                Current Date:
-                <input type="text" v-model="date" :placeholder =getDate() disabled><br>
-                NRIC: <input type="text" v-model="nric" placeholder="nric"> <br>
-                Search by Drug Name: <input v-model="drugName" placeholder="Drug Name">
-                <button @click="findDrug()" type="button"
-                    class="my-1 btn btn-sm btn-primary">Search</button><br>
+                <form>
+                    Current Time:
+                    <input type="text" v-model="time" id="time"disabled>
+                    Current Date:
+                    <input type="text" v-model="date" id="date" disabled><br>
+                    NRIC: <input type="text" id ="nric"> <br>
+                    Search by Drug Name: <input type = "drug" id="drugName" placeholder="Drug Name">
+                    <button type="button"
+                        class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button><br>  
+                    <button class="my-1 btn btn-sm btn-primary" onclick="getAllDrugs()">Show all drugs</button>
+                </form>
+                
 
-                {{drugs}}
-                <table class="table table-striped" v-if="hasDrugs">
+                <table class="table table-striped">
                     <!-- <table class="table table-striped"> -->
-                    <thead>
-
-                        <tr>
-                            <th>clinicId</th>
-                            <th>drugName</th>
-                            <th>quantity</th>
-                            <th>prescribed quantity</th>
-                        </tr>
-                        <tr v-for="drug in drugs"> 
-                            <td>{{ drug.clinicId }}</td>
-                            <td>{{ drug.drugName }}</td>
-                            <td>{{ drug.quantity }}</td>
-                            <td>
-                              <form>
-                                <input type="number" id="quantity" name="quantity" step=5 v-model="prescribedQuantity">
-                              </form>
-                            </td>
-                            <td><button @click="prescribeDrug(drug)" type="button"
-                                    class="btn btn-primary">Prescribe</button>
-                            </td>
-
-                        </tr>
+                    <thead id= 'all'>
+                        
+                        
                     </thead>
                 </table>
-                <div class="text-danger" v-if="!hasDrugs">{{ message }}</div>
             </div> <!-- main & col -->
         </div> <!-- row -->
+        <div id="test">
 
+        </div>
         <div id="prescribe_drug" v-show="prescribed">
             <h3>Prescribe Drugs</h3>
             <table class="table table-striped" v-if="hasDrugs">
@@ -103,10 +88,133 @@
     </div> <!-- app: container -->
 
     <script>
-        const drug_URL ="http://localhost:5007/drug/1"
+        const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
+        //time date
+        var today = new Date()
+        var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+        var currDate =today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+        document.getElementById('time').placeholder = currTime
+        document.getElementById('date').placeholder = currDate
 
 
+        //functions
+        async function getAllDrugs(){
+            const response =
+                        await fetch(drug_URL)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data.data.drug)
+                                result =JSON.parse(JSON.stringify(data.data.drug))
+                                message_str =  `<tr>
+                                    <th>clinicId</th>
+                                    <th>drugName</th>
+                                    <th>quantity</th>
+                                    <th>prescribed quantity</th>
+                                </tr>`
+                                console.log(result)
+                                for (const drug of result) {
+                                    message_str += `
+                                    <tr>
+                                        <td>
+                                            ${drug['clinicId']}
+                                        </td>
+                                        <td>
+                                            ${drug['drugName']}
+                                        </td>
+                                        <td>
+                                            ${drug['quantity']}
+                                        </td>
+                                        <td>
+                                            <form>
+                                              <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                            </form>
+                                        </td>
+                                            <td><button type="button"
+                                            class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                        </td>
+                                    </tr>`
+                                    //
+                                }
+                                document.getElementById('all').innerHTML = message_str
+
+                                return data.data.drug
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(error);
+
+                            });
+        }
+        getAllDrugs()
+
+        async function findDrug(){
+            var drugName = document.getElementById('drugName').value
+            console.log(drugName)
+            const response =
+                        await fetch(`${drug_URL}/1/${drugName}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data)
+                                result =JSON.parse(JSON.stringify(data.data))
+                                message_str =  `<tr>
+                                    <th>clinicId</th>
+                                    <th>drugName</th>
+                                    <th>quantity</th>
+                                    <th>prescribed quantity</th>
+                                </tr>`
+                                console.log(result)
+                                
+                                message_str += `
+                                <tr>
+                                    <td>
+                                        ${result['clinicId']}
+                                    </td>
+                                    <td>
+                                        ${result['drugName']}
+                                    </td>
+                                    <td>
+                                        ${result['quantity']}
+                                    </td>
+                                    <td>
+                                        <form>
+                                            <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                        </form>
+                                    </td>
+                                        <td><button type="button"
+                                        class="btn btn-primary" id="${result['drugName']}">Prescribe</button>
+                                    </td>
+                                </tr>`
+                                    
+                                
+                                document.getElementById('all').innerHTML = message_str
+
+                                return data.data.drug
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(error);
+
+                            });
+        }
+
+        async function prescribe_drug(item){
+            var nric = document.getElementById("nric").value
+            var time = currTime
+            var date = currDate
+            var clinicId = 1
+            var drugName = item.id
+            var prescribeQuantity = parseInt(document.getElementById(drugName+",quantity").value)
+            console.log([nric, time, date, clinicId, drugName, prescribeQuantity])
+            await fetch(prescribeDrug_URL,{
+                method: 'POST',
+                body: {"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}
+            })
+                
+        }
+ 
         const app = Vue.createApp({
             computed: {
                 hasDrugs: function () {
@@ -158,18 +266,6 @@
 
                 },
                 
-                getTime(){
-
-                    var today = new Date();
-                    this.time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
-                },
-                getDate(){
-
-                    var today = new Date();
-                    this.date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-
-                },
                 findDrug () {
                     console.log(this.drugName);
                     const response =

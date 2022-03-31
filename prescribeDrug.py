@@ -344,7 +344,7 @@ def createNotificationMessage(drug_record):
     print('\n-----Invoking clinic microservice-----')
     clinicId = str(drug_record['clinicId'])
     clinic_record = invoke_http(clinic_URL + 'id/' + clinicId, method='GET')
-    clinicName = clinic_record['data']['name']
+    clinicName = clinic_record['data']['clinicName']
     clinicAddress = clinic_record['data']['address']
     clinicPostalCode = clinic_record['data']['postalCode']
     clinicEmail = clinic_record['data']['email']

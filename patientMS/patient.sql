@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `patientName` char(64) NOT NULL,
   `nric` varchar(9) NOT NULL,
   `mobileNumber` int(8) NOT NULL,
+  `postalCode` int(6) NOT NULL, 
   `address` varchar(128) NOT NULL,
   `vaccinationStatus` char(64) NOT NULL,
   PRIMARY KEY (`nric`)
@@ -41,16 +42,15 @@ CREATE TABLE IF NOT EXISTS `patient` (
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`patientName`,`nric`, `mobileNumber`, `address`, `vaccinationStatus`) VALUES
-('Tricia Tan Xiao Hui', 'S9812381D', '81327832', '9 BISHAN PLACE, #01-40', 'Vaccinated'),
-('Alfred Tan Jun Jie','S9812382B', '91134712', '3023 Ubi Road 3 06-01', 'Vaccinated'),
-('Nur Fatimah Binte Muhammad','S9812385G', '92821321', '50 Seletar Hills Drive', 'Unvaccinated'),
-('Simon Deyes','G1612350T', '81312554', '50 1003 Bukit Merah Central #02-10', 'Vaccinated'),
-('Tan Wei Ming','F1612347K', '92233223', '9010 Tampines St 93 #04-109', 'Vaccinated'),
-('Devi Agarwal', 'S9912374E', '92323218', '609 Ang Mo Kio Avenue 4 #02-1153', 'Vaccinated'),
-('Randall Ang Wei Jie', 'S6005053H', '82103101','1003 Bukit Merah Central ,04-11', 'Vaccinated'),
-('Adam Bin Aid','S6005055', '91234573', '132 MARSILING RISE, #01-232', 'Vaccinated'),
-('Ryan Lim Pei Cai', 'G1612348Q', '82374619', '996 BENDEEMER ROAD 03-04', 'Vaccinated')
+INSERT INTO `patient` (`patientName`,`nric`, `mobileNumber`, `address`, `postalCode`, `vaccinationStatus`) VALUES
+('TAN MING HENG TERENCE', 'S9812388A', '81312554', 'Blk 123 TOA PAYOH VIEW #14-22', '310123', 'Vaccinated'), 
+('LIM YONG XIANG', 'S9812379B', '97399245', 'Blk 123 TOA PAYOH VIEW #12-22', '310123', 'Vaccinated'), 
+('BERNARD WONG', 'S9912375C', '97399245', 'Blk 138 HDB-TAMPINES #38-10', '520138', 'Vaccinated')
+('XIA YIN CHOW', 'S9640091H', '99472910', 'Blk 148 HDB-BUKIT PANJANG #02-101', '670148' 'Vaccinated'),
+('DA DONG BAI','S7955237B', '93749284', 'Blk 148 HDB-BUKIT PANJANG #04-101', '670148', 'Vaccinated'),
+('HENG GANG ZHENG JASMON', 'S9245177A', '91822847', 'Blk 148 HDB-BUKIT PANJANG #12-102', '670148', 'Vaccinated'), 
+('LEE SHU KWAN ELICIA', 'S8243452F', '83888811', 'Blk 148 HDB-BUKIT PANJANG #11-101', '670148', 'Vaccinated'), 
+('RATAN SHIVALI JOSHI', 'S7380725E', '94891920', 'Blk 148 HDB-BUKIT PANJANG #8-106', '670148', 'Vaccinated'), 
 ;
 COMMIT;
 

@@ -19,23 +19,21 @@ class Appointment(db.Model):
     __tablename__ = 'appointment'
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
     symptoms = db.Column(db.String(128), nullable=False)
-    potentialCovid = db.Column(db.String(3), nullable=False)
     clinicId = db.Column(db.Numeric(3), nullable=False)
     appointmentDate = db.Column(db.String(64), nullable=False, primary_key=True)
     appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
 
 
-    def __init__(self, nric, symptoms, potentialCovid, clinicId, appointmentDate, appointmentTime):
+    def __init__(self, nric, symptoms, clinicId, appointmentDate, appointmentTime):
         self.nric = nric
         self.symptoms = symptoms
-        self.potentialCovid = potentialCovid
         self.clinicId = clinicId
         self.appointmentDate = appointmentDate
         self.appointmentTime = appointmentTime
         
         
     def json(self):
-        return {"nric": self.nric, "symptoms": self.symptoms, "potentialCovid": self.potentialCovid, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+        return {"nric": self.nric, "symptoms": self.symptoms, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
 # get queue length of specified clinic id 
 @app.route("/appointment/<string:clinicId>")
