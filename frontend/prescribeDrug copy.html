@@ -135,38 +135,29 @@
                 };
             },
             methods: {
-                async getAllDrugs () {
+                getAllDrugs () {
                     // on Vue instance created, load the book list
-                    const response = await fetch(drug_URL)
-                    console.log(response)
-                    const data = await response.json();
-                    console.log(data.data.drug)
-                    return data.data.drug
-                    //console.log(data)
-                    //this.drugs = data.data.drug
-                    //this.check(data)
-                    //console.log(data)
-                    //if (data.code === 404) {
-                        // no book in db
-                        //this.message = data.message;
-                    //} else {
-                    //console.log(data.data.drug)
-                    //this.drugs = data.data.drug
-                        //console.log(this.drugs[0]['clinicId'])
-                    //}
+                    const response =
+                        fetch(drug_URL)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(response);
+                                if (data.code === 404) {
+                                    // no book in db
+                                    this.message = data.message;
+                                } else {
+                                    this.books = data.data.drug;
+                                }
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(this.message + error);
+
+                            });
+
                 },
-                async check(){
-                    //const response =await this.getAllDrugs()
-                    //console.log(response)
-                    //if (response.messsage === 404){
-                    //    this.message =  response.data.message;
-                    //}else{
-                    //    this.drugs=  response.data.drug
-                    //    console.log(this.drugs)
-                    //}
-                    this.drugs = await this.getAllDrugs()
-                    console.log(this.drugs)
-                },
+                
                 getTime(){
 
                     var today = new Date();
@@ -276,7 +267,7 @@
             },
             created () {
                 // on Vue instance created, load the book list
-                this.check();
+                this.getAllDrugs();
                 
             }
         });
