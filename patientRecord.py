@@ -20,27 +20,27 @@ CORS(app)
 class PatientRecord(db.Model):
     __tablename__ = 'patientRecord'
 
+    patientRecordId = db.Column(db.Integer, primary_key=True, nullable=False)
     nric = db.Column(db.String(9), primary_key=True, nullable=False)
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
-    #change quantity to prescribeQuantity
+    #change quantity to prescribeQuantity (DONE)
     #remove refillStatus
-    quantity = db.Column(db.Integer, nullable=False)
-    refillStatus = db.Column(db.String(64), nullable=False)
+    prescribeQuantity = db.Column(db.Integer, nullable=False)
     date = db.Column(db.String(64), primary_key=True, nullable=False)
     time = db.Column(db.String(64), primary_key=True, nullable=False)
 
-    def __init__(self, nric, clinicId, drugName, quantity, refillStatus, date, time):
+    def __init__(self, patientRecordId, nric, clinicId, drugName, prescribeQuantity, date, time):
+        self.patientRecordId = patientRecordId
         self.nric = nric
         self.clinicId = clinicId
         self.drugName = drugName
-        self.quantity = quantity
-        self.refillStatus = refillStatus
+        self.prescribeQuantity = prescribeQuantity
         self.date = date
         self.time = time
 
     def json(self):
-        return {"nric": self.nric, "clinicId": self.clinicId, "drugName": self.drugName, "quantity": self.quantity, "refillStatus": self.refillStatus, "date": self.date, "time": self.time}
+        return {"patientRecordId":self.patientRecordId, "nric": self.nric, "clinicId": self.clinicId, "drugName": self.drugName, "prescribeQuantity": self.prescribeQuantity, "date": self.date, "time": self.time}
 
 
 @app.route("/patientRecord")
@@ -66,6 +66,25 @@ def get_all_patient_record():
 @app.route("/patientRecord/<string:nric>/<string:drugName>")
 def find_patient_record_by_nric_and_drug(nric,drugName):
     record_list = PatientRecord.query.filter_by(nric=nric,drugName=drugName).all()
+    if len(record_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data":{
+                    "PatientRecords": [record.json() for record in record_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Patient record not found."
+        }
+    ), 404
+
+@app.route("/patientRecord/clinic/<string:nric>/<string:clinicId>")
+def find_patient_record_by_nric_and_clinic(nric,clinicId):
+    record_list = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId).all()
     if len(record_list):
         return jsonify(
             {
@@ -112,9 +131,10 @@ def create_patient_record(nric):
     #             "message": "Create"
     #         }
     #     ), 400
-
+    patient_record_list = PatientRecord.query.all()
+    new_id = len(patient_record_list) + 1
     data = request.get_json()
-    record = PatientRecord(nric, **data)
+    record = PatientRecord(new_id,nric, **data)
     print(record)
 
     try:
@@ -144,10 +164,8 @@ def update_patient_record(nric,clinicId,drugName,date,time):
     record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
-        if "quantity" in data:
-            record.quantity = data['quantity']
-        if "refillStatus" in data:
-            record.refillStatus = data['refillStatus'] 
+        if "prescribeQuantity" in data:
+            record.prescribeQuantity = data['prescribeQuantity']
         db.session.commit()
         return jsonify(
             {

@@ -71,10 +71,18 @@ def processPatientRecordAdd(patientRecord):
         }
         
     print('\n-----Invoking drug microservice-----')
-    patient_drug_qty = patientRecord['quantity']
+    patient_drug_qty = patientRecord['prescribeQuantity']
     patient_drugName = patientRecord['drugName']
     patient_clinicId = str(patientRecord['clinicId'])
     drug = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName , method='GET')
+    code = drug["code"]
+    if code not in range(200, 300):
+        # 7. Return error
+        return {
+            "code": 500,
+            "data": {"drug": drug},
+            "message": "Retrieve Drug Record failure."
+        }
     drug_qty = drug["data"]['quantity']
     new_qty = drug_qty - patient_drug_qty
     drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"quantity": new_qty})
@@ -92,6 +100,14 @@ def processPatientRecordAdd(patientRecord):
         message = createNotificationMessage(drug_result["data"])
         send_restock(message)
         new_drug_result = invoke_http(drug_URL + patient_clinicId + '/' + patient_drugName, method='PUT', json={"restockStatus": "yes"})
+        code = new_drug_result["code"]
+        if code not in range(200, 300):
+            # 7. Return error
+            return {
+                "code": 500,
+                "data": {"new_drug_result": new_drug_result},
+                "message": "Update Drug Record failure."
+            }
         return {
             "code": 201,
             "message": "Successfully restocked! Email send to supplier! Patient Record Created Successfully!",
@@ -167,8 +183,16 @@ def processPatientRecordDelete(patientRecord):
         }
         
     print('\n-----Invoking drug microservice-----')
-    patient_drug_qty = patientRecord['quantity']
+    patient_drug_qty = patientRecord['prescribeQuantity']
     drug = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='GET')
+    code = drug["code"]
+    if code not in range(200, 300):
+        # 7. Return error
+        return {
+            "code": 500,
+            "data": {"drug": drug},
+            "message": "Retrieve Drug Record failure."
+        }
     drug_qty = drug["data"]['quantity']
     new_qty = drug_qty + patient_drug_qty
     drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"quantity": new_qty})
@@ -231,15 +255,6 @@ def processPatientRecordUpdate(patientRecord):
     patient_date_str = patientRecord['date']
     patient_time_str = patientRecord['time']
     record_result = invoke_http(patientRecord_URL + patient_nric_str + '/' + patient_clinic_str + '/' + patient_drug_str + '/' + patient_date_str + '/' + patient_time_str, method='GET')
-    print('record_result:', record_result)
-
-    del patientRecord['nric']
-    del patientRecord['clinicId']
-    del patientRecord['drugName']
-    del patientRecord['date']
-    del patientRecord['time']
-    new_record_result = invoke_http(patientRecord_URL + patient_nric_str + '/' + patient_clinic_str + '/' + patient_drug_str + '/' + patient_date_str + '/' + patient_time_str, method='PUT',json=patientRecord)
-
 
     # Check the order result; if a failure, send it to the error microservice.
     code = record_result["code"]
@@ -250,18 +265,37 @@ def processPatientRecordUpdate(patientRecord):
             "data": {"record_result": record_result},
             "message": "Patient record search failure."
         }
-    code1 = new_record_result["code"]
-    if code1 not in range(200, 300):
+
+    print('record_result:', record_result)
+
+    del patientRecord['nric']
+    del patientRecord['clinicId']
+    del patientRecord['drugName']
+    del patientRecord['date']
+    del patientRecord['time']
+    new_record_result = invoke_http(patientRecord_URL + patient_nric_str + '/' + patient_clinic_str + '/' + patient_drug_str + '/' + patient_date_str + '/' + patient_time_str, method='PUT',json=patientRecord)
+
+
+    code = new_record_result["code"]
+    if code not in range(200, 300):
         # 7. Return error
         return {
             "code": 500,
-            "data": {"record_result": new_record_result},
+            "data": {"new_record_result": new_record_result},
             "message": "Patient record update failure."
         }
     print('\n-----Invoking drug microservice-----')
-    patient_drug_qty = record_result['data']['quantity']
-    new_patient_drug_qty = new_record_result['data']['quantity']
+    patient_drug_qty = record_result['data']['prescribeQuantity']
+    new_patient_drug_qty = new_record_result['data']['prescribeQuantity']
     drug = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='GET')
+    code = drug["code"]
+    if code not in range(200, 300):
+        # 7. Return error
+        return {
+            "code": 500,
+            "data": {"drug": drug},
+            "message": "Retrieve Drug Record failure."
+        }
     drug_qty = drug["data"]['quantity']
     new_qty = drug_qty + patient_drug_qty - new_patient_drug_qty
     drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"quantity": new_qty})
@@ -278,6 +312,14 @@ def processPatientRecordUpdate(patientRecord):
         message = createNotificationMessage(drug_result["data"])
         send_restock(message)
         new_drug_result = invoke_http(drug_URL + patient_clinic_str + '/' + patient_drug_str, method='PUT', json={"restockStatus": "yes"})
+        code = new_drug_result["code"]
+        if code not in range(200, 300):
+            # 7. Return error
+            return {
+                "code": 500,
+                "data": {"new_drug_result": new_drug_result},
+                "message": "Update Drug Record failure."
+            }
         return {
             "code": 201,
             "message": "Successfully restocked! Email send to supplier! Patient Record Updated Successfully!",
