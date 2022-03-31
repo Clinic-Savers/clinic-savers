@@ -36,6 +36,9 @@
                     Current Date:
                     <input type="text" v-model="date" id="date" disabled><br>
                     NRIC: <input type="text" id ="nric"> <br>
+                    <div id = "nric_error">
+
+                    </div>
                     Search by Drug Name: <input type = "drug" id="drugName" placeholder="Drug Name">
                     <button type="button"
                         class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button><br>  
@@ -55,38 +58,8 @@
         <div id="test">
 
         </div>
-        <div id="prescribe_drug" v-show="prescribed">
-            <h3>Prescribe Drugs</h3>
-            <table class="table table-striped" v-if="hasDrugs">
-                <!-- <table class="table table-striped"> -->
-                <thead>
-                    <tr>
-                      <th>clinicId</th>
-                      <th>drugName</th>
-                      <th>quantity</th>
-                    </tr>
-                    <tr>
-                      <td>{{ drug.clinicId }}</td>
-                      <td>{{ drug.drugName }}</td>
-                      <td>{{ drug.quantity }}</td>
-                    </tr>
-                </thead>
-            </table>
-            <div class="text-success" v-if="prescribeSuccessful">
-                The drug has been successfully prescribed! <br>
-                <br>
-            </div>
-            <div class="text-danger" v-else>
-                There is a problem with placing this order, please check with the store for more
-                details.<br>
-                <br>
-            </div>
-            <button @click="prescribed = false; prescribeSuccessful = false"
-                class="btn btn-primary">Return to home
-                page</button>
-        </div> <!-- place order -->
-    </div> <!-- app: container -->
 
+    </div>
     <script>
         const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
@@ -126,9 +99,9 @@
                                             ${drug['quantity']}
                                         </td>
                                         <td>
-                                            <form>
-                                              <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
-                                            </form>
+                                            
+                                            <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                            
                                         </td>
                                             <td><button type="button"
                                             class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
@@ -178,9 +151,9 @@
                                         ${result['quantity']}
                                     </td>
                                     <td>
-                                        <form>
-                                            <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
-                                        </form>
+                                       
+                                        <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                        
                                     </td>
                                         <td><button type="button"
                                         class="btn btn-primary" id="${result['drugName']}">Prescribe</button>
@@ -218,10 +191,12 @@
               .then(response => response.json())
               .then(data => {
                 console.log('Success:', data);
+                if (data.code === 201) {
+                    document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
+                    document.getElementById(`${drugName},quantity`).value = ""
+                    alert(`${drugName} successfully prescribed!`)
+                }
                 
-                document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
-                document.getElementById(`${drugName},quantity`).value = ""
-                alert(`${drugName} successfully prescribed!`)
               })
               .catch((error) => {
                 console.error('Error:', error);
