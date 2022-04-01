@@ -316,13 +316,13 @@
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"restockStatus": restockStatus,"quantity": newQuantity}),
+                body: JSON.stringify({"restockStatus": "no","quantity": newQuantity}),
               })
               .then(response => response.json())
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 200) {
-                    document.getElementById(`${drugName},${clinicId}`).children[3].innerText = "yes"
+                    document.getElementById(`${drugName},${clinicId}`).children[3].innerText = "no"
                     document.getElementById(`${drugName},${clinicId}`).children[2].innerText = newQuantity
                     var row = document.getElementById(`${drugName},${clinicId}`)
                     console.log(row)
