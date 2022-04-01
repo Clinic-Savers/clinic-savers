@@ -42,10 +42,10 @@
                     <table>
                         <tr>
                             <td>Current Time:</td>
-                            <td><input type="text" v-model="time" id="time"disabled class="d-table-cell"></td>
+                            <td><div id="time"></div></td>
                             <td></td>
                             <td>Current Date:</td>
-                            <td><input type="text" v-model="date" id="date" disabled></td>
+                            <td><div id="date"></div></td>
                         </tr>
                         <tr>
                             <td>NRIC: </td>
@@ -84,17 +84,23 @@
         const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
         //time date
-        var today = new Date()
-        var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
-        var currDate =today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
-        document.getElementById('time').placeholder = currTime
-        document.getElementById('date').placeholder = currDate
+
+        function setTime(){
+            var today = new Date()
+            var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+            var currDate =today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+            document.getElementById('time').innerText = currTime
+            document.getElementById('date').innerText = currDate
+            setTimeout(setTime,1000)
+        }
+        setTime()
 
 
         //functions
         async function getAllDrugs(){
+            var clinicId = 1
             const response =
-                        await fetch(drug_URL)
+                        await fetch(`${drug_URL}/${clinicId}`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data.data.drug)
@@ -195,8 +201,8 @@
 
         async function prescribe_drug(item){
             var nric = document.getElementById("nric").value
-            var time = currTime
-            var date = currDate
+            var time = document.getElementById("time").innerText
+            var date = document.getElementById("date").innerText
             var clinicId = 1
             var drugName = item.id
             var prescribeQuantity = parseInt(document.getElementById(drugName+",quantity").value)
