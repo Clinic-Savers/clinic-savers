@@ -66,7 +66,7 @@ def retrieveClinics(patientLocation):
 
 
     else:
-        patientPostalCode = patientLocation["postal"]
+        patientPostalCode = patientLocation["postalCode"]
 
     # 2. Invoking clinicMS to get those in the region
     clinic_result = invoke_http(clinic_URL + "/postal/" + patientPostalCode)
