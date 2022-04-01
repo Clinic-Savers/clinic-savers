@@ -95,8 +95,9 @@ def retrieveClinics(patientLocation):
         }
 
         #3. Invoke appointmentMS to get queue
-        appt_url = appointment_URL + str(clinic["clinicId"])
+        appt_url = appointment_URL + "/" + str(clinic["clinicId"])
         appointment_result = invoke_http(appt_url)
+        print(appointment_result)
 
         code = appointment_result["code"]
         #Got queue 
