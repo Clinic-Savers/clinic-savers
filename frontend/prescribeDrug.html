@@ -37,20 +37,32 @@
             </li>
         </ul>
         <div class="row">
-            <div id="main" class="col-8">
+            <div id="main" class="col">
                 <form>
-                    Current Time:
-                    <input type="text" v-model="time" id="time"disabled>
-                    Current Date:
-                    <input type="text" v-model="date" id="date" disabled><br>
-                    NRIC: <input type="text" id ="nric"> <br>
-                    <div id = "nric_error">
-
-                    </div>
-                    Search by Drug Name: <input type = "drug" id="drugName" placeholder="Drug Name">
-                    <button type="button"
-                        class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button><br>  
-                    <button class="my-1 btn btn-sm btn-primary" onclick="getAllDrugs()">Show all drugs</button>
+                    <table>
+                        <tr>
+                            <td>Current Time:</td>
+                            <td><input type="text" v-model="time" id="time"disabled class="d-table-cell"></td>
+                            <td></td>
+                            <td>Current Date:</td>
+                            <td><input type="text" v-model="date" id="date" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>NRIC: </td>
+                            <td><input type="text" id ="nric" placeholder="NRIC"></td>
+                        </tr>
+                        <tr>
+                            <td><div id = "nric_error"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Drug Name: </td>
+                            <td><input type = "drug" id="drugName" placeholder="Drug Name"></td>
+                            <td><button type="button" class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="my-1 btn btn-sm btn-primary" onclick="getAllDrugs()">Show all drugs</button></td>
+                        </tr>
+                    </table>
                 </form>
                 
 

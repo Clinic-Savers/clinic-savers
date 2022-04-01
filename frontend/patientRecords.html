@@ -39,12 +39,20 @@
         <div class="row">
             <div id="main" class="col-8">
                 <form>
-                    NRIC: <input type = "text" id="nric" placeholder="NRIC">
-                    <br>
-                    Drug Name: <input type = "text" id="drugName" placeholder="Drug Name">
-                    <button type="button"
-                        class="my-1 btn btn-sm btn-primary" onclick="findRecords()">Search</button><br>  
-                    <button class="my-1 btn btn-sm btn-primary" onclick="getAllRecords()">Show all Records</button>
+                    <table>
+                        <tr>
+                            <td>NRIC: </td>
+                            <td><input type = "text" id="nric" placeholder="NRIC"></td>
+                        </tr>
+                        <tr>
+                            <td>Drug Name: </td>
+                            <td><input type = "text" id="drugName" placeholder="Drug Name"></td>
+                            <td><button type="button" class="my-1 btn btn-sm btn-primary" onclick="findRecords()">Search</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="my-1 btn btn-sm btn-primary" onclick="getAllRecords()">Show all Records</button></td>
+                        </tr>
+                    </table>
                 </form>
                 
 
@@ -84,6 +92,7 @@
                                     <th>date</th>
                                     <th>time</th>
                                 </tr>`
+                                result.reverse()
                                 console.log(result)
                                 for (const record of result) {
                                     message_str += `
