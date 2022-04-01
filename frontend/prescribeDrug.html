@@ -27,260 +27,189 @@
     CA Page: Search Drug, Edit button (make Supplier info into input text and reorderQuantity), "Restock Completed" button -->
   <body>
     <div id="app" class="container">
-        <h1>Precribe Drugs</h1>
+        <h1>Prescribe Drugs</h1>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="./prescribeDrug.html">Prescribe Drugs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./patientRecords.html">Patient Records</a>
+            </li>
+        </ul>
         <div class="row">
             <div id="main" class="col-8">
-                Current Time:
-                <input type="text" v-model="time" :placeholder =getTime() disabled>
-                Current Date:
-                <input type="text" v-model="date" :placeholder =getDate() disabled><br>
-                NRIC: <input type="text" v-model="nric" placeholder="nric"> <br>
-                Search by Drug Name: <input v-model="drugName" placeholder="Drug Name">
-                <button @click="findDrug()" type="button"
-                    class="my-1 btn btn-sm btn-primary">Search</button><br>
+                <form>
+                    Current Time:
+                    <input type="text" v-model="time" id="time"disabled>
+                    Current Date:
+                    <input type="text" v-model="date" id="date" disabled><br>
+                    NRIC: <input type="text" id ="nric"> <br>
+                    <div id = "nric_error">
 
-                {{drugs}}
-                <table class="table table-striped" v-if="hasDrugs">
+                    </div>
+                    Search by Drug Name: <input type = "drug" id="drugName" placeholder="Drug Name">
+                    <button type="button"
+                        class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button><br>  
+                    <button class="my-1 btn btn-sm btn-primary" onclick="getAllDrugs()">Show all drugs</button>
+                </form>
+                
+
+                <table class="table table-striped">
                     <!-- <table class="table table-striped"> -->
-                    <thead>
-
-                        <tr>
-                            <th>clinicId</th>
-                            <th>drugName</th>
-                            <th>quantity</th>
-                            <th>prescribed quantity</th>
-                        </tr>
-                        <tr v-for="drug in drugs"> 
-                            <td>{{ drug.clinicId }}</td>
-                            <td>{{ drug.drugName }}</td>
-                            <td>{{ drug.quantity }}</td>
-                            <td>
-                              <form>
-                                <input type="number" id="quantity" name="quantity" step=5 v-model="prescribedQuantity">
-                              </form>
-                            </td>
-                            <td><button @click="prescribeDrug(drug)" type="button"
-                                    class="btn btn-primary">Prescribe</button>
-                            </td>
-
-                        </tr>
+                    <thead id= 'all'>
+                        
+                        
                     </thead>
                 </table>
-                <div class="text-danger" v-if="!hasDrugs">{{ message }}</div>
             </div> <!-- main & col -->
         </div> <!-- row -->
+        <div id="test">
 
-        <div id="prescribe_drug" v-show="prescribed">
-            <h3>Prescribe Drugs</h3>
-            <table class="table table-striped" v-if="hasDrugs">
-                <!-- <table class="table table-striped"> -->
-                <thead>
-                    <tr>
-                      <th>clinicId</th>
-                      <th>drugName</th>
-                      <th>quantity</th>
-                    </tr>
-                    <tr>
-                      <td>{{ drug.clinicId }}</td>
-                      <td>{{ drug.drugName }}</td>
-                      <td>{{ drug.quantity }}</td>
-                    </tr>
-                </thead>
-            </table>
-            <div class="text-success" v-if="prescribeSuccessful">
-                The drug has been successfully prescribed! <br>
-                <br>
-            </div>
-            <div class="text-danger" v-else>
-                There is a problem with placing this order, please check with the store for more
-                details.<br>
-                <br>
-            </div>
-            <button @click="prescribed = false; prescribeSuccessful = false"
-                class="btn btn-primary">Return to home
-                page</button>
-        </div> <!-- place order -->
-    </div> <!-- app: container -->
+        </div>
 
+    </div>
     <script>
-        const drug_URL ="http://localhost:5007/drug/1"
+        const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
+        //time date
+        var today = new Date()
+        var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+        var currDate =today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+        document.getElementById('time').placeholder = currTime
+        document.getElementById('date').placeholder = currDate
 
 
-        const app = Vue.createApp({
-            computed: {
-                hasDrugs: function () {
-                    return this.drugs.length > 0;
-                }
-            },
-            data() {
-                return {
-                    drugName: "",
-                    drugs: [],
-                    message: "There is a problem retrieving books data, please try again later.",
-                    clinicId: "",
-                    drugName: "",
-                    quantity: "",
-                    restockStatus: "",
-                    supplierName: "",
-                    supplierEmail: "",
-                    reorderQuantity: "",
-                    prescribedQuantity: 0,
-                    prescribedDrugs: "",
-                    prescribed: false,
-                    prescribeSuccessful: false,
-                    date: "",
-                    time: "",
-                    nric: ""                
-                };
-            },
-            methods: {
-                async getAllDrugs () {
-                    // on Vue instance created, load the book list
-                    const response = await fetch(drug_URL)
-                    console.log(response)
-                    const data = await response.json();
-                    console.log(data.data.drug)
-                    return data.data.drug
-                    //console.log(data)
-                    //this.drugs = data.data.drug
-                    //this.check(data)
-                    //console.log(data)
-                    //if (data.code === 404) {
-                        // no book in db
-                        //this.message = data.message;
-                    //} else {
-                    //console.log(data.data.drug)
-                    //this.drugs = data.data.drug
-                        //console.log(this.drugs[0]['clinicId'])
-                    //}
-                },
-                async check(){
-                    //const response =await this.getAllDrugs()
-                    //console.log(response)
-                    //if (response.messsage === 404){
-                    //    this.message =  response.data.message;
-                    //}else{
-                    //    this.drugs=  response.data.drug
-                    //    console.log(this.drugs)
-                    //}
-                    this.drugs = await this.getAllDrugs()
-                    console.log(this.drugs)
-                },
-                getTime(){
-
-                    var today = new Date();
-                    this.time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
-                },
-                getDate(){
-
-                    var today = new Date();
-                    this.date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-
-                },
-                findDrug () {
-                    console.log(this.drugName);
-                    const response =
-                        fetch(`${drug_URL}/1/${this.drugName}`)
+        //functions
+        async function getAllDrugs(){
+            const response =
+                        await fetch(drug_URL)
                             .then(response => response.json())
                             .then(data => {
-                                console.log(response);
-                                if (data.code === 404) {
-                                    // no book in db
-                                    this.message = data.message;
-                                    this.drugs = [];
-                                } else {
-                                    this.drugs = [data.data];
+                                console.log(data.data.drug)
+                                result =JSON.parse(JSON.stringify(data.data.drug))
+                                message_str =  `<tr>
+                                    <th>clinicId</th>
+                                    <th>drugName</th>
+                                    <th>quantity</th>
+                                    <th>prescribed quantity</th>
+                                </tr>`
+                                console.log(result)
+                                for (const drug of result) {
+                                    message_str += `
+                                    <tr id ="${drug['drugName']},${drug['clinicId']}">
+                                        <td>
+                                            ${drug['clinicId']}
+                                        </td>
+                                        <td>
+                                            ${drug['drugName']}
+                                        </td>
+                                        <td>
+                                            ${drug['quantity']}
+                                        </td>
+                                        <td>
+                                            
+                                            <input type="number" id="${drug['drugName']},quantity" name="quantity" step=5>
+                                            
+                                        </td>
+                                            <td><button type="button"
+                                            class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                        </td>
+                                    </tr>`
+                                    //
                                 }
+                                document.getElementById('all').innerHTML = message_str
+
+                                return data.data.drug
                             })
                             .catch(error => {
                                 // Errors when calling the service; such as network error, 
                                 // service offline, etc
-                                console.log(this.message + error);
+                                console.log(error);
 
                             });
+        }
+        getAllDrugs()
 
+        async function findDrug(){
+            var drugName = document.getElementById('drugName').value
+            console.log(drugName)
+            const response =
+                        await fetch(`${drug_URL}/1/${drugName}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data)
+                                result =JSON.parse(JSON.stringify(data.data))
+                                message_str =  `<tr>
+                                    <th>clinicId</th>
+                                    <th>drugName</th>
+                                    <th>quantity</th>
+                                    <th>prescribed quantity</th>
+                                </tr>`
+                                console.log(result)
+                                
+                                message_str += `
+                                <tr id ="${result['drugName']},${result['clinicId']}">
+                                    <td>
+                                        ${result['clinicId']}
+                                    </td>
+                                    <td>
+                                        ${result['drugName']}
+                                    </td>
+                                    <td>
+                                        ${result['quantity']}
+                                    </td>
+                                    <td>
+                                       
+                                        <input type="number" id="${result['drugName']},quantity" name="quantity" step=5>
+                                        
+                                    </td>
+                                        <td><button type="button"
+                                        class="btn btn-primary" id="${result['drugName']}">Prescribe</button>
+                                    </td>
+                                </tr>`
+                                    
+                                
+                                document.getElementById('all').innerHTML = message_str
+
+                                return data.data
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(error);
+
+                            });
+        }
+
+        async function prescribe_drug(item){
+            var nric = document.getElementById("nric").value
+            var time = currTime
+            var date = currDate
+            var clinicId = 1
+            var drugName = item.id
+            var prescribeQuantity = parseInt(document.getElementById(drugName+",quantity").value)
+            console.log([nric, time, date, clinicId, drugName, prescribeQuantity])
+            fetch(prescribeDrug_URL, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                  'Content-Type': 'application/json',
                 },
-                prescribeDrug(drug){
-                  this.prescribedDrugs = drug;
-                  fetch(prescribeDrug_URL,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: JSON.stringify(
-                                {
-                                    "nric": this.nric,
-                                    "clinicId": this.clinicId,
-                                    "drugName": this.drugName,
-                                    "prescribedQuantity": this.prescribedQuantity,
-                                    "date": this.date,
-                                    "time": this.time
-
-                                })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-                            result = data.data;
-                            console.log(result);
-                            // 3 cases
-                            switch (data.code) {
-                                case 201:
-                                    // 201
-                                    this.prescribeSuccessful = true;
-                                    orderMessage =
-                                        `Drug prescribed
-                                        Prescribed:
-                                        ${result.record_result.code}:${result.record_result.data.status}
-
-                                        Drug Result:
-                                        ${result.drug_result.code}:${result.drug_result.message}`;
-                                    break;
-
-                                case 400:
-                                    // 400 
-                                    this.prescribeSuccessful = true;
-                                    orderMessage =
-                                        `Drug prescribed
-                                        Prescribed:
-                                        ${result.order_result.code}:${result.order_result.data.status}
-
-                                        Drug Result:
-                                        ${result.drug_result.code}:${result.drug_result.message}
-`;
-                                    break;
-                                case 500:
-                                    // 500 
-                                    prescriptionMessage =
-                                        `Order placed with error:
-                                        Order Result:
-                                        ${result.order_result.code}:${result.order_result.message}`;
-                                    break;
-                                default:
-                                    orderMessage = `Unexpected error: ${data.code}`;
-                                    console.log(`Unknown error code : ${data.code}`);
-                                    break;
-
-                            } // switch
-                            console.log(prescriptionMessage);
-                            this.prescribed = true;
-                        })
-                        .catch(error => {
-                            console.log("Problem in placing an order. " + error);
-                        })
-              
+                body: JSON.stringify({"nric": nric,"clinicId": clinicId,"drugName":drugName,"prescribeQuantity":prescribeQuantity,"date":date,"time":time}),
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Success:', data);
+                if (data.code === 201) {
+                    document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
+                    document.getElementById(`${drugName},quantity`).value = ""
+                    alert(`${drugName} successfully prescribed!`)
                 }
-            },
-            created () {
-                // on Vue instance created, load the book list
-                this.check();
                 
-            }
-        });
-        const vm = app.mount('#app');
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+        }
     </script>
 
     <!-- Bootstrap Javascript -->
