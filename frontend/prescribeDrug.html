@@ -110,6 +110,7 @@
                                     <th>drugName</th>
                                     <th>quantity</th>
                                     <th>prescribed quantity</th>
+                                    <th></th>
                                 </tr>`
                                 console.log(result)
                                 for (const drug of result) {
@@ -133,17 +134,14 @@
                                             class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
                                         </td>
                                     </tr>`
-                                    //
                                 }
                                 document.getElementById('all').innerHTML = message_str
-
                                 return data.data.drug
                             })
                             .catch(error => {
                                 // Errors when calling the service; such as network error, 
                                 // service offline, etc
                                 console.log(error);
-
                             });
         }
         getAllDrugs()
@@ -162,6 +160,7 @@
                                     <th>drugName</th>
                                     <th>quantity</th>
                                     <th>prescribed quantity</th>
+                                    <th></th>
                                 </tr>`
                                 console.log(result)
                                 
@@ -185,17 +184,13 @@
                                         class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
                                     </td>
                                 </tr>`
-                                    
-                                
                                 document.getElementById('all').innerHTML = message_str
-
                                 return data.data
                             })
                             .catch(error => {
                                 // Errors when calling the service; such as network error, 
                                 // service offline, etc
                                 console.log(error);
-
                             });
         }
 

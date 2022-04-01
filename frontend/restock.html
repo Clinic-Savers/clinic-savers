@@ -201,7 +201,6 @@
         }
 
         function edit(item){
-            console.log(item)
             var drugName = item.id.split(",")[0]
             var quantity = item.id.split(",")[1]
             var restockStatus = item.id.split(",")[2]
@@ -245,7 +244,6 @@
         }
  
         function cancel_update(item){
-            //console.log(item)
             var drugName = item.id.split(",")[1]
             var quantity = parseInt(item.id.split(",")[2])
             var restockStatus = item.id.split(",")[3]
@@ -295,36 +293,30 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 200) {
-                    if (document.getElementById('drugName').value !== "") {
-                        findDrug()
+                    document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierName
+                    document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newSupplierEmail
+                    document.getElementById(`${drugName},${clinicId}`).children[6].innerText = newReorderQuantity
+                    if (document.getElementById(`${drugName},${clinicId}`).children.length == 10) {
+                        confirm_btn = `
+                            <button type="button"
+                            class="btn btn-success" id="confirm,${drugName}, ${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery</button>
+                        `
+                        document.getElementById(`${drugName},${clinicId}`).children[9].innerHTML= confirm_btn   
+                    }
+                    edit_btn = `
+                        <button type="button"
+                        class="btn btn-primary" id="${drugName},${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="edit(this)">Edit
+                        </button>
+                    `
+                    document.getElementById(`${drugName},${clinicId}`).children[7].innerHTML= edit_btn
+                    var row = document.getElementById(`${drugName},${clinicId}`)
+                    console.log(row)
+                    if (row.children.length == 10) {
+                        row.deleteCell(row.children.length - 2)
                     }
                     else{
-                        getAllDrugs()
+                        row.deleteCell(row.children.length - 1)
                     }
-                    // document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierName
-                    // document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newSupplierEmail
-                    // document.getElementById(`${drugName},${clinicId}`).children[6].innerText = newReorderQuantity
-                    // if (document.getElementById(`${drugName},${clinicId}`).children.length == 10) {
-                    //     confirm_btn = `
-                    //         <button type="button"
-                    //         class="btn btn-success" id="confirm,${drugName}, ${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery</button>
-                    //     `
-                    //     document.getElementById(`${drugName},${clinicId}`).children[9].innerHTML= confirm_btn   
-                    // }
-                    // edit_btn = `
-                    //     <button type="button"
-                    //     class="btn btn-primary" id="${drugName},${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="edit(this)">Edit
-                    //     </button>
-                    // `
-                    // document.getElementById(`${drugName},${clinicId}`).children[7].innerHTML= edit_btn
-                    // var row = document.getElementById(`${drugName},${clinicId}`)
-                    // console.log(row)
-                    // if (row.children.length == 10) {
-                    //     row.deleteCell(row.children.length - 2)
-                    // }
-                    // else{
-                    //     row.deleteCell(row.children.length - 1)
-                    // }
                     alert(`${drugName} successfully updated!`)
                 }
                 
