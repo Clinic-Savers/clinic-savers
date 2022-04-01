@@ -83,7 +83,7 @@
                         this.loginDone = true;
                         console.log(this.loginDone);
                         sessionStorage.setItem("clinicId", this.username);
-                        window.open("user.html")
+                        location.href="user.html"
                         this.username = ""; 
                         this.password = ""; 
                     } else {
