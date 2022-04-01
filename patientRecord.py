@@ -61,6 +61,24 @@ def get_all_patient_record():
         }
     ), 404
 
+@app.route("/patientRecord/<string:clinicId>")
+def find_patient_record_by_clinic(clinicId):
+    record_list = PatientRecord.query.filter_by(clinicId=clinicId).all()
+    if len(record_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data":{
+                    "PatientRecords": [record.json() for record in record_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Patient record not found."
+        }
+    ), 404
 
 @app.route("/patientRecord/<string:nric>/<string:drugName>")
 def find_patient_record_by_nric_and_drug(nric,drugName):
@@ -120,16 +138,6 @@ def find_patient_record_by_nric_clinic_drug_date_time(nric,clinicId,drugName,dat
 
 @app.route("/patientRecord/<string:nric>", methods=['POST'])
 def create_patient_record(nric):
-    # if (Patient_Record.query.filter_by(date=date).first()):
-    #     return jsonify(
-    #         {
-    #             "code": 400,
-    #             "data": {
-    #                 "date": date
-    #             },
-    #             "message": "Create"
-    #         }
-    #     ), 400
     patient_record_list = PatientRecord.query.all()
     new_id = len(patient_record_list) + 1
     data = request.get_json()
