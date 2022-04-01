@@ -109,7 +109,7 @@ def processPatientRecordAdd(patientRecord):
                 "message": "Update Drug Record failure."
             }
         return {
-            "code": 201,
+            "code": 202,
             "message": "Successfully restocked! Email send to supplier! Patient Record Created Successfully!",
             "data": {
                 "record_result": record_result,
@@ -321,7 +321,7 @@ def processPatientRecordUpdate(patientRecord):
                 "message": "Update Drug Record failure."
             }
         return {
-            "code": 201,
+            "code": 202,
             "message": "Successfully restocked! Email send to supplier! Patient Record Updated Successfully!",
             "data": {
                 "record_result": record_result,

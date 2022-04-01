@@ -227,7 +227,7 @@
                 console.log('Success:', data);
                 if (data.code === 201) {
                     document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).remove()
-                    alert(`${clinicId},${nric},${drugName},${date},${time} successfully deleted record!`)
+                    alert(`Successfully deleted record!`)
                 }
                 
               })
@@ -298,7 +298,7 @@
               .then(response => response.json())
               .then(data => {
                 console.log('Success:', data);
-                if (data.code === 201) {
+                if (data.code === 201 || data.code === 202) {
                     document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[3].innerText = prescribeQuantity
                     delete_btn = `
                         <button type="button"
@@ -312,7 +312,12 @@
                         </button>
                     `
                     document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[7].innerHTML = edit_btn
-                    alert(`${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time} successfully updated record!`)
+                    if (data.code === 201) {
+                        alert(`Successfully updated record!`)
+                    }
+                    else{
+                        alert(`Successfully updated record! Low quantity, email sent to supplier to restock!`)
+                    }
                 }
                 
               })

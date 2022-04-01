@@ -211,10 +211,15 @@
               .then(response => response.json())
               .then(data => {
                 console.log('Success:', data);
-                if (data.code === 201) {
+                if (data.code === 201 || data.code === 202) {
                     document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
                     document.getElementById(`${drugName},quantity`).value = ""
-                    alert(`${drugName} successfully prescribed!`)
+                    if (data.code === 201) {
+                        alert(`${drugName} successfully prescribed!`)
+                    }
+                    else{
+                        alert(`${drugName} successfully prescribed! Low quantity, email sent to supplier to restock!`)
+                    }
                 }
                 
               })
