@@ -41,6 +41,10 @@
                 <form>
                     <table>
                         <tr>
+                            <th>Clinic ID: </th>
+                            <th id="clinicId"></th>
+                        </tr>
+                        <tr>
                             <td>NRIC: </td>
                             <td><input type = "text" id="nric" placeholder="NRIC"></td>
                             <td><button type="button" class="my-1 btn btn-sm btn-primary" onclick="findRecords()">Search</button></td>
@@ -71,6 +75,8 @@
         const updateRecord_URL ="http://localhost:5120/update_record"
         const deleteRecord_URL = "http://localhost:5120/delete_record"
 
+        document.getElementById("clinicId").innerText = sessionStorage.getItem("clinicId")
+
         //functions
         async function getAllRecords(){
             var clinicId = sessionStorage.getItem("clinicId")
@@ -81,12 +87,11 @@
                                 console.log(data.data.PatientRecords)
                                 result =JSON.parse(JSON.stringify(data.data.PatientRecords))
                                 message_str =  `<tr>
-                                    <th>clinicId</th>
-                                    <th>nric</th>
-                                    <th>drugName</th>
-                                    <th>prescribed quantity</th>
-                                    <th>date</th>
-                                    <th>time</th>
+                                    <th>NRIC</th>
+                                    <th>Drug Name</th>
+                                    <th>Prescribed Quantity</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
                                     <th></th>
                                     <th></th>
                                 </tr>`
@@ -95,9 +100,6 @@
                                 for (const record of result) {
                                     message_str += `
                                     <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
-                                        <td>
-                                            ${record['clinicId']}
-                                        </td>
                                         <td>
                                             ${record['nric']}
                                         </td>
@@ -150,12 +152,11 @@
                                 result =JSON.parse(JSON.stringify(data.data.PatientRecords))
                                 console.log(result)
                                 message_str =  `<tr>
-                                    <th>clinicId</th>
-                                    <th>nric</th>
-                                    <th>drugName</th>
-                                    <th>prescribed quantity</th>
-                                    <th>date</th>
-                                    <th>time</th>
+                                    <th>NRIC</th>
+                                    <th>Drug Name</th>
+                                    <th>Prescribed Quantity</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
                                     <th></th>
                                     <th></th>
                                 </tr>`
@@ -164,9 +165,6 @@
                                 for (const record of result) {
                                     message_str += `
                                         <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
-                                            <td>
-                                                ${record['clinicId']}
-                                            </td>
                                             <td>
                                                 ${record['nric']}
                                             </td>
@@ -247,17 +245,17 @@
                 class="btn btn-warning" id="save,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="save_record(this)">Update
                 </button>
             `
-            item.parentElement.parentElement.children[6].innerHTML = update_btn
+            item.parentElement.parentElement.children[5].innerHTML = update_btn
             qty_input = `
                 <input type = "text" id="qty,${clinicId},${nric},${drugName},${date},${time}" value="${prescribeQuantity}">
             `
-            item.parentElement.parentElement.children[3].innerHTML = qty_input
+            item.parentElement.parentElement.children[2].innerHTML = qty_input
             cancel_btn = `
                 <button type="button"
                 class="btn btn-light" id="cancel,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="cancel_record(this)">Cancel
                 </button>
             `
-            item.parentElement.parentElement.children[7].innerHTML = cancel_btn
+            item.parentElement.parentElement.children[6].innerHTML = cancel_btn
         }
         function cancel_record(item){
             var nric = item.id.split(",")[2]
@@ -271,14 +269,14 @@
                 class="btn btn-danger" id="delete,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="delete_record(this)">Delete
                 </button>
             `
-            item.parentElement.parentElement.children[6].innerHTML = delete_btn
-            item.parentElement.parentElement.children[3].innerHTML = prescribeQuantity
+            item.parentElement.parentElement.children[5].innerHTML = delete_btn
+            item.parentElement.parentElement.children[2].innerHTML = prescribeQuantity
             edit_btn = `
                 <button type="button"
                 class="btn btn-primary" id="update,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="update_record(this)">Edit
                 </button>
             `
-            item.parentElement.parentElement.children[7].innerHTML = edit_btn
+            item.parentElement.parentElement.children[6].innerHTML = edit_btn
         }
         async function save_record(item){
             var nric = item.id.split(",")[2]
@@ -299,19 +297,19 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 201 || data.code === 202) {
-                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[3].innerText = prescribeQuantity
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[2].innerText = prescribeQuantity
                     delete_btn = `
                         <button type="button"
                         class="btn btn-danger" id="delete,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="delete_record(this)">Delete
                         </button>
                     `
-                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[6].innerHTML = delete_btn
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[5].innerHTML = delete_btn
                     edit_btn = `
                         <button type="button"
                         class="btn btn-primary" id="update,${clinicId},${nric},${drugName},${prescribeQuantity},${date},${time}" onclick="update_record(this)">Edit
                         </button>
                     `
-                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[7].innerHTML = edit_btn
+                    document.getElementById(`${clinicId},${nric},${drugName},${date},${time}`).children[6].innerHTML = edit_btn
                     if (data.code === 201) {
                         alert(`Successfully updated record!`)
                     }

@@ -251,7 +251,7 @@ INSERT INTO `drug` (`clinicId`,`drugName`,`quantity`,`restockStatus`,`supplierNa
 (9,'Ursodeoxycholic Acid',  170,'no','ClinicDrugSupplier','clinicDrugSupplier@gmail.com',200),
 (9,'Vitamin A',  110,'no','ClinicDrugSupplier','clinicDrugSupplier@gmail.com',150),
 (9,'Warfarin Sodium',  140,'no','ClinicDrugSupplier','clinicDrugSupplier@gmail.com',150),
-(9,'Zidovudine',  160,'no','ClinicDrugSupplier','clinicDrugSupplier@gmail.com',150),
+(9,'Zidovudine',  160,'no','ClinicDrugSupplier','clinicDrugSupplier@gmail.com',150);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -41,6 +41,10 @@
                 <form>
                     <table>
                         <tr>
+                            <th>Clinic ID: </th>
+                            <th id="clinicId"></th>
+                        </tr>
+                        <tr>
                             <td>Current Time:</td>
                             <td><div id="time"></div></td>
                             <td></td>
@@ -83,8 +87,10 @@
     <script>
         const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
-        //time date
 
+        document.getElementById("clinicId").innerText = sessionStorage.getItem("clinicId")
+
+        // Get the current date and time function
         function setTime(){
             var today = new Date()
             var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
@@ -106,10 +112,9 @@
                                 console.log(data.data.drug)
                                 result =JSON.parse(JSON.stringify(data.data.drug))
                                 message_str =  `<tr>
-                                    <th>clinicId</th>
-                                    <th>drugName</th>
-                                    <th>quantity</th>
-                                    <th>prescribed quantity</th>
+                                    <th>Drug Name</th>
+                                    <th>Remaining Quantity</th>
+                                    <th>Prescribe Quantity</th>
                                     <th></th>
                                 </tr>`
                                 console.log(result)
@@ -117,21 +122,15 @@
                                     message_str += `
                                     <tr id ="${drug['drugName']},${drug['clinicId']}">
                                         <td>
-                                            ${drug['clinicId']}
-                                        </td>
-                                        <td>
                                             ${drug['drugName']}
                                         </td>
                                         <td>
                                             ${drug['quantity']}
                                         </td>
                                         <td>
-                                            
                                             <input type="number" id="${drug['drugName']},quantity" name="quantity" min=0 step=5>
-                                            
                                         </td>
-                                            <td><button type="button"
-                                            class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                            <td><button type="button" class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
                                         </td>
                                     </tr>`
                                 }
@@ -156,10 +155,9 @@
                                 console.log(data)
                                 result =JSON.parse(JSON.stringify(data.data))
                                 message_str =  `<tr>
-                                    <th>clinicId</th>
-                                    <th>drugName</th>
-                                    <th>quantity</th>
-                                    <th>prescribed quantity</th>
+                                    <th>Drug Name</th>
+                                    <th>Remaining Quantity</th>
+                                    <th>Prescribe Quantity</th>
                                     <th></th>
                                 </tr>`
                                 console.log(result)
@@ -167,21 +165,15 @@
                                 message_str += `
                                 <tr id ="${result['drugName']},${result['clinicId']}">
                                     <td>
-                                        ${result['clinicId']}
-                                    </td>
-                                    <td>
                                         ${result['drugName']}
                                     </td>
                                     <td>
                                         ${result['quantity']}
                                     </td>
                                     <td>
-                                       
                                         <input type="number" id="${result['drugName']},quantity" name="quantity" step=5>
-                                        
                                     </td>
-                                        <td><button type="button"
-                                        class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                        <td><button type="button" class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
                                     </td>
                                 </tr>`
                                 document.getElementById('all').innerHTML = message_str
@@ -213,7 +205,7 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 201 || data.code === 202) {
-                    document.getElementById(`${drugName},${clinicId}`).getElementsByTagName("td")[2].innerText = data.data.drug_result.data.quantity
+                    document.getElementById(`${drugName},${clinicId}`).children[1].innerText = data.data.drug_result.data.quantity
                     document.getElementById(`${drugName},quantity`).value = ""
                     if (data.code === 201) {
                         alert(`${drugName} successfully prescribed!`)
