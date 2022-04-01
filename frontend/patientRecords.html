@@ -43,10 +43,6 @@
                         <tr>
                             <td>NRIC: </td>
                             <td><input type = "text" id="nric" placeholder="NRIC"></td>
-                        </tr>
-                        <tr>
-                            <td>Drug Name: </td>
-                            <td><input type = "text" id="drugName" placeholder="Drug Name"></td>
                             <td><button type="button" class="my-1 btn btn-sm btn-primary" onclick="findRecords()">Search</button></td>
                         </tr>
                         <tr>
@@ -72,14 +68,14 @@
     </div>
     <script>
         const patientRecord_URL ="http://localhost:5006/patientRecord"
-        const prescribeDrug_URL = "http://localhost:5120/create_record"
         const updateRecord_URL ="http://localhost:5120/update_record"
         const deleteRecord_URL = "http://localhost:5120/delete_record"
 
         //functions
         async function getAllRecords(){
+            var clinicId = 1
             const response =
-                        await fetch(patientRecord_URL)
+                        await fetch(`${patientRecord_URL}/${clinicId}`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data.data.PatientRecords)
@@ -142,12 +138,11 @@
         getAllRecords()
 
         async function findRecords(){
-            var drugName = document.getElementById('drugName').value
             var nric = document.getElementById('nric').value
-            console.log(drugName)
+            var clinicId = 1
             console.log(nric)
             const response =
-                        await fetch(`${patientRecord_URL}/${nric}/${drugName}`)
+                        await fetch(`${patientRecord_URL}/clinic/${nric}/${clinicId}`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data)
@@ -161,39 +156,41 @@
                                     <th>date</th>
                                     <th>time</th>
                                 </tr>`
+                                result.reverse()
                                 console.log(result)
-                                
-                                message_str += `
-                                <tr id ="${result[0]['drugName']},${result[0]['clinicId']}">
-                                    <td>
-                                        ${result[0]['clinicId']}
-                                    </td>
-                                    <td>
-                                        ${result[0]['nric']}
-                                    </td>
-                                    <td>
-                                        ${result[0]['drugName']}
-                                    </td>
-                                    <td>
-                                        ${result[0]['prescribeQuantity']}
-                                    </td>
-                                    <td>
-                                        ${result[0]['date']}
-                                    </td>
-                                    <td>
-                                        ${result[0]['time']}
-                                    </td>
-                                    <td>
-                                        <button type="button"
-                                        class="btn btn-danger" id="${result[0]['clinicId']},${result[0]['nric']},${result[0]['drugName']},${result[0]['prescribeQuantity']},${result[0]['date']},${result[0]['time']}" onclick="delete_record(this)">Delete
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button"
-                                        class="btn btn-primary" id="${result[0]['nric']}" onclick="update_record(this)">Edit
-                                        </button>
-                                    </td>
-                                </tr>`
+                                for (const record of result) {
+                                    message_str += `
+                                        <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
+                                            <td>
+                                                ${record['clinicId']}
+                                            </td>
+                                            <td>
+                                                ${record['nric']}
+                                            </td>
+                                            <td>
+                                                ${record['drugName']}
+                                            </td>
+                                            <td>
+                                                ${record['prescribeQuantity']}
+                                            </td>
+                                            <td>
+                                                ${record['date']}
+                                            </td>
+                                            <td>
+                                                ${record['time']}
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                class="btn btn-danger" id="delete,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="delete_record(this)">Delete
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                class="btn btn-primary" id="update,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="update_record(this)">Edit
+                                                </button>
+                                            </td>
+                                        </tr>`   
+                                }
                                 
                                 document.getElementById('all').innerHTML = message_str
 
