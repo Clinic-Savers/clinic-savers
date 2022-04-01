@@ -242,12 +242,17 @@
         function cancel_update(item){
             //console.log(item)
             var drugName = item.id.split(",")[1]
-            var quantity = item.id.split(",")[2]
+            var quantity = parseInt(item.id.split(",")[2])
             var restockStatus = item.id.split(",")[3]
             var supplierName = item.id.split(",")[4]
             var supplierEmail = item.id.split(",")[5]
-            var reorderQuantity = item.id.split(",")[6]
-            //console.log(drugName,quantity)
+            var reorderQuantity = parseInt(item.id.split(",")[6])
+            console.log(item.parentElement.parentElement.children[4])
+            item.parentElement.parentElement.children[4].innerText= supplierName
+            item.parentElement.parentElement.children[5].innerText= supplierEmail
+            item.parentElement.parentElement.children[6].innerText= reorderQuantity
+
+
             edit_btn = `
                 <button type="button"
                 class="btn btn-primary" id="${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="edit(this)">Edit
