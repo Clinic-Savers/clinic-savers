@@ -134,7 +134,7 @@
             var drugName = document.getElementById('drugName').value
             console.log(drugName)
             const response =
-                        await fetch(`${drug_URL}/${clinicId}/${drugName}`)
+                        await fetch(`${drug_URL}/${drugName}`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data)
