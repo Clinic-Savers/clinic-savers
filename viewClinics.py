@@ -124,12 +124,7 @@ def retrieveClinics(patientLocation):
             final_clinic[listOfClinics[i]["clinicId"]]["distance"] = distance_compare[i]["distance"]["value"]
 
         #sort by distance
-        final_clinic = sorted(final_clinic.values(), key= lambda x: x["distance"])
-    else:
-        final_clinic = list(final_clinic.values())
-
-    print(final_clinic)
-
+        final_clinic = sorted(final_clinic.items(), key= lambda x: x[1]["distance"])
     return {
         "code":200,
         "data": final_clinic
