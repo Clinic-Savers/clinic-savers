@@ -98,7 +98,7 @@
 
         //functions
         async function getAllDrugs(){
-            var clinicId = 1
+            var clinicId = sessionStorage.getItem("clinicId")
             const response =
                         await fetch(`${drug_URL}/${clinicId}`)
                             .then(response => response.json())
@@ -150,9 +150,9 @@
 
         async function findDrug(){
             var drugName = document.getElementById('drugNameSearch').value
-            console.log(drugName)
+            var clinicId = sessionStorage.getItem("clinicId")
             const response =
-                        await fetch(`${drug_URL}/1/${drugName}`)
+                        await fetch(`${drug_URL}/${clinicId}/${drugName}`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data)
@@ -203,7 +203,7 @@
             var nric = document.getElementById("nric").value
             var time = document.getElementById("time").innerText
             var date = document.getElementById("date").innerText
-            var clinicId = 1
+            var clinicId = sessionStorage.getItem("clinicId")
             var drugName = item.id
             var prescribeQuantity = parseInt(document.getElementById(drugName+",quantity").value)
             console.log([nric, time, date, clinicId, drugName, prescribeQuantity])

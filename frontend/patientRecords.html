@@ -73,7 +73,7 @@
 
         //functions
         async function getAllRecords(){
-            var clinicId = 1
+            var clinicId = sessionStorage.getItem("clinicId")
             const response =
                         await fetch(`${patientRecord_URL}/${clinicId}`)
                             .then(response => response.json())
@@ -139,8 +139,7 @@
 
         async function findRecords(){
             var nric = document.getElementById('nric').value
-            var clinicId = 1
-            console.log(nric)
+            var clinicId = sessionStorage.getItem("clinicId")
             const response =
                         await fetch(`${patientRecord_URL}/clinic/${nric}/${clinicId}`)
                             .then(response => response.json())

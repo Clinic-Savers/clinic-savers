@@ -69,27 +69,39 @@
             data() {
                 return {
                     loginDone: false,
-                    message: "There is a problem retrieving clinics near you. Please try again later.", 
                     username: "", 
-                    password: ""
+                    password: "",
+                    clinic_URL: "http://localhost:5002/clinic"
                 };
             }, 
 
             methods: {
                 login () {
                     this.loginDone = false; 
-                    console.log(this.password); 
-                    if (this.username === "1" && this.password === "abc") {
-                        this.loginDone = true;
-                        console.log(this.loginDone);
-                        sessionStorage.setItem("clinicId", this.username);
-                        location.href="user.html"
-                        this.username = ""; 
-                        this.password = ""; 
-                    } else {
-                        this.message = "Invalid username/password"; 
-                        console.log(this.message); 
-                    }
+                    const response =
+                        fetch(`${this.clinic_URL}/id/${this.username}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data)
+                                result =JSON.parse(JSON.stringify(data.data))
+                                console.log(result)
+                                if (this.password == result['password']) {
+                                    this.loginDone = true
+                                    sessionStorage.setItem("clinicId", this.username)
+                                    window.open("user.html")
+                                    this.username = ""
+                                    this.password = ""
+                                }
+                                else{
+                                    alert("Invalid username/password!")
+                                }
+                            })
+                            .catch(error => {
+                                // Errors when calling the service; such as network error, 
+                                // service offline, etc
+                                console.log(error);
+
+                            });
                 },
             }
         })
