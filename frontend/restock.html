@@ -55,8 +55,6 @@
     <script>
         var clinicId= sessionStorage.getItem("clinicId")
         const drug_URL =`http://localhost:5007/drug/${clinicId}`
-        const prescribeDrug_URL ="http://localhost:5120/create_record"
-        
         //functions
         async function getAllDrugs(){
             const response =
@@ -73,6 +71,7 @@
                                     <th class="text-center">supplierName</th>
                                     <th class="text-center">supplierEmail</th>
                                     <th class="text-center">reorderQuantity</th>
+                                    <th></th>
                                 </tr>`
                                 console.log(result)
                                 for (const drug of result) {
@@ -144,6 +143,10 @@
                                     <th class="text-center">drugName</th>
                                     <th class="text-center">quantity</th>
                                     <th class="text-center">prescribed quantity</th>
+                                    <th class="text-center">supplierName</th>
+                                    <th class="text-center">supplierEmail</th>
+                                    <th class="text-center">reorderQuantity</th>
+                                    <th></th>
                                 </tr>`
                                 console.log(result)
                                 
@@ -179,7 +182,7 @@
                                     message_str+=`
                                         <td class="text-center">
                                             <button type="button"
-                                            class="btn btn-success" id="confirm,${result['drugName']}, ${result['quantity']},${result['restockStatus']},${result['supplierName']},${result['supplierEmail']},${result['reorderQuantity']}
+                                            class="btn btn-success" id="confirm,${result['drugName']}, ${result['quantity']},${result['restockStatus']},${result['supplierName']},${result['supplierEmail']},${result['reorderQuantity']}" onclick="confirm_delivery(this)">Confirm Delivery</button>
                                         </td>
                                     </tr>`
                                 }
@@ -198,7 +201,7 @@
         }
 
         function edit(item){
-            console.log(item.id)
+            console.log(item)
             var drugName = item.id.split(",")[0]
             var quantity = item.id.split(",")[1]
             var restockStatus = item.id.split(",")[2]
@@ -217,7 +220,7 @@
             console.log(item.parentElement.parentElement.children[5])
             item.parentElement.parentElement.children[5].innerHTML = supplierEmail_input
             reorderQuantity_input = `
-                <input type = "text" id="reorderQuantity,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" value="${reorderQuantity}">
+                <input type = "number" id="reorderQuantity,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" value="${reorderQuantity}" min='0'>
             `
             console.log(item.parentElement.parentElement.children[6])
             item.parentElement.parentElement.children[6].innerHTML = reorderQuantity_input
@@ -229,14 +232,16 @@
             console.log(clinicId)
             item.parentElement.parentElement.children[7].innerHTML = update_btn
             var row =document.getElementById(`${drugName},${clinicId}`)
-            var del_btn =  row.insertCell(-1);
+            var del_btn
+            if (document.getElementById(`${drugName},${clinicId}`).children.length == 9) {
+                del_btn =  row.insertCell(row.children.length - 1)
+            }
+            else{
+                del_btn =  row.insertCell(row.children.length)
+            }
             del_btn.innerHTML = `<button type="button"
                             class="btn btn-light" id="cancel,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="cancel_update(this)">Cancel
                             </button>`
-                            
-            
-            
-           
         }
  
         function cancel_update(item){
@@ -260,8 +265,12 @@
             `
             item.parentElement.parentElement.children[7].innerHTML = edit_btn
             var row = document.getElementById(`${drugName},${clinicId}`)
-            console.log(row)
-            row.deleteCell(-1)
+            if (row.children.length == 10) {
+                row.deleteCell(row.children.length - 2)
+            }
+            else{
+                row.deleteCell(row.children.length - 1)
+            }
         }
 
         async function save_drug(item){
@@ -274,7 +283,7 @@
             var newSupplierName = document.getElementById(`supplierName,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value
             var newSupplierEmail = document.getElementById(`supplierEmail,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value
             var newReorderQuantity = parseInt(document.getElementById(`reorderQuantity,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value)
-            console.log([clinicId, drugName])
+            console.log([clinicId, drugName, newSupplierName,newSupplierEmail,newReorderQuantity])
             fetch(`${drug_URL}/${drugName}`, {
                 method: 'PUT',
                 headers: {
@@ -286,20 +295,37 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 200) {
-                    document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierName
-                    document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newSupplierEmail
-                    document.getElementById(`${drugName},${clinicId}`).children[6].innerText = newReorderQuantity
-                    edit_btn = `
-                    <button type="button"
-                    class="btn btn-primary" id="${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="edit(this)">Edit
-                    </button>
-                    `
-                    document.getElementById(`${drugName},${clinicId}`).children[7].innerHTML= edit_btn
-                    var row = document.getElementById(`${drugName},${clinicId}`)
-                    console.log(row)
-                    row.deleteCell(-1)
-                    alert(`${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity} successfully updated drug!`)
-
+                    if (document.getElementById('drugName').value !== "") {
+                        findDrug()
+                    }
+                    else{
+                        getAllDrugs()
+                    }
+                    // document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierName
+                    // document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newSupplierEmail
+                    // document.getElementById(`${drugName},${clinicId}`).children[6].innerText = newReorderQuantity
+                    // if (document.getElementById(`${drugName},${clinicId}`).children.length == 10) {
+                    //     confirm_btn = `
+                    //         <button type="button"
+                    //         class="btn btn-success" id="confirm,${drugName}, ${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery</button>
+                    //     `
+                    //     document.getElementById(`${drugName},${clinicId}`).children[9].innerHTML= confirm_btn   
+                    // }
+                    // edit_btn = `
+                    //     <button type="button"
+                    //     class="btn btn-primary" id="${drugName},${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="edit(this)">Edit
+                    //     </button>
+                    // `
+                    // document.getElementById(`${drugName},${clinicId}`).children[7].innerHTML= edit_btn
+                    // var row = document.getElementById(`${drugName},${clinicId}`)
+                    // console.log(row)
+                    // if (row.children.length == 10) {
+                    //     row.deleteCell(row.children.length - 2)
+                    // }
+                    // else{
+                    //     row.deleteCell(row.children.length - 1)
+                    // }
+                    alert(`${drugName} successfully updated!`)
                 }
                 
               })
@@ -327,13 +353,13 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 200) {
-                    document.getElementById(`${drugName},${clinicId}`).children[3].innerText = "no"
-                    document.getElementById(`${drugName},${clinicId}`).children[2].innerText = newQuantity
-                    var row = document.getElementById(`${drugName},${clinicId}`)
-                    console.log(row)
-                    row.deleteCell(-1)
-                    alert(`${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity} confirmed delivery`)
-
+                    if (document.getElementById('drugName').value !== "") {
+                        findDrug()
+                    }
+                    else{
+                        getAllDrugs()
+                    }
+                    alert(`${drugName} confirmed delivery!`)
                 }
                 
               })
