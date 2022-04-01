@@ -84,6 +84,8 @@
                         console.log(this.loginDone);
                         sessionStorage.setItem("clinicId", username);
                         window.open("user.html")
+                        this.username = ""; 
+                        this.password = ""; 
                     } else {
                         this.message = "Invalid username/password"; 
                         console.log(this.message); 
