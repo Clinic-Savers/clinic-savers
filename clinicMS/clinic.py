@@ -15,18 +15,20 @@ class Clinic(db.Model):
     __tablename__ = 'clinic'
     clinicId = db.Column(db.Numeric(3), nullable=False, primary_key=True)
     clinicName = db.Column(db.String(128), nullable=False)
-    address = db.Column(db.String(128), nullable=False, primary_key=True)
+    address = db.Column(db.String(128), nullable=False)
     postalCode = db.Column(db.String(6), nullable=False)
     email = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, clinicId, clinicName, address, postalCode, email):
+    def __init__(self, clinicId, clinicName, address, postalCode, email, password):
         self.clinicId = clinicId
         self.clinicName = clinicName
         self.address = address
         self.postalCode= postalCode
         self.email = email
+        self.password = password
     def json(self):
-        return {"clinicId": self.clinicId, "clinicName": self.clinicName, "address": self.address, "postalCode": self.postalCode, "email": self.email}
+        return {"clinicId": self.clinicId, "clinicName": self.clinicName, "address": self.address, "postalCode": self.postalCode, "email": self.email, "password": self.password}
 
 
 @app.route("/clinic")
@@ -159,6 +161,8 @@ def update_clinic(clinicId):
             clinic.postalCode = data['postalCode'] 
         if data['email']:
             clinic.email = data['email']
+        if data['password']:
+            clinic.password = data['password']
         db.session.commit()
         return jsonify(
             {

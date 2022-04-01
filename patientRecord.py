@@ -13,9 +13,6 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-# add search by nric & clinicId (DONE)
-# patientRecord ID auto-increment .sort() .reverse() (DONE)
-
 class PatientRecord(db.Model):
     __tablename__ = 'patientRecord'
 
@@ -23,8 +20,6 @@ class PatientRecord(db.Model):
     nric = db.Column(db.String(9), primary_key=True, nullable=False)
     clinicId = db.Column(db.Numeric(3), primary_key=True, nullable=False)
     drugName = db.Column(db.String(128), primary_key=True, nullable=False)
-    #change quantity to prescribeQuantity (DONE)
-    #remove refillStatus (DONE)
     prescribeQuantity = db.Column(db.Integer, nullable=False)
     date = db.Column(db.String(64), primary_key=True, nullable=False)
     time = db.Column(db.String(64), primary_key=True, nullable=False)
@@ -171,6 +166,10 @@ def update_patient_record(nric,clinicId,drugName,date,time):
     record = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId,drugName=drugName,date=date,time=time).first()
     if record:
         data = request.get_json()
+        if "nric" in data:
+            record.nric = data['nric']
+        if "drugName" in data:
+            record.drugName = data['drugName']
         if "prescribeQuantity" in data:
             record.prescribeQuantity = data['prescribeQuantity']
         db.session.commit()
