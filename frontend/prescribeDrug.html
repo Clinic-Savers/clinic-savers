@@ -56,7 +56,7 @@
                         </tr>
                         <tr>
                             <td>Drug Name: </td>
-                            <td><input type = "drug" id="drugName" placeholder="Drug Name"></td>
+                            <td><input type = "drug" id="drugNameSearch" placeholder="Drug Name"></td>
                             <td><button type="button" class="my-1 btn btn-sm btn-primary" onclick="findDrug()">Search</button></td>
                         </tr>
                         <tr>
@@ -143,7 +143,7 @@
         getAllDrugs()
 
         async function findDrug(){
-            var drugName = document.getElementById('drugName').value
+            var drugName = document.getElementById('drugNameSearch').value
             console.log(drugName)
             const response =
                         await fetch(`${drug_URL}/1/${drugName}`)
@@ -176,7 +176,7 @@
                                         
                                     </td>
                                         <td><button type="button"
-                                        class="btn btn-primary" id="${result['drugName']}">Prescribe</button>
+                                        class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
                                     </td>
                                 </tr>`
                                     
