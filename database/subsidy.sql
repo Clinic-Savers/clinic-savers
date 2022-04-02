@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS `subsidy` (
   `cardNumber` varchar(8) NOT NULL,
   `cardType` char(128) NOT NULL,
   `organisationType` char(64) NULL,
-  `expiryDate` varchar(8) NOT NULL,
-  PRIMARY KEY (`nric`)
+  `expiryDate` varchar(10) NOT NULL,
+  PRIMARY KEY (`cardNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
