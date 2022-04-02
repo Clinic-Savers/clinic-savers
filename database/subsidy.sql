@@ -30,7 +30,7 @@ USE `subsidy`;
 DROP TABLE IF EXISTS `subsidy`;
 CREATE TABLE IF NOT EXISTS `subsidy` (
   `nric` varchar(9) NOT NULL,
-  `cardNumber` varchar(8) NOT NULL,
+  `cardNumber` varchar(64) NOT NULL,
   `cardType` char(128) NOT NULL,
   `organisationType` char(64) NULL,
   `expiryDate` varchar(10) NOT NULL,
