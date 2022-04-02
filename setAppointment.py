@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import os, sys
+from os import environ
 
 import requests
 from invokes import invoke_http
@@ -12,9 +13,9 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-appt_URL = "http://192.168.1.108:5003/set_appointment"
-patient_URL = "http://192.168.1.108:5000/patient/"
-subsidy_URL = "http://192.168.1.108:5004/subsidy/"
+appt_URL = environ.get('appt_URL') or "http://localhost:5003/set_appointment"
+patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
+subsidy_URL = environ.get('subsidy_URL') or "http://localhost:5004/subsidy/"
 
 @app.route("/set_appointment", methods=['POST'])
 def check_appointment():

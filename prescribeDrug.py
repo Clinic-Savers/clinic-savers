@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import os, sys
+from os import environ
 import pika
 import requests
 import json
@@ -10,9 +11,9 @@ from invokes import invoke_http
 app = Flask(__name__)
 CORS(app)
 
-patientRecord_URL = "http://localhost:5006/patientRecord/"
-drug_URL ="http://localhost:5007/drug/"
-clinic_URL = "http://localhost:5002/clinic/"
+patientRecord_URL = environ.get('patientRecord_URL') or "http://localhost:5006/patientRecord/"
+drug_URL = environ.get('drug_URL') or "http://localhost:5007/drug/"
+clinic_URL = environ.get('clinic_URL') or "http://localhost:5002/clinic/"
 
 @app.route("/create_record", methods=['POST'])
 def create_record():
