@@ -8,7 +8,7 @@ from os import environ
 import requests
 from invokes import invoke_http
 
-from datetime import datetime
+import datetime
 
 import json
 
@@ -129,8 +129,8 @@ def set_appointment(appt_details):
             }
         else:
             #check card if expired then if expired delete & alert card from DB
-            current_date = datetime.today().strftime('%Y-%m-%d')
-            d1 = datetime.datetime(datetime.today().strftime('%Y'), datetime.today().strftime('%m'), datetime.today().strftime('%d'))
+            current_date = datetime.datetime.now().date()
+            d1 = datetime.datetime(int(current_date.strftime('%Y')), int(current_date.strftime('%m')), int(current_date.strftime('%d')))
             d2 = datetime.datetime(int(subsidy_result["data"]["expiryDate"].split('-')[0]), int(subsidy_result["data"]["expiryDate"].split('-')[1]), int(subsidy_result["data"]["expiryDate"].split('-')[2]))
             if d2 < d1:
                 #expired and delete
@@ -152,7 +152,7 @@ def set_appointment(appt_details):
             #card not expired
             return {
                 "code": 257,
-                "message": "Appointment succesfully created. Appointment succesfully created. Your "+  subsidy_result["date"]["cardType"] +" card is still in use!"
+                "message": "Appointment succesfully created. Appointment succesfully created. Your "+  subsidy_result["data"]["cardType"] +" card is still in use!"
             }
             
 
