@@ -50,9 +50,9 @@ def viewClinics():
 
 
 def retrieveClinics(patientLocation):
-    patientCheck = patientLocation["postalCode"]
+    patientPostalCode = patientLocation["postalCode"]
 
-    if patientCheck == "":
+    if patientPostalCode == "":
         patientNRIC = patientLocation["nric"]
 
         #invoke patientMS to get the home address 
@@ -62,8 +62,8 @@ def retrieveClinics(patientLocation):
         #cannot find the patient
         if code not in range(200,300):
             return "Patient not logged in"
-        else:
-            patientPostalCode= str(patient_result["data"]["postalCode"])
+        # else:
+        #     patientPostalCode= str(patient_result["data"]["postalCode"])
 
     # 2. Invoking clinicMS to get those in the region
     clinic_result = invoke_http(clinic_URL + "/postal/" + patientPostalCode)
@@ -127,6 +127,8 @@ def retrieveClinics(patientLocation):
         "code":200,
         "data": final_clinic
     }
+
+
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":

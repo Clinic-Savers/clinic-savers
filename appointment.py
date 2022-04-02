@@ -38,7 +38,11 @@ class Appointment(db.Model):
 @app.route("/appointment/<string:clinicId>/<string:appointmentDate>")
 def check_appt_timing(clinicId, appointmentDate):
     clinicId = int(clinicId)
-    appt_list = Appointment.query.filter_by(clinicId=clinicId, appointmentDate=appointmentDate).all()
+    now = datetime.now()
+    current_time = time(now.hour, now.minute, now.second)
+    # appt_list = Appointment.query.filter_by(clinicId=clinicId, appointmentDate=appointmentDate).all()
+    appt_list = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==appointmentDate, func.time(Appointment.appointmentTime)>=current_time).all()
+
     if len(appt_list):
         return jsonify(
             {
