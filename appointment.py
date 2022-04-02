@@ -82,34 +82,34 @@ def get_queue_length(clinicId):
         }
     ), 404    
 
-@app.route("/appointment")
-def get_all():
-    appointmentlist = Appointment.query.all()
-    if len(appointmentlist):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "appointment": [appointment.json() for appointment in appointmentlist]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no appointments."
-        }
-    ), 404
+# @app.route("/appointment")
+# def get_all():
+#     appointmentlist = Appointment.query.all()
+#     if len(appointmentlist):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "appointment": [appointment.json() for appointment in appointmentlist]
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no appointments."
+#         }
+#     ), 404
 
 
 @app.route("/appointment/<string:nric>")
 def find_by_nric(nric):
-    appointment = Appointment.query.filter_by(nric=nric).first()
-    if appointment:
+    appointment_list = Appointment.query.filter_by(nric=nric).all()
+    if len(appointment_list):
         return jsonify(
             {
                 "code": 200,
-                "data": appointment.json()
+                "data": [record.json() for record in appointment_list]
             }
         )
     return jsonify(
@@ -121,12 +121,12 @@ def find_by_nric(nric):
 
 @app.route("/appointment/<string:nric>/<string:appointmentDate>")
 def find_by_appointmentDate(nric, appointmentDate):
-    appointment = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate).first()
-    if appointment:
+    appointment_list = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate).all()
+    if len(appointment_list):
         return jsonify(
             {
                 "code": 200,
-                "data": appointment.json()
+                "data": [record.json() for record in appointment_list]
             }
         )
     return jsonify(
@@ -137,10 +137,9 @@ def find_by_appointmentDate(nric, appointmentDate):
     ), 404
 
 
-@app.route("/set_appointment", methods=["POST"])
-def set_appointment():
+@app.route("/createAppointment", methods=["POST"])
+def createAppointment():
     data = request.get_json()
-
     #retrieve the details
     nric = data["nric"]
     symptoms = data["symptoms"]

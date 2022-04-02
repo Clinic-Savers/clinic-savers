@@ -83,9 +83,7 @@
                           </form>
 
                           <div class="row mx-auto mt-3">
-                            <table class="table table-striped">
-                                <thead id="all">
-                                </thead>
+                            <table class="table table-striped" id="all">
                             </table>
                         </div>   
                     </div>
@@ -110,19 +108,23 @@
                             .then(data => {
                                 console.log(data.data.PatientRecords)
                                 result =JSON.parse(JSON.stringify(data.data.PatientRecords))
-                                message_str =  `<tr>
-                                    <th>NRIC</th>
-                                    <th>Drug Name</th>
-                                    <th>Prescribed Quantity</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>`
+                                message_str =  `
+                                <thead>
+                                    <tr>
+                                        <th>NRIC</th>
+                                        <th>Drug Name</th>
+                                        <th>Prescribed Quantity</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>`
                                 result.reverse()
                                 console.log(result)
                                 for (const record of result) {
                                     message_str += `
+                                    <tbody>
                                     <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
                                         <td>
                                             ${record['nric']}
@@ -149,7 +151,8 @@
                                             class="btn btn-primary" id="update,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="update_record(this)">Edit
                                             </button>
                                         </td>
-                                    </tr>`
+                                    </tr>
+                                    </tbody>`
                                     //
                                 }
                                 document.getElementById('all').innerHTML = message_str
@@ -176,7 +179,9 @@
                                 console.log(data)
                                 result =JSON.parse(JSON.stringify(data.data.PatientRecords))
                                 console.log(result)
-                                message_str =  `<tr>
+                                message_str =  `
+                                <thead>
+                                <tr>
                                     <th>NRIC</th>
                                     <th>Drug Name</th>
                                     <th>Prescribed Quantity</th>
@@ -184,11 +189,13 @@
                                     <th>Time</th>
                                     <th></th>
                                     <th></th>
-                                </tr>`
+                                </tr>
+                                </thead>`
                                 result.reverse()
                                 console.log(result)
                                 for (const record of result) {
                                     message_str += `
+                                    <tbody>
                                         <tr id ="${record['clinicId']},${record['nric']},${record['drugName']},${record['date']},${record['time']}">
                                             <td>
                                                 ${record['nric']}
@@ -215,7 +222,8 @@
                                                 class="btn btn-primary" id="update,${record['clinicId']},${record['nric']},${record['drugName']},${record['prescribeQuantity']},${record['date']},${record['time']}" onclick="update_record(this)">Edit
                                                 </button>
                                             </td>
-                                        </tr>`   
+                                        </tr>
+                                    </tbody>`   
                                 }
                                 
                                 document.getElementById('all').innerHTML = message_str

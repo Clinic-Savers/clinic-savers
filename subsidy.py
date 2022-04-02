@@ -161,7 +161,7 @@ def delete_subsidy(cardNumber):
             {
                 "code": 200,
                 "data": {
-                    "cardNumber": cardNumber
+                    "subsidy": subsidy.json()
                 }
             }
         )
@@ -169,7 +169,7 @@ def delete_subsidy(cardNumber):
         {
             "code": 404,
             "data": {
-                "cardNumber": cardNumber
+                "subsidy": subsidy.json()
             },
             "message": "Card not found."
         }
