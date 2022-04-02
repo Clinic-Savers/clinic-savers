@@ -21,8 +21,7 @@ class Appointment(db.Model):
     symptoms = db.Column(db.String(128), nullable=False)
     clinicId = db.Column(db.Numeric(3), nullable=False)
     appointmentDate = db.Column(db.String(64), nullable=False, primary_key=True)
-    appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
-
+    appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)    
 
     def __init__(self, nric, symptoms, clinicId, appointmentDate, appointmentTime):
         self.nric = nric
@@ -34,6 +33,27 @@ class Appointment(db.Model):
         
     def json(self):
         return {"nric": self.nric, "symptoms": self.symptoms, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+
+# @app.route("/appointment/<string:clinicID>/<string: appointDate>")
+# def check_appt_timing(clinicId, appointDate):
+#     clinicId = int(clinicId)
+#     appt_list = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==appointDate)
+#     if len(appt_list):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "appointment": [appointment.json() for appointment in appt_list]
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no appointments."
+#         }
+#     ), 404
+
 
 # get queue length of specified clinic id 
 @app.route("/appointment/<string:clinicId>")
