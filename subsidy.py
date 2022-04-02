@@ -16,7 +16,7 @@ class Subsidy(db.Model):
     __tablename__ = 'subsidy'
     cardNumber = db.Column(db.String(64), nullable=False, primary_key=True)
     nric = db.Column(db.String(9), nullable=False)
-    cardType = db.Column(db.Integer, nullable=False)
+    cardType = db.Column(db.String(128), nullable=False)
     organisationType = db.Column(db.String(128), nullable=True)
     expiryDate = db.Column(db.String(64), nullable=False)
 
@@ -77,12 +77,12 @@ def find_by_nric(nric):
     return jsonify(
         {
             "code": 404,
-            "message": "Patient not found."
+            "message": "No subsidy card."
         }
     ), 404
 
-@app.route("/subsidy/create/<string:cardNumber>", methods=['POST'])
-def create_subsidy(cardNumber):
+@app.route("/subsidy/<string:cardNumber>", methods=['POST'])
+def create_subsidyCard(cardNumber):
     if (Subsidy.query.filter_by(cardNumber=cardNumber).first()):
         return jsonify(
             {
@@ -90,12 +90,11 @@ def create_subsidy(cardNumber):
                 "data": {
                     "cardNumber": cardNumber
                 },
-                "message": "Card already exists."
+                "message": "Subsidy card already exists."
             }
         ), 400
 
     data = request.get_json()
-    print(data)
     subsidy = Subsidy(cardNumber, **data)
 
     try:
@@ -108,7 +107,7 @@ def create_subsidy(cardNumber):
                 "data": {
                     "cardNumber": cardNumber
                 },
-                "message": "An error occurred adding the subsidy card."
+                "message": "An error occurred creating the subsidy card."
             }
         ), 500
 

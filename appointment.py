@@ -82,27 +82,7 @@ def get_queue_length(clinicId):
         }
     ), 404    
 
-# @app.route("/appointment")
-# def get_all():
-#     appointmentlist = Appointment.query.all()
-#     if len(appointmentlist):
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": {
-#                     "appointment": [appointment.json() for appointment in appointmentlist]
-#                 }
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "There are no appointments."
-#         }
-#     ), 404
-
-
-@app.route("/appointment/<string:nric>")
+@app.route("/appointment/nric/<string:nric>")
 def find_by_nric(nric):
     appointment_list = Appointment.query.filter_by(nric=nric).all()
     if len(appointment_list):
@@ -119,7 +99,7 @@ def find_by_nric(nric):
         }
     ), 404
 
-@app.route("/appointment/<string:nric>/<string:appointmentDate>")
+@app.route("/appointment/date/<string:nric>/<string:appointmentDate>")
 def find_by_appointmentDate(nric, appointmentDate):
     appointment_list = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate).all()
     if len(appointment_list):
@@ -144,6 +124,7 @@ def createAppointment():
     nric = data["nric"]
     symptoms = data["symptoms"]
     clinicId = int(data["clinicId"])
+
 
     #Check the lastest appointment time
     now = datetime.now()
