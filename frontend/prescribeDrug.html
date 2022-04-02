@@ -121,7 +121,7 @@
         const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
 
-        document.getElementById("clinicId").innerText = sessionStorage.getItem("clinicId")
+        document.getElementById("clinicId").value = sessionStorage.getItem("clinicId")
 
         // Get the current date and time function
         function setTime(){

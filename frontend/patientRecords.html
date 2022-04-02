@@ -66,8 +66,13 @@
                             </div>
                             <div class="form-group row">
                               <label for="nric" class="col-sm-2 col-form-label"><h5>NRIC</h5></label>
-                              <div class="col-sm-10">
+                              <div class="col-sm-8">
                                 <input type="text" class="form-control" id="nric" placeholder="Enter NRIC here">
+                              </div>
+                              <div class="col-sm-1">
+                                <button type="button" onclick="findRecords()" class="btn btn-primary text-white m-0">
+                                    Search
+                                </button>
                               </div>
                             </div>
                             <div class="form-group mt-2">
@@ -94,7 +99,7 @@
         const updateRecord_URL ="http://localhost:5120/update_record"
         const deleteRecord_URL = "http://localhost:5120/delete_record"
 
-        document.getElementById("clinicId").innerText = sessionStorage.getItem("clinicId")
+        document.getElementById("clinicId").value = sessionStorage.getItem("clinicId")
 
         //functions
         async function getAllRecords(){
