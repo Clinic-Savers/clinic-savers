@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Sample Application</title>
+	<title>Patient Login UI</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	
 	<link rel="stylesheet" href="../frontend/style.css">
@@ -196,92 +196,76 @@
 
 <body class="myinfo" style="background: linear-gradient(to right, #616161, #9bc5c3);">
 
-	<section class="hero-area">
-		<div class="container">
-			<div class="row pt-5 pb-3">
-				<div class="col-lg-6 col-md-6 d-flex align-items-center full-screen-height">
-					<div class="hero-content-div">
-						<div class="hero-content">
-							<h1 class="display-4 text-white">Clinic</h1>
-							<hr>
-							<p class="font-weight-light mb-4 text-white font-italic">To start the login process, click on the "Login" button below.</p>
-						</div>
-						<form id="formAuthorise">
-							<a href="#" onclick="$(this).closest('form').submit()" class="btn btn-primary text-white">Login</a>
-						</form><br>
-					</div>
+	<div id="app" class="container">
+        <div class="container">
+    	    <div class="row pt-5 pb-3">
+                <div class="col-lg-9 mx-auto text-center text-white">
+                    <h1 class="display-4">Quick Booking System </h1><p class="lead mb-0"> Making appointment booking quicker.</p>
+                    <p class="lead">Visit us here @ <a href="https://www.rafflesmedicalgroup.com/">
+                        <u class="text-white">Raffles Medical</u></a>
+                    </p>   
+                </div> 
+            </div>
+        </div>
+
+		<div class="row mb-3">
+            <div class="col-lg-8 mx-auto">
+                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Login to your account here. </h5>
+				<div class="bg-white p-5 rounded shadow">
+					<form id="formAuthorise">
+						<a href="#" onclick="$(this).closest('form').submit()" class="btn btn-primary text-white">Login</a>
+					</form>
+					
+					<br>
+
+					<a href="#form" class="form-link link-light">
+						<p class="btn btn-primary text-light">Form Below</p>
+					</a>
 				</div>
-				
-				<a href="#form" class="form-link link-light">
-					<p class="btn btn-primary text-light">Form Below</p>
-				</a>
+
+				<h5 id="postalHeader" class="font-weight-light mt-4 text-white font-italic"> Application pre-filled with MyInfo! </h5>
+				<p class="lead mb-4 text-white"> Confirm your details below and click "Submit Application".</p>
+
+				<div class="bg-white p-5 rounded shadow" id="form">
+					<form id="formApplication" class="toggle_content my-2">
+						<label for="uinfin"> <h5> NRIC </h5> </label>
+						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
+                            </div>
+                        </div>
+
+						<label for="name"> <h5> Full Name </h5> </label>
+						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
+                            </div>
+                        </div>
+
+						<hr>
+
+						<label for="mobileno"> <h5> Mobile Number </h5> </label>
+						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
+                            </div>
+                        </div>
+
+						<label for="regadd"> <h5> Registered Address </h5> </label>
+						<div class="input-group">
+							<textarea cols="50" rows="3" name="regadd" class="border-1 bg-light"></textarea>
+						</div>
+                        
+
+						<button type="button" class="mt-2 btn btn-primary text-white">
+                            <a href="#" class="btn2 text-white">Submit Application</a></button>
+                        </button>
+					</form>
+				</div>
 			</div>
 		</div>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br>
-	</section>
-
-	<section id="form" class="lone-about-us section-padding">
-		<form id="formApplication" class="toggle_content">
-			<div class="container">
-				<div class="single-heading" >
-					<h4 class="text-center text-light">Application pre-filled with MyInfo!</h4>
-				</div>
-				<div class="row">
-					<div class="col-md-12 mb-4">
-						<p class="text-center text-light">Confirm your details below and click "Submit Application".</p>
-					</div>
-				</div>
-				<div class="row justify-content-around">
-					<div class="col-md-12 col-lg-5 form-box mb-4">
-						<h3 class="font-weight-light mb-4 text-white font-italic">Personal Information</h3>
-						<hr>
-						<div class="bg-white p-5 rounded shadow">
-							<div class="form-group">
-								<label>NRIC</label>
-								<div class="input-group">
-									<input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label>Full Name</label>
-								<div class="input-group">
-									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
-								</div>
-							</div>
-						
-							<hr>
-							<div class="form-group">
-								<label>Email</label>
-								<div class="input-group">
-									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="email" value="" placeholder="" required="">
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label>Mobile Number</label>
-								<div class="input-group">
-									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label>Registered Address</label>
-								<div class="input-group">
-									<textarea cols="50" rows="3" name="regadd"></textarea>
-								</div>
-							</div>
-							<hr>
-						</div>
-					</div>
-					<div class="col-md-12 text-center">
-						<button type="button" class="btn btn-primary text-white"><a href="#" class="btn2 text-white">Submit Application</a></button>
-					</div>
-				</div>
-			</div>
-		</form>
-	</section>
-
+	</div>
+	
 	<!-- Plugin JavaScript -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 	
