@@ -17,6 +17,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient
       PYTHONUNBUFFERED: 1
+    ports:
+        - "5000:5000"
  
   #######################################################
   # Clinic: The Clinic microservice
@@ -30,6 +32,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/clinic
       PYTHONUNBUFFERED: 1
+    ports:
+      - "5002:5002"
 
   #######################################################
   # Appointment: The Appointment microservice
@@ -43,6 +47,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/appointment
       PYTHONUNBUFFERED: 1
+    ports:
+        - "5003:5003"
 
   #######################################################
   # Distance: The Distance microservice
@@ -55,6 +61,8 @@ services:
     restart: always
     environment:
       PYTHONUNBUFFERED: 1
+    ports:
+        - "5001:5001"
 
   #######################################################
   # Drug: The Drug microservice
@@ -68,6 +76,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/drug
       PYTHONUNBUFFERED: 1
+    ports:
+      - "5007:5007"
 
   #######################################################
   # PatientRecord: The PatientRecord microservice
@@ -76,11 +86,13 @@ services:
     build:
       context: ./
       dockerfile: patientRecord.Dockerfile
-    image: bryanshing/patientRecord:esd
+    image: bryanshing/patient_record:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patientRecord
       PYTHONUNBUFFERED: 1
+    ports:
+      - "5006:5006"
 
   #######################################################
   # Subsidy: The Subsidy microservice
@@ -94,6 +106,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/subsidy
       PYTHONUNBUFFERED: 1
+    ports:
+      - "5004:5004"
 
   ####################################
   # RabbitMQ: The messaging broker   
@@ -131,7 +145,7 @@ services:
     build:
       context: ./
       dockerfile: prescribeDrug.Dockerfile
-    image: bryanshing/prescribeDrug:esd
+    image: bryanshing/prescribe_drug:esd
     restart: always
     depends_on:
       - clinic
@@ -144,7 +158,7 @@ services:
       rabbit_port: 5672
       clinic_URL: http://clinic:5002/clinic/
       drug_URL: http://drug:5007/drug/
-      patientRecord_URL: http://patientRecord:5007/patientRecord/
+      patientRecord_URL: http://patientRecord:5006/patientRecord/
       PYTHONUNBUFFERED: 1
     ports:
       - "5120:5120"
@@ -156,7 +170,7 @@ services:
     build:
       context: ./
       dockerfile: viewClinics.Dockerfile
-    image: bryanshing/viewClinics:esd
+    image: bryanshing/view_clinics:esd
     restart: always
     depends_on:
       - clinic
@@ -179,7 +193,7 @@ services:
     build:
       context: ./
       dockerfile: setAppointment.Dockerfile
-    image: bryanshing/setAppointment:esd
+    image: bryanshing/set_appointment:esd
     restart: always
     depends_on:
       - subsidy

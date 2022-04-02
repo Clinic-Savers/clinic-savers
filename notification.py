@@ -3,14 +3,15 @@ from mailjet_rest import Client
 import json
 import sys
 import os
+from os import environ
 import pika
 
 api_key = 'ce935253e850312f41b9c38c450a9ca0'
 api_secret = '3fdd8dcf9fd9bb6cf96bb71d97a659ac'
 mailjet = Client(auth=(api_key, api_secret), version='v3.1')
 
-hostname = "localhost" 
-port = 5672 
+hostname = environ.get('rabbit_host') or "localhost" 
+port = environ.get('rabbit_port') or 5672 
 # connect to the broker and set up a communication channel in the connection
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostname, port=port))
 channel = connection.channel()
