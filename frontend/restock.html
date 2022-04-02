@@ -76,9 +76,7 @@
                         </form> 
 
                         <div class="row mx-auto mt-3">
-                            <table class="table table-striped">
-                                <thead id="all">
-                                </thead>
+                            <table class="table table-striped" id="all">
                             </table>
                         </div> 
                     </div>
@@ -105,6 +103,7 @@
                                     <th class="text-center">Supplier Name</th>
                                     <th class="text-center">Supplier Email</th>
                                     <th class="text-center">Reorder Quantity</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>`
                                 console.log(result)
@@ -142,7 +141,10 @@
                                                 <button type="button"
                                                 class="btn btn-success" id="confirm,${drug['drugName']},${drug['quantity']},${drug['restockStatus']},${drug['supplierName']},${drug['supplierEmail']},${drug['reorderQuantity']}" onclick="confirm_delivery(this)">Confirm Delivery</button>
                                             </td>
-                                        </tr>`
+                                        </tr>
+                                        </tbody>`
+                                    } else {
+                                        message_str += `<td></td></tr></tbody>`
                                     }
                                         
                                     //
