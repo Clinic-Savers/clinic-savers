@@ -110,7 +110,7 @@
 						console.log(data)
 						console.log(data.text)
 						$.ajax({
-							url: "http://192.168.1.244:5000/patient/" + data.text.uinfin.value,
+							url: "http://192.168.1.108:5000/patient/" + data.text.uinfin.value,
 							data: 
 								JSON.stringify({
 
@@ -122,7 +122,7 @@
 								}),
 							type: "POST",
 							dataType: 'json',
-            				contentType: 'application/json'
+							contentType: 'application/json'
 						})
 
 					} else {

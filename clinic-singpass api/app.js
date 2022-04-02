@@ -1,18 +1,15 @@
+const dotenv = require('dotenv')
 var express = require('express');
 var router = express.Router();
 
 const restClient = require('superagent-bluebird-promise');
 const path = require('path');
-const url = require('url');
-const util = require('util');
-const Promise = require('bluebird');
 const _ = require('lodash');
 const querystring = require('querystring');
 const securityHelper = require('./security/security');
-const crypto = require('crypto');
-const colors = require('colors');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var cors = require('cors')
 
 var app = express();
 
@@ -20,8 +17,9 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
+app.options('*', cors())
 app.use("/",router)
 
 // view engine setup
@@ -29,11 +27,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 // ####################
 // Setup Configuration
 // ####################
-
 // LOADED FRON ENV VARIABLE: public key from MyInfo Consent Platform given to you during onboarding for RSA digital signature
 var _publicCertContent = process.env.MYINFO_SIGNATURE_CERT_PUBLIC_CERT;
 // LOADED FRON ENV VARIABLE: your private key for RSA digital signature
@@ -45,14 +41,14 @@ var _clientSecret = process.env.MYINFO_APP_CLIENT_SECRET;
 // redirect URL for your web application
 var _redirectUrl = process.env.MYINFO_APP_REDIRECT_URL;
 
-
 // URLs for MyInfo APIs
 var _authLevel = process.env.AUTH_LEVEL;
 var _authApiUrl = process.env.MYINFO_API_AUTHORISE;
 var _tokenApiUrl = process.env.MYINFO_API_TOKEN;
 var _personApiUrl = process.env.MYINFO_API_PERSON;
 
-var _attributes = "uinfin,name,sex,race,nationality,dob,email,mobileno,regadd,housingtype,hdbtype,marital,edulevel,noa-basic,ownerprivate,cpfcontributions,cpfbalances";
+//attributes patientMS needs
+var _attributes = "uinfin,name,mobileno,regadd";
 
 
 /* GET home page. */
@@ -179,69 +175,26 @@ function callPersonAPI(accessToken, res) {
           });
         } else {
 
-          if (_authLevel == "L0") {
-            console.log("xxxPerson Data:".green);
-            console.log(personData); //patient info
-            
-            personData = JSON.parse(personData);
-            // personData = securityHelper.verifyJWS(personData, _publicCertContent);
+          console.log("xxxPerson Data:".green);
+          console.log(personData); //patient info
+          
+          personData = JSON.parse(personData);
+          // personData = securityHelper.verifyJWS(personData, _publicCertContent);
 
-            if (personData == undefined || personData == null) {
-              res.jsonp({
-                status: "ERROR",
-                msg: "INVALID DATA OR SIGNATURE FOR PERSON DATA"
-              });
-            }
-            
-            // successful. return data back to frontend
+          if (personData == undefined || personData == null) {
             res.jsonp({
-              status: "OK",
-              text: personData
+              status: "ERROR",
+              msg: "INVALID DATA OR SIGNATURE FOR PERSON DATA"
             });
-
           }
-          else if(_authLevel == "L2"){
-            console.log("Person Data (JWE):".green);
-            console.log(personData);
+          
+          // successful. return data back to frontend
+          res.jsonp({
+            status: "OK",
+            text: personData
+          });
 
-            var jweParts = personData.split("."); // header.encryptedKey.iv.ciphertext.tag
-            securityHelper.decryptJWE(jweParts[0], jweParts[1], jweParts[2], jweParts[3], jweParts[4], _privateKeyContent)
-              .then(personDataJWS => {
-                if (personDataJWS == undefined || personDataJWS == null) {
-                  res.jsonp({
-                    status: "ERROR",
-                    msg: "INVALID DATA OR SIGNATURE FOR PERSON DATA"
-                  });
-                }
-                console.log("Person Data (JWS):".green);
-                console.log(JSON.stringify(personDataJWS));
-
-                var decodedPersonData = securityHelper.verifyJWS(personDataJWS, _publicCertContent);
-                if (decodedPersonData == undefined || decodedPersonData == null) {
-                  res.jsonp({
-                    status: "ERROR",
-                    msg: "INVALID DATA OR SIGNATURE FOR PERSON DATA"
-                  })
-                }
-
-
-                console.log("Person Data (Decoded):".green);
-                console.log(JSON.stringify(decodedPersonData));
-                // successful. return data back to frontend
-                res.jsonp({
-                  status: "OK",
-                  text: decodedPersonData
-                });
-
-              })
-              .catch(error => {
-                console.error("Error with decrypting JWE: %s".red, error);
-              })
-          }
-          else {
-            throw new Error("Unknown Auth Level");
-          }
-
+          
         } // end else
       }
     }); //end asynchronous call
@@ -261,29 +214,12 @@ function createTokenRequest(code) {
     "&client_secret=" + _clientSecret;
   var params = querystring.parse(strParams);
 
-
   // assemble headers for Token API
   var strHeaders = "Content-Type=" + contentType + "&Cache-Control=" + cacheCtl;
   var headers = querystring.parse(strHeaders);
 
   // Add Authorisation headers for connecting to API Gateway
   var authHeaders = null;
-  if (_authLevel == "L0") {
-    // No headers
-  } else if (_authLevel == "L2") {
-    authHeaders = securityHelper.generateAuthorizationHeader(
-      _tokenApiUrl,
-      params,
-      method,
-      contentType,
-      _authLevel,
-      _clientId,
-      _privateKeyContent,
-      _clientSecret
-    );
-  } else {
-    throw new Error("Unknown Auth Level");
-  }
 
   if (!_.isEmpty(authHeaders)) {
     _.set(headers, "Authorization", authHeaders);
