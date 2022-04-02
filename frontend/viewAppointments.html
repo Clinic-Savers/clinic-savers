@@ -30,6 +30,11 @@
     2nd Page: Doctor or CA
     Doctor Page: Dropdown Search PR & Prescribe Drug
     CA Page: Search Drug, Edit button (make Supplier info into input text and reorderQuantity), "Restock Completed" button -->
+
+    <script>
+        var nric = sessionStorage.getItem("nric")
+        console.log(nric)
+    </script>
     
     <div class="container">
         <div class="container">
@@ -46,19 +51,20 @@
         <div class="container">
             <div class="row mb-3">
                 <div class="col-lg-12 mx-auto">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link " href="./patientUI copy.html"> Patient </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="./viewAppointments.html"> View Appointments </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="./subsidyCard.html"> Subsidy cards </a>
-                        </li>
-                    </ul>
                     <h5 class="font-weight-light mb-4 text-white font-italic"> View Appointments </h5>
                     <div class="bg-white p-5 rounded shadow">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" href="./patientUI copy.html"> Find Clinics </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="./viewAppointments.html"> View Appointments </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./subsidyCard.html"> Subsidy Cards </a>
+                            </li>
+                        </ul>
+
                         <form class="mt-4">
                             <div class="form-group row">
                               <label for="nric" class="col-sm-2 col-form-label"><h5>Date</h5></label>
@@ -76,12 +82,12 @@
                                     Show All Appointments!
                                 </button>
                             </div>
-                          </form>
+                        </form>
 
-                          <div class="row mx-auto mt-3">
+                        <div class="row mx-auto mt-3">
                             <table class="table table-striped" id="all">
                             </table>
-                        </div>   
+                        </div> 
                     </div>
                 </div>
             </div>
