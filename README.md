@@ -3,16 +3,12 @@
 ## Access to Frontend UI ##
 add process of user logging in (order in which the pages will be accessed)
 
-
-
-
+<br><br>
 For the frontend files to function, clinic-savers repository has to be saved in the webroot
 
 ![Location of clinic-savers](clinicsaversloc.jpg)
 
-
-
-
+<br><br>
 Our frontend webpages can be accessed through these links:
 
 * Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
