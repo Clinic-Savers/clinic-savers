@@ -1,8 +1,5 @@
 const dotenv = require('dotenv').config()
-console.log(process.env)
 var express = require('express');
-var router = express.Router();
-
 const restClient = require('superagent-bluebird-promise');
 const path = require('path');
 const _ = require('lodash');
@@ -12,13 +9,12 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cors = require('cors')
 
+var router = express.Router();
 var app = express();
 
-// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 app.options('*', cors())
 app.use("/",router)
@@ -28,9 +24,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-// ####################
+
 // Setup Configuration
-// ####################
 // LOADED FRON ENV VARIABLE: public key from MyInfo Consent Platform given to you during onboarding for RSA digital signature
 var _publicCertContent = process.env.MYINFO_SIGNATURE_CERT_PUBLIC_CERT;
 // LOADED FRON ENV VARIABLE: your private key for RSA digital signature
@@ -50,7 +45,6 @@ var _personApiUrl = process.env.MYINFO_API_PERSON;
 
 //attributes patientMS needs
 var _attributes = "uinfin,name,mobileno,regadd";
-
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -95,20 +89,17 @@ router.post('/getPersonData', function(req, res, next) {
     .end(function(callErr, callRes) {
       if (callErr) {
         // ERROR
-        console.error("Token Call Error: ",callErr.status);
-        console.error(callErr.response.req.res.text);
         res.jsonp({
           status: "ERROR",
           msg: callErr
         });
-      } else {
+      } 
+      else {
         // SUCCESSFUL
         var data = {
           body: callRes.body,
           text: callRes.text
         };
-        console.log("Response from Token API:".green);
-        console.log(JSON.stringify(data.body));
 
         var accessToken = data.body.access_token;
         if (accessToken == undefined || accessToken == null) {
@@ -118,15 +109,12 @@ router.post('/getPersonData', function(req, res, next) {
           });
         }
 
-        // everything ok, call person API
         callPersonAPI(accessToken, res);
       }
     });
 });
 
 function callPersonAPI(accessToken, res) {
-
-  console.log("AUTH_LEVEL:".green,_authLevel);
 
   // validate and decode token to get SUB
   var decoded = securityHelper.verifyJWS(accessToken, _publicCertContent);
@@ -136,9 +124,6 @@ function callPersonAPI(accessToken, res) {
       msg: "INVALID TOKEN"
     })
   }
-
-  console.log("Decoded Access Token:".green);
-  console.log(JSON.stringify(decoded));
 
   var sub = decoded.sub;
   if (sub == undefined || sub == null) {
@@ -162,7 +147,8 @@ function callPersonAPI(accessToken, res) {
           status: "ERROR",
           msg: callErr
         });
-      } else {
+      } 
+      else {
         // SUCCESSFUL
         var data = {
           body: callRes.body,
@@ -174,11 +160,8 @@ function callPersonAPI(accessToken, res) {
             status: "ERROR",
             msg: "PERSON DATA NOT FOUND"
           });
-        } else {
-
-          console.log("xxxPerson Data:".green);
-          console.log(personData); //patient info
-          
+        } 
+        else {
           personData = JSON.parse(personData);
           // personData = securityHelper.verifyJWS(personData, _publicCertContent);
 
@@ -189,16 +172,15 @@ function callPersonAPI(accessToken, res) {
             });
           }
           
-          // successful. return data back to frontend
           res.jsonp({
             status: "OK",
             text: personData
           });
 
           
-        } // end else
+        } 
       }
-    }); //end asynchronous call
+    });
 }
 
 // function to prepare request for TOKEN API
@@ -225,9 +207,6 @@ function createTokenRequest(code) {
   if (!_.isEmpty(authHeaders)) {
     _.set(headers, "Authorization", authHeaders);
   }
-
-  console.log("Request Header for Token API:".green);
-  console.log(JSON.stringify(headers));
 
   var request = restClient.post(_tokenApiUrl);
 
@@ -258,27 +237,8 @@ function createPersonRequest(sub, validToken) {
   var strHeaders = "Cache-Control=" + cacheCtl;
   var headers = querystring.parse(strHeaders);
 
-  // Add Authorisation headers for connecting to API Gateway
-  var authHeaders = securityHelper.generateAuthorizationHeader(
-    url,
-    params,
-    method,
-    "", // no content type needed for GET
-    _authLevel,
-    _clientId,
-    _privateKeyContent,
-    _clientSecret
-  );
+  _.set(headers, "Authorization", "" + ",Bearer " + validToken);
 
-  // NOTE: include access token in Authorization header as "Bearer " (with space behind)
-  if (!_.isEmpty(authHeaders)) {
-    _.set(headers, "Authorization", authHeaders + ",Bearer " + validToken);
-  } else {
-    _.set(headers, "Authorization", "Bearer " + validToken);
-  }
-
-  console.log("Request Header for Person API:".green);
-  console.log(JSON.stringify(headers));
   // invoke person API
   var request = restClient.get(url);
 
@@ -292,10 +252,6 @@ function createPersonRequest(sub, validToken) {
 
   return request;
 }
-
-// app.listen(3000, () => {
-//   console.log("app running on port 3000...");
-// })
 
 module.exports = router;
 module.exports = app;
