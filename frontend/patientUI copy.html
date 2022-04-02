@@ -22,6 +22,13 @@
     <title> Patient UI </title>
 </head>
 <body>
+
+    <script>
+        var nric = sessionStorage.getItem("nric")
+        console.log(nric) 
+        sessionStorage.clear()
+    </script>
+
     <div id="app" class="container">
         <div class="container">
     	    <div class="row pt-5 pb-3">
@@ -34,22 +41,25 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="./patientUI copy.html"> Patient </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./viewAppointments.html"> View Appointments </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./subsidyCard.html"> Subsidy cards </a>
-                </li>
-            </ul>
-            <div class="col-lg-8 mx-auto">
-                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Find clinics near you </h5>
-                <div class="bg-white p-5 rounded shadow">
-                    
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-lg-12 mx-auto">
+                    <h5 class="font-weight-light mb-4 text-white font-italic"> Find Clinics Near You </h5>
+                    <div class="bg-white p-5 rounded shadow">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="./patientUI copy.html"> Find Clinics </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./viewAppointments.html"> View Appointments </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./subsidyCard.html"> Subsidy Cards </a>
+                            </li>
+                        </ul>
+
+                        <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Find clinics near you </h5>
+                           
                         <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                             <div class="input-group">
                                 <input id="postalCode" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
@@ -67,22 +77,26 @@
                                 Use Home Address
                             </button>
                         </div>
-                    <!-- build the message in js -->
-                    <div class="row mx-auto mt-3">
-                        <table class="table table-striped">
-                            <thead id="listClinics">
-                            </thead>
-                        </table>
+
+                        <!-- build the message in js -->
+                        <div class="row mx-auto mt-3">
+                            <table class="table table-striped" id="listClinics">
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row mb-3" id="showAppt">
+
+            </div>
         </div>
-    </div>    
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script>
-        nric = sessionStorage.setItem('nric',"S7380725E");
-        nric = sessionStorage.getItem('nric');
+        // nric = sessionStorage.setItem('nric',"S7380725E");
+        // nric = sessionStorage.getItem('nric');
 
         const viewClinicURL = "http://localhost:5100/viewClinics";
         const selected_clinic_url = "http://localhost:5008/set_appointment"; 
@@ -107,15 +121,19 @@
                                 console.log(data)
                                 clinics = data.data
                                 message_str =  `
+                                <thead>
                                 <tr>
                                     <th>Clinic Name</th>
                                     <th> Clinic Address </th>
                                     <th> Queue Length </th>
-                                </tr>`
+                                    <th> </th>
+                                </tr>
+                                </thead>`
                                 var i = 0
                                 for (const clinic of clinics) {
                                     i++
                                     message_str += `
+                                    <tbody>
                                     <tr id ="${clinic[0]}">
                                         <td>
                                             ${clinic[1]['name']}
@@ -127,11 +145,12 @@
                                             ${clinic[1]['queue']}
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-primary"  id="${i},${nric},${clinic[0]}" onclick="toggle_form(this)">
+                                            <button type="button" class="btn btn-primary text-center"  id="${i},${nric},${clinic[0]}" onclick="toggle_form(this)">
                                                 Book Appointment
                                             </button>
                                         </td>
                                     </tr>
+                                    </tbody>
                                     `
                                 }
                                 document.getElementById("listClinics").innerHTML= message_str
@@ -152,29 +171,32 @@
             clinicId = item.id.split(',')[2]
             nric = item.id.split(',')[1]
             index = item.id.split(',')[0]
-            row = document.getElementById(`${clinicId}`)
-            var table = document.getElementById("listClinics");
-            for (let i = 1; i < table.children.length; i++) {
-                table.children[i].children[3].remove()
-            }
-            var row =table.insertRow(parseInt(index)+1)
-            row.innerHTML = `
-            <td colspan='3'>
-                <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
-                <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-
-                    <div class="input-group">
-                        <input id="symptoms" type="text" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+            // row = document.getElementById(`${clinicId}`)
+            
+            // for (let i = 1; i < table.children.length; i++) {
+            //     table.children[i].children[3].remove()
+            // }
+            // var row =table.insertRow(parseInt(index)+1)
+            message_str = `
+            <h5 id="makeAppt" class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
+            <div class="bg-white p-5 rounded shadow">
+                <form action="" class="my-2">
+                    <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
+                    <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                        <div class="input-group">
+                            <input id="symptoms" type="text" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
-                <button class="btn btn-success" id="${nric},${clinicId}" onclick="bookAppointment(this)">Submit</button>
-            </td>
-            <td>
-                <button class="btn btn-secondary" onclick="getClinics()">Cancel</button>
-            </td>
+                    <button type="button" class="btn btn-success text-center" id="${nric},${clinicId}" onclick="bookAppointment(this)">
+                        Submit
+                    </button>
+                    <button type="button" class="btn btn-secondary text-center" onclick="getClinics()">
+                        Cancel
+                    </button>
+                </form>
+            </div>
             `
+            document.getElementById("showAppt").innerHTML = message_str
         }
 
         async function bookAppointment(item){
