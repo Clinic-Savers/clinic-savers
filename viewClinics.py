@@ -16,7 +16,7 @@ CORS(app)
 clinic_URL = environ.get('clinic_URL') or "http://localhost:5002/clinic"
 distance_URL = environ.get('distance_URL') or "http://localhost:5001/checkDist"
 appointment_URL = environ.get('appointment_URL') or "http://localhost:5003/appointment"
-patient_URL = environ.get('patient_URL') or " http://localhost:5000/patient/"
+patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
 
 @app.route("/viewClinics", methods=["POST"])
 def viewClinics():
@@ -62,8 +62,8 @@ def retrieveClinics(patientLocation):
         #cannot find the patient
         if code not in range(200,300):
             return "Patient not logged in"
-        # else:
-        #     patientPostalCode= str(patient_result["data"]["postalCode"])
+        else:
+            patientPostalCode= str(patient_result["data"]["postalCode"])
 
     # 2. Invoking clinicMS to get those in the region
     clinic_result = invoke_http(clinic_URL + "/postal/" + patientPostalCode)

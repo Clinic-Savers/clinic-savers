@@ -56,7 +56,7 @@
 
                         
                         <div class="form-check">
-                            <input class="form-check-input"  type="checkbox" @click="checkClinics" id="homeAddress">
+                            <input class="form-check-input"  type="checkbox" @click="getClinics" id="homeAddress">
                             <label class="form-check-label" for="flexCheckDefault">
                                 Use Home Address
                             </label>
@@ -188,9 +188,9 @@
         nric = sessionStorage.setItem('nric',"S7380725E");
         nric = sessionStorage.getItem('nric');
 
-        const viewClinicURL = "http://localhost:5100/viewClinics";
-        const selected_clinic_url = "http://localhost:5008/set_appointment"; 
-        const subsidy_url = "http:/localhost:5004/subsidy/create";
+        const viewClinicURL = "http://192.168.1.108:5100/viewClinics";
+        const selected_clinic_url = "http://192.168.1.108:5008/set_appointment"; 
+        const subsidy_url = "http://192.168.1.108:5004/subsidy/create";
 
         const app = Vue.createApp({
             data() {
@@ -235,47 +235,6 @@
                 //             });
 
                 // // },
-                
-                checkClinics () {
-                    this.clinicsRetrieved = false
-                    this.clinics = []
-
-                    let jsonData = JSON.stringify({
-                        nric: nric,
-                        postalCode: this.postalCode
-                    });
-
-                    console.log(nric);
-
-                    const response = 
-                        fetch(viewClinicURL, 
-                        {
-                            method: "POST", 
-                            headers: {
-                                "Content-type": "application/json"
-                            }, 
-                            body: jsonData 
-                            
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(response);
-                            if (data.code === 404) {
-                                this.message = data.message;
-                            } else {
-                                this.clinicsRetrieved = true;
-                                this.clinics = data.data; 
-                                console.log(this.clinics)
-                                for (let i=0; i < this.clinics.length; i++) {
-                                    console.log(this.clinics[i])
-                                }
-                                this.postalCode = ""; 
-                            }
-                        })
-                        .catch(error => {
-                            console.log(this.message + error)
-                        });
-                },
 
                 getClinics () {
                     this.clinicsRetrieved = false

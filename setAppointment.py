@@ -13,8 +13,9 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+appt_timing_URL = environ.get('appt_URL') or "http://localhost:5003/appointment"
 appt_URL = environ.get('appt_URL') or "http://localhost:5003/set_appointment"
-patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
+patient_URL = environ.get('patient_URL') or "http://192.168.1.108:5000/patient/"
 subsidy_URL = environ.get('subsidy_URL') or "http://localhost:5004/subsidy/"
 
 @app.route("/set_timing", methods=["POST"])
