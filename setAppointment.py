@@ -17,7 +17,6 @@ CORS(app)
 
 appt_timing_URL = environ.get('appt_URL') or "http://localhost:5003/appointment"
 appt_URL = environ.get('appt_URL') or "http://localhost:5003/createAppointment"
-# patient_URL = environ.get('patient_URL') or "http://192.168.1.108:5000/patient/"
 subsidy_URL = environ.get('subsidy_URL') or "http://localhost:5004/subsidy/"
 
 @app.route("/set_timing", methods=["POST"])
@@ -111,6 +110,7 @@ def set_appointment(appt_details):
     if code not in range(200, 300):
         return {
             "code": 500,
+            "data": appt_result,
             "message": "Appointment created already"
         }
 
