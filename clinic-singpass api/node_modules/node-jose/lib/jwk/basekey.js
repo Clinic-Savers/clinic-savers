@@ -5,17 +5,16 @@
  */
 "use strict";
 
-var lodash = require("lodash"),
-    merge = require("../util/merge"),
-    uuid = require("uuid");
+var merge = require("../util/merge");
+const { v4: uuidv4 } = require("uuid");
 
-var assign = lodash.assign;
-var clone = lodash.clone;
-var flatten = lodash.flatten;
-var intersection = lodash.intersection;
-var omit = lodash.omit;
-var pick = lodash.pick;
-var uniq = lodash.uniq;
+var assign = require("lodash/assign");
+var clone = require("lodash/clone");
+var flatten = require("lodash/flatten");
+var intersection = require("lodash/intersection");
+var omit = require("lodash/omit");
+var pick = require("lodash/pick");
+var uniq = require("lodash/uniq");
 
 var ALGORITHMS = require("../algorithms"),
     CONSTANTS = require("./constants.js"),
@@ -78,7 +77,7 @@ var JWKBaseKeyObject = function(kty, ks, props, cfg) {
 
   // force certain values
   props.kty = kty;
-  props.kid = props.kid || kid || uuid();
+  props.kid = props.kid || kid || uuidv4();
 
   // setup base info
   var included = Object.keys(HELPERS.COMMON_PROPS).map(function(p) {
