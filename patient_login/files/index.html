@@ -1,5 +1,3 @@
-#frontend code (client side)
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +13,22 @@
 	<script src="/components/jquery/purl.js"></script>
 	<script src="/components/tether/js/tether.min.js"></script> 
 -->
+	<link rel="stylesheet" href="../frontend/style.css">
+
+	<!-- Bootstrap CSS -->
+	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css'
+		rel='stylesheet'
+	integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC'
+	crossorigin='anonymous'>
+
+	<!-- Font Awesome CDN -->
+	<script src="https://use.fontawesome.com/8bc874cd5e.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- Vue 3 -->
+	<script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 	<script>
@@ -221,96 +235,98 @@
 
 </head>
 
-<body class="myinfo">
+<body class="myinfo" style="background: linear-gradient(to right, #616161, #9bc5c3);">
+
 	<section class="hero-area">
 		<div class="container">
-			<div class="row">
+			<div class="row pt-5 pb-3">
 				<div class="col-lg-6 col-md-6 d-flex align-items-center full-screen-height">
 					<div class="hero-content-div">
 						<div class="hero-content">
-							<h1>Clinic</h1>
+							<h1 class="display-4 text-white">Clinic</h1>
 							<hr>
-							<p>To start the login process, click on the "Retrieve Patient Details" button below.</p>
+							<p class="font-weight-light mb-4 text-white font-italic">To start the login process, click on the "Login" button below.</p>
 						</div>
 						<form id="formAuthorise">
-							<a href="#" onclick="$(this).closest('form').submit()" class="btn2">Retrieve Patient Details</a>
-						</form>
+							<a href="#" onclick="$(this).closest('form').submit()" class="btn btn-primary text-white">Login</a>
+						</form><br>
 					</div>
 				</div>
 				
+				<a href="#form" class="form-link link-light">
+					<p class="btn btn-primary text-light">Form Below</p>
+				</a>
 			</div>
 		</div>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br>
 	</section>
 
-	<a href="#form" class="form-link">
-		<p>form below</p>
-	</a>
+	
 
-	<div id="lame">Hello</div>
 
 	<section id="form" class="lone-about-us section-padding">
 		<form id="formApplication" class="toggle_content">
 			<div class="container">
-				<div class="single-heading">
-					<h2>Form</h2>
-					<h4>Application pre-filled with MyInfo!</h4>
+				<div class="single-heading" >
+					<h4 class="text-center text-light">Application pre-filled with MyInfo!</h4>
 				</div>
 				<div class="row">
 					<div class="col-md-12 mb-4">
-						<p style="text-align:center;">Confirm your details below and click "Submit Application".</p>
+						<p class="text-center text-light">Confirm your details below and click "Submit Application".</p>
 					</div>
 				</div>
 				<div class="row justify-content-around">
 					<div class="col-md-12 col-lg-5 form-box mb-4">
-						<h3>Personal Information</h3>
+						<h3 class="font-weight-light mb-4 text-white font-italic">Personal Information</h3>
 						<hr>
+						<div class="bg-white p-5 rounded shadow">
 						<div class="form-group">
 							<label>NRIC</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="uinfin" value="" placeholder="" required="">
+								<input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Full Name</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="name" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Sex</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="sex" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="sex" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Race</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="race" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="race" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Nationality</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="nationality" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="nationality" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Date Of Birth</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="dob" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="dob" value="" placeholder="" required="">
 							</div>
 						</div>
 						<hr>
 						<div class="form-group">
 							<label>Email</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="email" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="email" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Mobile Number</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="mobileno" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
@@ -322,31 +338,32 @@
 						<div class="form-group">
 							<label>Housing Type</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="housingtype" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="housingtype" value="" placeholder="" required="">
 							</div>
 						</div>
 						<hr>
 						<div class="form-group">
 							<label>Marital Status</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="marital" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="marital" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Highest Education Level</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="edulevel" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="edulevel" value="" placeholder="" required="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Notice of Assessment - Latest Assessable Income (SGD)</label>
 							<div class="input-group">
-								<input type="text" class="form-control" name="assessableincome" value="" placeholder="" required="">
+								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="assessableincome" value="" placeholder="" required="">
 							</div>
+						</div>
 						</div>
 					</div>
 					<div class="col-md-12 text-center">
-						<a href="#" class="btn2">Submit Application</a>
+						<button type="button" class="btn btn-primary text-white"><a href="#" class="btn2 text-white">Submit Application</a></button>
 					</div>
 				</div>
 			</div>
@@ -368,6 +385,11 @@
 	<!-- <script src="/public/components/scrollreveal/scrollreveal.min.js"></script>
 	<script src="/public/components/magnific-popup/jquery.magnific-popup.min.js"></script> -->
 
+	    <!-- Bootstrap Javascript; at the end of the <body> -->
+			<script 
+			src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'
+			integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM'
+			crossorigin='anonymous'></script> 
 	<!-- Theme JavaScript -->
 	<!-- <script src="/public/js/creative.js"></script> -->
 	<script>
