@@ -145,10 +145,11 @@
                                 result =JSON.parse(JSON.stringify(data.data.drug))
                                 message_str =  `
                                 <thead>
-                                    <th>Drug Name</th>
-                                    <th>Remaining Quantity</th>
-                                    <th>Prescribe Quantity</th>
-                                    <th></th>
+                                    <tr>
+                                        <th>Drug Name</th>
+                                        <th>Remaining Quantity</th>
+                                        <th>Prescribe Quantity</th>
+                                        <th></th>
                                 </thead>`
                                 console.log(result)
                                 for (const drug of result) {
