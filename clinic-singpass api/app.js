@@ -180,8 +180,9 @@ function callPersonAPI(accessToken, res) {
         } else {
 
           if (_authLevel == "L0") {
-            console.log("Person Data:".green);
-            console.log(personData);
+            console.log("xxxPerson Data:".green);
+            console.log(personData); //patient info
+            
             personData = JSON.parse(personData);
             // personData = securityHelper.verifyJWS(personData, _publicCertContent);
 

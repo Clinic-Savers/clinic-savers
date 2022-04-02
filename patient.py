@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 
 CORS(app)  
 
+
 class Patient(db.Model):
     __tablename__ = 'patient'
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
@@ -83,6 +84,7 @@ def create_patient(nric):
         ), 400
 
     data = request.get_json()
+    print(data)
     patient = Patient(nric, **data)
 
     try:
