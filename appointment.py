@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
- 
+
 CORS(app) 
 
 class Appointment(db.Model):
@@ -21,8 +21,7 @@ class Appointment(db.Model):
     symptoms = db.Column(db.String(128), nullable=False)
     clinicId = db.Column(db.Numeric(3), nullable=False)
     appointmentDate = db.Column(db.String(64), nullable=False, primary_key=True)
-    appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)
-
+    appointmentTime = db.Column(db.String(64), nullable=False, primary_key=True)    
 
     def __init__(self, nric, symptoms, clinicId, appointmentDate, appointmentTime):
         self.nric = nric
@@ -34,6 +33,32 @@ class Appointment(db.Model):
         
     def json(self):
         return {"nric": self.nric, "symptoms": self.symptoms, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
+
+#get the booked timeslot in the a specific clinic
+@app.route("/appointment/<string:clinicId>/<string:appointmentDate>")
+def check_appt_timing(clinicId, appointmentDate):
+    clinicId = int(clinicId)
+    now = datetime.now()
+    current_time = time(now.hour, now.minute, now.second)
+    # appt_list = Appointment.query.filter_by(clinicId=clinicId, appointmentDate=appointmentDate).all()
+    appt_list = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==appointmentDate, func.time(Appointment.appointmentTime)>=current_time).all()
+
+    if len(appt_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "appointment": [appointment.json() for appointment in appt_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no appointments."
+        }
+    ), 404
+
 
 # get queue length of specified clinic id 
 @app.route("/appointment/<string:clinicId>")

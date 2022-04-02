@@ -53,6 +53,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        
+                        <div class="form-check">
+                            <input class="form-check-input"  type="checkbox" @click="checkClinics" id="homeAddress">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Use Home Address
+                            </label>
+                        </div>
                     </form> 
                     <div class="row mx-auto mt-3" v-show="clinicsRetrieved">
                         <table class="table table-striped">
@@ -102,6 +110,74 @@
                             Submit!
                         </button>
                     </form> 
+
+                    <div class="row mx-auto mt-3" v-show="apptBooked">
+                        <h5> Your appointment details </h5>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> Appointment Date </th>
+                                    <th> Appointment Time </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td> {{appt.appointmentDate}} </td>
+                                    <td> {{appt.appointmentTime}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" v-show="apptBooked">
+            <div class="col-lg-8 mx-auto">
+                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Add your subsidy card <span class="fst-italic">(optional)</span> </h5>
+                <div class="bg-white p-5 rounded shadow">
+                    <form action="">
+                        <label for="symptoms"> <h5> Subsidy Card Number </h5></label>
+                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input v-model="cardNumber" type="text" placeholder="Enter your subsidy card number here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                            </div>
+                        </div>
+
+                        <label for="cardType" class="mt-2"> <h5> Subsidy Card Type </h5></label>
+                        <select id="cardType" v-model="selectedCard" class="w-100 h-25 p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <option disabled> Select a card type </option>
+                            <option> Green CHAS </option>
+                            <option> Orange CHAS </option>
+                            <option> Blue CHAS </option>
+                            <option> Merdeka </option>
+                            <option> Pioneer </option>
+                            <option> Company </option>
+                        </select>
+
+                        <label for="organisationType" class="mt-2"> <h5> Organisation </h5></label>
+                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input v-model="organisationType" type="text" placeholder="Optional" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                            </div>
+                        </div>
+
+                        <label for="expiryDate" class="mt-2"> <h5> Expiry Date of Subsidy Card </h5></label>
+                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                            <div class="input-group">
+                                <input v-model="expiryDate" type="text" placeholder="dd/mm/yyyy" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                            </div>
+                        </div>
+
+                        <button type="button" @click="addSubsidy" class="btn btn-primary text-white">
+                            Submit!
+                        </button>
+                    </form> 
+
+                    <div class="row mx-auto mt-3" v-show="subsidyMade">
+                        <h5> Your subsidy card has been added. </h5>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,8 +188,9 @@
         nric = sessionStorage.setItem('nric',"S7380725E");
         nric = sessionStorage.getItem('nric');
 
-        const viewClinicURL = "http://192.168.68.113:5100/viewClinics";
-        const selected_clinic_url = "http://192.168.68.113:5008/set_appointment"; 
+        const viewClinicURL = "http://localhost:5100/viewClinics";
+        const selected_clinic_url = "http://localhost:5008/set_appointment"; 
+        const subsidy_url = "http:/localhost:5004/subsidy/create";
 
         const app = Vue.createApp({
             data() {
@@ -126,18 +203,86 @@
                     apptBooked: false, 
                     makeApptError: false, 
                     selected: "", 
-                    symptoms: ""
+                    symptoms: "", 
+                    appt: [], 
+                    cardNumber: "", 
+                    selectedCard: "", 
+                    organisationType: "", 
+                    expiryDate: "", 
+                    subsidyMade: false, 
                 };
             }, 
 
             methods: {
+                // getPostalCode () {
+                //     let useHomeAddressURL = "http://192.168.1.108:5000/patient/"
+                //     const response =
+                //         fetch(`${useHomeAddressURL}` + nric)
+                //             .then(response => response.json())
+                //             .then(data => {
+                //                 console.log(response);
+                //                 if (data.code === 404) {
+                //                     this.message = data.message;
+                //                 } else {
+                //                     this.postalCode = data.data.postalCode
+                //                 }
+                //             })
+                //             .catch(error => {
+                //                 // Errors when calling the service; such as network error, 
+                //                 // service offline, etc
+                //                 console.log(this.message + error);
+
+                //             });
+
+                // // },
+                
+                checkClinics () {
+                    this.clinicsRetrieved = false
+                    this.clinics = []
+
+                    let jsonData = JSON.stringify({
+                        nric: nric,
+                        postalCode: this.postalCode
+                    });
+
+                    console.log(nric);
+
+                    const response = 
+                        fetch(viewClinicURL, 
+                        {
+                            method: "POST", 
+                            headers: {
+                                "Content-type": "application/json"
+                            }, 
+                            body: jsonData 
+                            
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(response);
+                            if (data.code === 404) {
+                                this.message = data.message;
+                            } else {
+                                this.clinicsRetrieved = true;
+                                this.clinics = data.data; 
+                                console.log(this.clinics)
+                                for (let i=0; i < this.clinics.length; i++) {
+                                    console.log(this.clinics[i])
+                                }
+                                this.postalCode = ""; 
+                            }
+                        })
+                        .catch(error => {
+                            console.log(this.message + error)
+                        });
+                },
+
                 getClinics () {
                     this.clinicsRetrieved = false
                     this.clinics = []
 
                     let jsonData = JSON.stringify({
                         nric: nric,
-                        useHomeAddress: true,
                         postalCode: this.postalCode
                     });
 
@@ -210,6 +355,56 @@
                     .catch(error=> {
                         console.log(this.message + error)
                     }); 
+                }, 
+
+                addSubsidy() {
+                    this.subsidy = [];
+
+                    if (this.cardType != 'Company') {
+                        this.organisationType = null;
+                    }
+
+                    let jsonData = JSON.stringify({
+                        // cardNumber: this.cardNumber, 
+                        nric: nric,
+                        cardType: this.selectedCard, 
+                        organisationType: this.organisationType, 
+                        expiryDate: this.expiryDate
+                    })
+
+                    console.log(jsonData); 
+                    console.log(`${subsidy_url}/${this.cardNumber}`); 
+                    fetch(`${subsidy_url}/${this.cardNumber}`, 
+                        {
+                            method: "POST", 
+                            headers: {
+                                "Content-type": "application/json"
+                            }, 
+                            body: jsonData
+                        }
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        result = data.data; 
+                        console.log(result); 
+
+                        if (data.code === 404) {
+                                this.message = data.message
+                            } else {
+                                this.subsidyMade = true;
+                                this.subsidy = result; 
+                                console.log(this.subsidy);  
+                                this.cardNumber = "";
+                                this.cardType = ""; 
+                                this.organisationType = "";
+                                this.expiryDate = "";
+                                this.subsidy = []; 
+                            }
+                        })
+                    .catch(error=> {
+                        console.log(this.message + error)
+                    })
                 }
             }
         })

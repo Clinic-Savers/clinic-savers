@@ -54,6 +54,7 @@ def processPatientRecordAdd(patientRecord):
     patient_nric_str = patientRecord['nric']
     del patientRecord['nric']
     print(patientRecord)
+    print(patientRecord_URL)
     record_result = invoke_http(patientRecord_URL + patient_nric_str , method='POST', json=patientRecord)
     print('record_result:', record_result)
 
@@ -366,8 +367,8 @@ def createNotificationMessage(drug_record):
 # send Restock to Notification through AMQP
 def send_restock(message):
     """send supplier, clinic, drug information to Notification """
-    hostname = "localhost"
-    port = 5672
+    hostname = environ.get('rabbit_host') or "localhost"
+    port = environ.get('rabbit_port') or 5672
     # connect to the broker and set up a communication channel in the connection
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostname, port=port))
     channel = connection.channel()
