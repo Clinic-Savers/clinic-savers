@@ -133,7 +133,6 @@ services:
     restart: always
     depends_on:
       - rabbitmq
-      - prescribeDrug
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672
@@ -152,13 +151,14 @@ services:
       - clinic
       - patientRecord
       - drug
+      - notification
       - rabbitmq
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672
       clinic_URL: http://clinic:5002/clinic/
       drug_URL: http://drug:5007/drug/
-      patientRecord_URL: http://patientRecord:5007/patientRecord/
+      patientRecord_URL: http://patientRecord:5006/patientRecord/
       PYTHONUNBUFFERED: 1
     ports:
       - "5120:5120"
