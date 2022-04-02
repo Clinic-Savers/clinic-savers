@@ -1,7 +1,7 @@
 # clinic-savers
 
 ## Access to Frontend UI ##
-add process of user logging in (order in which the pages will be accessed)
+add process of user journey (order in which the pages will be accessed)
 
 <br><br>
 For the frontend files to function, clinic-savers repository has to be saved in the webroot
