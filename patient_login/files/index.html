@@ -5,21 +5,14 @@
 	<meta charset="utf-8">
 	<title>Sample Application</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- <link href="https://fonts.googleapis.com/css?family=Merriweather:300,400%7CPoppins:400,500,600" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../../vendor/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../../css/main.css"> -->
-
-	<!-- <script src="/components/jquery/jquery.min.js"></script>
-	<script src="/components/jquery/purl.js"></script>
-	<script src="/components/tether/js/tether.min.js"></script> 
--->
+	
 	<link rel="stylesheet" href="../frontend/style.css">
 
 	<!-- Bootstrap CSS -->
 	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css'
 		rel='stylesheet'
-	integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC'
-	crossorigin='anonymous'>
+		integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC'
+		crossorigin='anonymous'>
 
 	<!-- Font Awesome CDN -->
 	<script src="https://use.fontawesome.com/8bc874cd5e.js"></script>
@@ -29,7 +22,7 @@
 
 	<!-- Vue 3 -->
 	<script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 	<script>
 		// SETUP VARIABLES
@@ -39,9 +32,9 @@
 		var authApiUrl; // URL for authorise API
 		var clientId; // your app_id/client_id provided to you during onboarding
 		var redirectUrl; //callback url for your application
-
 		var attributes; // the attributes you are retrieving for your application to fill the form
 		var authLevel; // the auth level, determines the flow
+		
 		// the purpose of your data retrieval
 		var purpose = "demonstrating MyInfo APIs";
 
@@ -97,15 +90,11 @@
 			window.location = authoriseUrl;
 		}
 		
-
 		// Function for calling server side APIs (token & person) to get the person data for prefilling form
 		function callServerAPIs() {
-			console.log(this.location.href)
 			var check = this.location.href.split("code=")
 			var spliting = check[1].split("&")
 			var authCode = spliting[0]
-			console.log(authCode)
-			//alert ("authorisation code="+authCode);
 
 			// invoke AJAX call from frontend clientside to your backend serverside
 			$.ajax({
@@ -115,19 +104,16 @@
 				},
 				type: "POST", // post to serverside
 				success: function(data) {
-					//alert ("data:"+JSON.stringify(data));
-					// successful response from serverside
 					if (data.status == "OK") { // successful
-						// fill up the application form
-						// console.log("data",data);
 						prefillForm(data.text);
 						console.log(data)
-						
+
+						sessionStorage.clear()
 						sessionStorage.setItem("nric", JSON.stringify(data.text.uinfin.value))
 						console.log(sessionStorage.getItem("nric"))
-						
+
 						$.ajax({
-							url: "http://192.168.1.108:5000/patient/" + data.text.uinfin.value,
+							url: "http://localhost:5000/patient/" + data.text.uinfin.value,
 							data: 
 								JSON.stringify({
 
@@ -146,23 +132,14 @@
 						// error occured
 						alert("ERROR:" + JSON.stringify(data.msg));
 					}
-
-
 				}
 			});
-
-
 		}
 
-
-		// Prefill Online Form with MyInfo data
 		function prefillForm(data) {
 			// prefill form data
 			var noaData = "";
 			var address = "";
-			if (data["noa-basic"]) {
-				noaData = str(data["noa-basic"].amount) ? formatMoney(str(data["noa-basic"].amount), 2, ".", ",") : "";
-			}
 			if (data.regadd.type == "SG") {
 				address = str(data.regadd.country) == "" ? "" :
 					str(data.regadd.block) + " " +
@@ -170,40 +147,21 @@
 					"#" + str(data.regadd.floor) + "-" + str(data.regadd.unit) + " " +
 					str(data.regadd.street) + " \n" +
 					"Singapore " + str(data.regadd.postal)
-			} else if (data.regadd.type == "Unformatted") {
+			} 
+			else {
 				address = str(data.regadd.line1) + "\n" +
 					str(data.regadd.line2)
 			}
 			var formValues = {
 				"uinfin": str(data.uinfin),
 				"name": str(data.name),
-				"sex": str(data.sex),
-				"race": str(data.race),
-				"nationality": str(data.nationality),
-				"dob": str(data.dob),
 				"email": str(data.email),
 				"mobileno": str(data.mobileno.prefix) + str(data.mobileno.areacode) + " " + str(data.mobileno.nbr),
 				"regadd": address,
-				"housingtype": str(data.housingtype) == "" ? str(data.hdbtype) : str(data.housingtype),
-				"marital": str(data.marital),
-				"edulevel": str(data.edulevel),
-				"assessableincome": noaData
 			};
 
 			// Populate values
 			populate('#formApplication', formValues);
-
-		}
-
-		function formatMoney(n, c, d, t) {
-			var c = isNaN(c = Math.abs(c)) ? 2 : c,
-				d = d == undefined ? "." : d,
-				t = t == undefined ? "," : t,
-				s = n < 0 ? "-" : "",
-				i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-				j = (j = i.length) > 3 ? j % 3 : 0;
-
-			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 		}
 
 		// CALLBACK HANDLER
@@ -211,7 +169,6 @@
 			scrollToAppForm = true;
 			// call the backend server APIs
 			callServerAPIs();
-
 		}
 
 		function populate(frm, data) {
@@ -221,7 +178,6 @@
 			});
 		}
 
-		// used to output data items with value or desc
 		function str(data) {
 			if (!data)
 				return null;
@@ -264,9 +220,6 @@
 		<br><br><br><br><br><br><br><br><br><br><br><br><br>
 	</section>
 
-	
-
-
 	<section id="form" class="lone-about-us section-padding">
 		<form id="formApplication" class="toggle_content">
 			<div class="container">
@@ -283,86 +236,42 @@
 						<h3 class="font-weight-light mb-4 text-white font-italic">Personal Information</h3>
 						<hr>
 						<div class="bg-white p-5 rounded shadow">
-						<div class="form-group">
-							<label>NRIC</label>
-							<div class="input-group">
-								<input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
+							<div class="form-group">
+								<label>NRIC</label>
+								<div class="input-group">
+									<input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label>Full Name</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
+
+							<div class="form-group">
+								<label>Full Name</label>
+								<div class="input-group">
+									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label>Sex</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="sex" value="" placeholder="" required="">
+						
+							<hr>
+							<div class="form-group">
+								<label>Email</label>
+								<div class="input-group">
+									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="email" value="" placeholder="" required="">
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label>Race</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="race" value="" placeholder="" required="">
+
+							<div class="form-group">
+								<label>Mobile Number</label>
+								<div class="input-group">
+									<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label>Nationality</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="nationality" value="" placeholder="" required="">
+
+							<div class="form-group">
+								<label>Registered Address</label>
+								<div class="input-group">
+									<textarea cols="50" rows="3" name="regadd"></textarea>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label>Date Of Birth</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="dob" value="" placeholder="" required="">
-							</div>
-						</div>
-						<hr>
-						<div class="form-group">
-							<label>Email</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="email" value="" placeholder="" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Mobile Number</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Registered Address</label>
-							<div class="input-group">
-								<textarea cols="50" rows="3" name="regadd"></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Housing Type</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="housingtype" value="" placeholder="" required="">
-							</div>
-						</div>
-						<hr>
-						<div class="form-group">
-							<label>Marital Status</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="marital" value="" placeholder="" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Highest Education Level</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="edulevel" value="" placeholder="" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Notice of Assessment - Latest Assessable Income (SGD)</label>
-							<div class="input-group">
-								<input type="text" class="form-control login-form-field form-control border-0 bg-light" name="assessableincome" value="" placeholder="" required="">
-							</div>
-						</div>
+							<hr>
 						</div>
 					</div>
 					<div class="col-md-12 text-center">
@@ -373,28 +282,15 @@
 		</form>
 	</section>
 
-	<!-- <script src="/public/vendor/jquery/jquery-3.3.1.min.js"></script>
-	<script src="/public/vendor/jquery.scrollTo.min.js"></script>
-	<script src="/public/js/main.js"></script> -->
-
-	<!-- jQuery -->
-	<!-- <script src="/public/components/jquery/jquery.min.js"></script> -->
-
-	<!-- Bootstrap Core JavaScript -->
-	<!-- <script src="/public/components/bootstrap/js/bootstrap.min.js"></script> -->
-
 	<!-- Plugin JavaScript -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-	<!-- <script src="/public/components/scrollreveal/scrollreveal.min.js"></script>
-	<script src="/public/components/magnific-popup/jquery.magnific-popup.min.js"></script> -->
+	
+	<!-- Bootstrap Javascript; at the end of the <body> -->
+		<script 
+		src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'
+		integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM'
+		crossorigin='anonymous'></script> 
 
-	    <!-- Bootstrap Javascript; at the end of the <body> -->
-			<script 
-			src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'
-			integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM'
-			crossorigin='anonymous'></script> 
-	<!-- Theme JavaScript -->
-	<!-- <script src="/public/js/creative.js"></script> -->
 	<script>
 		// this needs to be at the bottom of the page so that the page scrolling can work
 		if (scrollToAppForm == true) {
