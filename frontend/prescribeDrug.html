@@ -106,9 +106,8 @@
                         </form>
 
                         <div class="row mx-auto mt-3">
-                            <table class="table table-striped">
-                                <thead id="all">
-                                </thead>
+                            <table class="table table-striped" id="all">
+                                
                             </table>
                         </div> 
                     </div>
@@ -144,28 +143,31 @@
                             .then(data => {
                                 console.log(data.data.drug)
                                 result =JSON.parse(JSON.stringify(data.data.drug))
-                                message_str =  `<tr>
+                                message_str =  `
+                                <thead>
                                     <th>Drug Name</th>
                                     <th>Remaining Quantity</th>
                                     <th>Prescribe Quantity</th>
                                     <th></th>
-                                </tr>`
+                                </thead>`
                                 console.log(result)
                                 for (const drug of result) {
                                     message_str += `
-                                    <tr id ="${drug['drugName']},${drug['clinicId']}">
-                                        <td>
-                                            ${drug['drugName']}
-                                        </td>
-                                        <td>
-                                            ${drug['quantity']}
-                                        </td>
-                                        <td>
-                                            <input type="number" id="${drug['drugName']},quantity" name="quantity" min=0 step=5>
-                                        </td>
-                                            <td><button type="button" class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
-                                        </td>
-                                    </tr>`
+                                    <tbody>
+                                        <tr id ="${drug['drugName']},${drug['clinicId']}">
+                                            <td>
+                                                ${drug['drugName']}
+                                            </td>
+                                            <td>
+                                                ${drug['quantity']}
+                                            </td>
+                                            <td>
+                                                <input type="number" id="${drug['drugName']},quantity" name="quantity" min=0 step=5>
+                                            </td>
+                                                <td><button type="button" class="btn btn-primary" id="${drug['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>`
                                 }
                                 document.getElementById('all').innerHTML = message_str
                                 return data.data.drug
@@ -187,28 +189,31 @@
                             .then(data => {
                                 console.log(data)
                                 result =JSON.parse(JSON.stringify(data.data))
-                                message_str =  `<tr>
+                                message_str =  `
+                                <thead>
                                     <th>Drug Name</th>
                                     <th>Remaining Quantity</th>
                                     <th>Prescribe Quantity</th>
                                     <th></th>
-                                </tr>`
+                                </thead>`
                                 console.log(result)
                                 
                                 message_str += `
-                                <tr id ="${result['drugName']},${result['clinicId']}">
-                                    <td>
-                                        ${result['drugName']}
-                                    </td>
-                                    <td>
-                                        ${result['quantity']}
-                                    </td>
-                                    <td>
-                                        <input type="number" id="${result['drugName']},quantity" name="quantity" step=5>
-                                    </td>
-                                        <td><button type="button" class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
-                                    </td>
-                                </tr>`
+                                <tbody>
+                                    <tr id ="${result['drugName']},${result['clinicId']}">
+                                        <td>
+                                            ${result['drugName']}
+                                        </td>
+                                        <td>
+                                            ${result['quantity']}
+                                        </td>
+                                        <td>
+                                            <input type="number" id="${result['drugName']},quantity" name="quantity" step=5>
+                                        </td>
+                                            <td><button type="button" class="btn btn-primary" id="${result['drugName']}" onclick="prescribe_drug(this)">Prescribe</button>
+                                        </td>
+                                    </tr>
+                                </tbody>`
                                 document.getElementById('all').innerHTML = message_str
                                 return data.data
                             })
