@@ -107,6 +107,25 @@
 						// fill up the application form
 						// console.log("data",data);
 						prefillForm(data.text);
+						console.log(data)
+						console.log(data.text)
+						$.ajax({
+							url: "http://192.168.1.244:5000/patient/" + data.text.uinfin.value,
+							data: 
+								JSON.stringify({
+
+								'patientName': data.text.name.value,
+								'mobileNumber': data.text.mobileno.nbr.value,
+								'postalCode': data.text.regadd.postal.value,
+								'address': data.text.regadd.block.value + data.text.regadd.street.value + data.text.regadd.floor.value + data.text.regadd.unit.value,
+								'vaccinationStatus': "True"
+
+								}),
+							type: "POST",
+							dataType: 'json',
+            				contentType: 'application/json'
+						})
+
 					} else {
 						// error occured
 						alert("ERROR:" + JSON.stringify(data.msg));
