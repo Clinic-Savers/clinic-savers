@@ -54,7 +54,6 @@ def processPatientRecordAdd(patientRecord):
     patient_nric_str = patientRecord['nric']
     del patientRecord['nric']
     print(patientRecord)
-    print(patientRecord_URL)
     record_result = invoke_http(patientRecord_URL + patient_nric_str , method='POST', json=patientRecord)
     print('record_result:', record_result)
 

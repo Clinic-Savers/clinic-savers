@@ -77,7 +77,10 @@ def retrieveClinics(patientLocation):
 
         #no clinic in database
         if clinic_result["code"] not in range(200,300):
-            return "No Clinic"
+            return {
+                "code": 500,
+                "message": "No Clinic Nearby!"
+            }
     
     listOfClinics = clinic_result["data"]["clinic"]
 

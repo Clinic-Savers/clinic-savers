@@ -8,14 +8,16 @@ from os import environ
 import requests
 from invokes import invoke_http
 
+from datetime import datetime
+
 import json
 
 app = Flask(__name__)
 CORS(app)
 
 appt_timing_URL = environ.get('appt_URL') or "http://localhost:5003/appointment"
-appt_URL = environ.get('appt_URL') or "http://localhost:5003/set_appointment"
-patient_URL = environ.get('patient_URL') or "http://192.168.1.108:5000/patient/"
+appt_URL = environ.get('appt_URL') or "http://localhost:5003/createAppointment"
+# patient_URL = environ.get('patient_URL') or "http://192.168.1.108:5000/patient/"
 subsidy_URL = environ.get('subsidy_URL') or "http://localhost:5004/subsidy/"
 
 @app.route("/set_timing", methods=["POST"])
@@ -121,16 +123,38 @@ def set_appointment(appt_details):
         
         code = subsidy_result["code"]
         if code not in range(200,300):
-            appt_result["data"]["subsidy_status"] = "No subsidy"
-            
+            return {
+                "code": 255,
+                "message": "Appointment succesfully created. No subsidy card available!"
+            }
         else:
-            appt_result["data"]["subsidy_status"] = subsidy_result["data"]
-
-        data = appt_result["data"]
-        return {
-            "code":200,
-            "data": data
-        }      
+            #check card if expired then if expired delete & alert card from DB
+            current_date = datetime.today().strftime('%Y-%m-%d')
+            d1 = datetime.datetime(datetime.today().strftime('%Y'), datetime.today().strftime('%m'), datetime.today().strftime('%d'))
+            d2 = datetime.datetime(int(subsidy_result["data"]["expiryDate"].split('-')[0]), int(subsidy_result["data"]["expiryDate"].split('-')[1]), int(subsidy_result["data"]["expiryDate"].split('-')[2]))
+            if d2 < d1:
+                #expired and delete
+                #delete
+                subsidy_delete = invoke_http(subsidy_URL + str(subsidy_result["data"]['cardNumber']), method="DELETE")
+                #return with a unique code number which means expired then in js check that num then alert
+                code = subsidy_delete['code']
+                if code not in range(200,300):
+                    return jsonify({
+                        "code": 400,
+                        "message": "Error in deleting subsidy card: " + str(subsidy_delete)
+                    }), 400
+                
+                return {
+                    "code": 256,
+                    "data": {"subsidy_card": subsidy_delete["data"]["subsidy"]},
+                    "message": "Appointment succesfully created. Appointment succesfully created. Your " + subsidy_result["data"]["cardType"] + " card has expired. It has been deleted in your subsidy wallet."
+                }
+            #card not expired
+            return {
+                "code": 257,
+                "message": "Appointment succesfully created. Appointment succesfully created. Your "+  subsidy_result["date"]["cardType"] +" card is still in use!"
+            }
+            
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
