@@ -20,18 +20,18 @@ class Subsidy(db.Model):
     organisationType = db.Column(db.String(128), nullable=True)
     expiryDate = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, nric, cardNumber, cardType, organisationType, expiryDate):
-        self.nric = nric
+    def __init__(self, cardNumber, nric, cardType, organisationType, expiryDate):
         self.cardNumber = cardNumber
+        self.nric = nric
         self.cardType = cardType
         self.organisationType = organisationType
         self.expiryDate = expiryDate
         
     def json(self):
-        return {"nric": self.nric, "cardNumber": self.cardNumber, "cardType": self.cardType, "organisationType": self.organisationType, "expiryDate": self.expiryDate,}
+        return {"cardNumber": self.cardNumber, "nric": self.nric, "cardType": self.cardType, "organisationType": self.organisationType, "expiryDate": self.expiryDate,}
 
 
-@app.route("/subsidy/<string:nric>")
+@app.route("/subsidy/<string:nric>/<string:cardNumber>")
 def verify_subsidy(nric):
     patient = Subsidy.query.filter_by(nric=nric).first()
     if patient:
@@ -81,7 +81,7 @@ def find_by_nric(nric):
         }
     ), 404
 
-@app.route("/subsidy/<string:cardNumber>", methods=['POST'])
+@app.route("/subsidy/create/<string:cardNumber>", methods=['POST'])
 def create_subsidy(cardNumber):
     if (Subsidy.query.filter_by(cardNumber=cardNumber).first()):
         return jsonify(
@@ -95,6 +95,7 @@ def create_subsidy(cardNumber):
         ), 400
 
     data = request.get_json()
+    print(data)
     subsidy = Subsidy(cardNumber, **data)
 
     try:
