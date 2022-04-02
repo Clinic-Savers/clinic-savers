@@ -169,18 +169,22 @@
                             .then(data => {
                                 console.log(data)
                                 result =JSON.parse(JSON.stringify(data.data))
-                                message_str =  `<tr>
-                                    <th class="text-center">Drug Name</th>
-                                    <th class="text-center">Remaining Quantity</th>
-                                    <th class="text-center">Restock Status</th>
-                                    <th class="text-center">Supplier Name</th>
-                                    <th class="text-center">Supplier Email</th>
-                                    <th class="text-center">Reorder Quantity</th>
-                                    <th></th>
-                                </tr>`
+                                message_str =  `
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Drug Name</th>
+                                        <th class="text-center">Remaining Quantity</th>
+                                        <th class="text-center">Restock Status</th>
+                                        <th class="text-center">Supplier Name</th>
+                                        <th class="text-center">Supplier Email</th>
+                                        <th class="text-center">Reorder Quantity</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>`
                                 console.log(result)
                                 
                                 message_str += `
+                                <tbody>
                                 <tr id ="${result['drugName']},${result['clinicId']}">
                                     <td class="text-center">
                                         ${result['drugName']}
@@ -211,7 +215,10 @@
                                             <button type="button"
                                             class="btn btn-success" id="confirm,${result['drugName']},${result['quantity']},${result['restockStatus']},${result['supplierName']},${result['supplierEmail']},${result['reorderQuantity']}" onclick="confirm_delivery(this)">Confirm Delivery</button>
                                         </td>
-                                    </tr>`
+                                    </tr>
+                                    </tbody>`
+                                } else {
+                                    message_str += `</tr> </tbody>`
                                 }
                                     
                                 
