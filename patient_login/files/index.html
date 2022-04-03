@@ -108,11 +108,9 @@
 						prefillForm(data.text);
 						console.log(data)
 
-						const urlParams = new URLSearchParams(window.location.search);
-						urlParams.set("nric", JSON.stringify(data.text.uinfin.value));
-						window.location.search = urlParams;
-
+						sessionStorage.clear()
 						sessionStorage.setItem("nric", JSON.stringify(data.text.uinfin.value))
+						console.log(sessionStorage.getItem("nric"))
 
 						$.ajax({
 							url: "http://localhost:5000/patient/" + data.text.uinfin.value,
@@ -316,8 +314,8 @@
 		},1000)
 
 		function swtichPage(){
-			console.log(sessionStorage.getItem("nric"))
-			window.location.replace("http://localhost/clinic-savers/frontend/patientUIcopy.html")
+			var nric = sessionStorage.getItem("nric")
+			window.location.replace("http://localhost/clinic-savers/frontend/patientUIcopy.html?nric=" + nric)
 		}
 	</script>
 
