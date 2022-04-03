@@ -120,14 +120,14 @@
 								'patientName': data.text.name.value,
 								'mobileNumber': data.text.mobileno.nbr.value,
 								'postalCode': data.text.regadd.postal.value,
-								'address': data.text.regadd.block.value + data.text.regadd.street.value + data.text.regadd.floor.value + data.text.regadd.unit.value
+								'address': data.text.regadd.block.value + " " + data.text.regadd.street.value + " #" + data.text.regadd.floor.value + "-" + data.text.regadd.unit.value
 
 								}),
 							type: "POST",
 							dataType: 'json',
 							contentType: 'application/json'
 						})
-						window.location.replace("http://localhost/clinic-savers/frontend/patientUIcopy.html")
+						
 					} else {
 						// error occured
 						alert("ERROR:" + JSON.stringify(data.msg));
@@ -256,10 +256,10 @@
 							<textarea cols="50" rows="3" name="regadd" class="border-1 bg-light"></textarea>
 						</div>
                         
+						<div id="submitApplicationButton">
 
-						<button type="button" class="mt-2 btn btn-primary text-white">
-                            <a href="#" class="btn2 text-white">Submit Application</a></button>
-                        </button>
+						</div>
+
 					</form>
 				</div>
 			</div>
@@ -289,6 +289,33 @@
 			$("#formPerson").show();
 		} else {
 			$("#formPerson").hide();
+		}
+
+		// check if form has populated, if so make the 'Submit Application' button appear!
+		function check_population() {
+			console.log("==== Checking Population ====")
+			console.log(sessionStorage.getItem("nric"))
+			console.log(document.getElementById("formApplication").children[1].children[0].children[0].value)
+
+			if (document.getElementById("formApplication").children[1].children[0].children[0].value != "") {
+				msg_str = `
+						<button type="button" class="mt-2 btn btn-primary text-white" onclick="swtichPage()">
+                            <a class="btn2 text-white">Submit Application</a></button>
+                        </button>
+				`
+				document.getElementById("submitApplicationButton").innerHTML = msg_str
+			}
+			else{
+				document.getElementById("submitApplicationButton").innerHTML = ""
+			}
+		}
+		setInterval(function () {
+			check_population()
+		},1000)
+
+		function swtichPage(){
+			console.log(sessionStorage.getItem("nric"))
+			window.location.replace("http://localhost/clinic-savers/frontend/patientUIcopy.html")
 		}
 	</script>
 

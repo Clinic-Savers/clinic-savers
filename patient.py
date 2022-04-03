@@ -16,8 +16,8 @@ class Patient(db.Model):
     __tablename__ = 'patient'
     nric = db.Column(db.String(9), nullable=False, primary_key=True)
     patientName = db.Column(db.String(64), nullable=False)
-    mobileNumber = db.Column(db.Integer, nullable=False)
-    postalCode = db.Column(db.Integer, nullable=False)
+    mobileNumber = db.Column(db.String(8), nullable=False)
+    postalCode = db.Column(db.String(6), nullable=False)
     address = db.Column(db.String(128), nullable=False)
 
     def __init__(self, nric, patientName, mobileNumber, postalCode, address):

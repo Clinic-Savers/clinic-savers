@@ -31,8 +31,8 @@ DROP TABLE IF EXISTS `patient`;
 CREATE TABLE IF NOT EXISTS `patient` (
   `patientName` char(64) NOT NULL,
   `nric` varchar(9) NOT NULL,
-  `mobileNumber` int(8) NOT NULL,
-  `postalCode` int(6) NOT NULL, 
+  `mobileNumber` varchar(8) NOT NULL,
+  `postalCode` varchar(6) NOT NULL, 
   `address` varchar(128) NOT NULL,
   PRIMARY KEY (`nric`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
