@@ -200,9 +200,8 @@ services:
       - appointment
       - patient
     environment:
-      subsidy_URL: http://subsidy:5001/subsidy/
-      appt_URL: http://appointment:5003/set_appointment
-      patient_URL: http://patient:5000/patient/
+      subsidy_URL: http://subsidy:5004/subsidy/
+      appt_URL: http://appointment:5003/createAppointment
       PYTHONUNBUFFERED: 1
     ports:
       - "5008:5008"

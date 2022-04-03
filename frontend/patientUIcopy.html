@@ -25,8 +25,9 @@
 
     <script>
         var nric = sessionStorage.getItem("nric")
+        //sessionStorage.setItem("nric","S7380725E")
         console.log(nric) 
-        sessionStorage.clear()
+
     </script>
 
     <div id="app" class="container">
@@ -65,7 +66,7 @@
                                 <input id="postalCode" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
 
                                 <div class="input-group-append">
-                                    <button type="button" onclick="getClinics()" class="btn btn-link text-primary">
+                                    <button type="button" onclick="getClinics(this)" class="btn btn-link text-primary" id="searchAll">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -73,7 +74,7 @@
                         </div>
 
                         <div class="form-check">
-                            <button class="btn btn-primary" onclick="getClinics()" id="homeAddress">
+                            <button class="btn btn-primary" onclick="getClinics(this)" id="homeAddress">
                                 Use Home Address
                             </button>
                         </div>
@@ -103,9 +104,16 @@
 
         // const subsidy_url = "http://localhost:5004/subsidy/create";
         
-        async function getClinics(){
+        async function getClinics(item){
+            document.getElementById("showAppt").innerHTML = ""
             var nric = sessionStorage.getItem('nric')
-            var postalCode = document.getElementById("postalCode").value
+            var postalCode
+            if (item.id == "homeAddress") {
+                postalCode = ""
+            }
+            else{
+                postalCode = document.getElementById("postalCode").value
+            }
             const response =
                     await fetch(viewClinicURL, {
                         method: 'POST',
@@ -171,12 +179,12 @@
             clinicId = item.id.split(',')[2]
             nric = item.id.split(',')[1]
             index = item.id.split(',')[0]
-            // row = document.getElementById(`${clinicId}`)
-            
+            //row = document.getElementById(`${clinicId}`)
+            // table = 
             // for (let i = 1; i < table.children.length; i++) {
             //     table.children[i].children[3].remove()
             // }
-            // var row =table.insertRow(parseInt(index)+1)
+            //var row =table.insertRow(parseInt(index)+1)
             message_str = `
             <h5 id="makeAppt" class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
             <div class="bg-white p-5 rounded shadow">
