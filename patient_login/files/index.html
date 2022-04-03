@@ -108,9 +108,11 @@
 						prefillForm(data.text);
 						console.log(data)
 
-						sessionStorage.clear()
+						const urlParams = new URLSearchParams(window.location.search);
+						urlParams.set("nric", JSON.stringify(data.text.uinfin.value));
+						window.location.search = urlParams;
+
 						sessionStorage.setItem("nric", JSON.stringify(data.text.uinfin.value))
-						console.log(sessionStorage.getItem("nric"))
 
 						$.ajax({
 							url: "http://localhost:5000/patient/" + data.text.uinfin.value,
