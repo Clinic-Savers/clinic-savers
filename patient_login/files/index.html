@@ -109,11 +109,11 @@
 						console.log(data)
 
 						sessionStorage.clear()
-						sessionStorage.setItem("nric", JSON.stringify(data.text.uinfin.value))
+						sessionStorage.setItem("nric", String(data.text.uinfin.value))
 						console.log(sessionStorage.getItem("nric"))
 
 						$.ajax({
-							url: "http://localhost:5000/patient/" + data.text.uinfin.value,
+							url: "http://localhost:5000/patient/" + String(data.text.uinfin.value),
 							data: 
 								JSON.stringify({
 
@@ -198,7 +198,7 @@
 
 	<div id="app" class="container">
         <div class="container">
-    	    <div class="row pt-5 pb-3">
+			<div class="row pt-5 pb-3">
                 <div class="col-lg-9 mx-auto text-center text-white">
                     <h1 class="display-4">Quick Booking System </h1><p class="lead mb-0"> Making appointment booking quicker.</p>
                     <p class="lead">Visit us here @ <a href="https://www.rafflesmedicalgroup.com/">
@@ -218,9 +218,9 @@
 					
 					<br>
 
-					<a href="#form" class="form-link link-light">
-						<p class="btn btn-primary text-light">Form Below</p>
-					</a>
+					<!-- <a href="#form" class="form-link link-light">
+						<p class="btn btn-primary text-light">Click to check the information retrieve</p>
+					</a> -->
 				</div>
 
 				<h5 id="postalHeader" class="font-weight-light mt-4 text-white font-italic"> Application pre-filled with MyInfo! </h5>
@@ -293,9 +293,9 @@
 
 		// check if form has populated, if so make the 'Submit Application' button appear!
 		function check_population() {
-			console.log("==== Checking Population ====")
-			console.log(sessionStorage.getItem("nric"))
-			console.log(document.getElementById("formApplication").children[1].children[0].children[0].value)
+			// console.log("==== Checking Population ====")
+			// console.log(sessionStorage.getItem("nric"))
+			// console.log(document.getElementById("formApplication").children[1].children[0].children[0].value)
 
 			if (document.getElementById("formApplication").children[1].children[0].children[0].value != "") {
 				msg_str = `
@@ -315,6 +315,7 @@
 
 		function swtichPage(){
 			var nric = sessionStorage.getItem("nric")
+			console.log(nric)
 			window.location.replace("http://localhost/clinic-savers/frontend/patientUIcopy.html?nric=" + nric)
 		}
 	</script>

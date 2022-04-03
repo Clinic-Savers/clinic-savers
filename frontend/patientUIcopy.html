@@ -95,10 +95,12 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <script>
-        // nric = sessionStorage.setItem('nric',"S7380725E");
-        // nric = sessionStorage.getItem('nric');
+    <script>    
+        if (sessionStorage.getItem("nric") == null) {
+            nric = sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+        }  
 
+        nric = sessionStorage.getItem('nric')
         const viewClinicURL = "http://localhost:5100/viewClinics";
         const selected_clinic_url = "http://localhost:5008/set_appointment"; 
 
@@ -106,7 +108,7 @@
         
         async function getClinics(item){
             document.getElementById("showAppt").innerHTML = ""
-            var nric = sessionStorage.getItem('nric')
+            var nric =  sessionStorage.getItem('nric')
             var postalCode
             if (item.id == "homeAddress") {
                 postalCode = ""

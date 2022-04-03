@@ -126,12 +126,11 @@ def retrieveClinics(patientLocation):
 
         #sort by distance
         final_clinic = sorted(final_clinic.items(), key= lambda x: x[1]["distance"])
+    print(final_clinic)
     return {
         "code":200,
         "data": final_clinic
     }
-
-
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":

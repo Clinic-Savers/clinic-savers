@@ -27,7 +27,7 @@ def get_distance():
         clinic_path += "Singapore " + postal + "%7C"
     clinic_path = clinic_path[:-3]
 
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=" + patient + "&region=sg&key=" + api_key
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=S" + clinic_path + "&origins=" + patient + "&region=sg&key=" + api_key
     result = invokes.invoke_http(url,"GET")
     print(url)
     

@@ -130,10 +130,10 @@ def createAppointment():
     now = datetime.now()
     current_time = time(now.hour, now.minute, now.second)
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
-
     #No appointment made after the current timing
     if last_appt == None:
-        if current_time.minute > 30:
+        print(current_time)
+        if current_time.minute >= 30:
             newTiming = time(current_time.hour + 1,0,0)
         else: 
             newTiming = time(current_time.hour,30,0)
