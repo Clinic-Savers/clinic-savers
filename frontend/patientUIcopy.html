@@ -24,10 +24,11 @@
 <body>
 
     <script>
-        var nric = sessionStorage.getItem("nric")
-        //sessionStorage.setItem("nric","S7380725E")
-        console.log(nric) 
+         if (sessionStorage.getItem("nric") === null) {
+                sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+            } 
 
+        var nric =  sessionStorage.getItem('nric')
     </script>
 
     <div id="app" class="container">
@@ -60,7 +61,7 @@
                         </ul>
 
                         <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Find clinics near you </h5>
-                           
+
                         <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                             <div class="input-group">
                                 <input id="postalCode" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
@@ -95,12 +96,8 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <script>    
-        if (sessionStorage.getItem("nric") == null) {
-            nric = sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
-        }  
-
-        nric = sessionStorage.getItem('nric')
+    <script>  
+        var nric = sessionStorage.getItem('nric')
         const viewClinicURL = "http://localhost:5100/viewClinics";
         const selected_clinic_url = "http://localhost:5008/set_appointment"; 
 
@@ -108,8 +105,14 @@
         
         async function getClinics(item){
             document.getElementById("showAppt").innerHTML = ""
+
+            if (sessionStorage.getItem("nric") === null) {
+                sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+            } 
+
             var nric =  sessionStorage.getItem('nric')
             var postalCode
+            
             if (item.id == "homeAddress") {
                 postalCode = ""
             }

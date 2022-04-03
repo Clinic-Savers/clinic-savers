@@ -3,6 +3,8 @@ version: "3.8"
 volumes:
   rabbitmq_data:
 
+
+
 services:
  
   ###################################
@@ -47,6 +49,7 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/appointment
       PYTHONUNBUFFERED: 1
+      TZ: "Asia/Singapore"
     ports:
         - "5003:5003"
 
