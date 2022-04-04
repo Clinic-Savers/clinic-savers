@@ -104,3 +104,18 @@ Our frontend webpages can be accessed through these links:
 * Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
 * Drug restocking: http://localhost/clinic-savers/frontend/restock.html
 * Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
+
+## Course and Team Information ##
+
+IS213 Enterprise Solution Development
+AY2021-2022, Term 2
+Section 4
+Team 5
+
+## Authors ##
+
+Bryan Shing Wen Yan bryan.shing.2020@scis.smu.edu.sg
+Jann Chia Rui Qi jann.chia.2020@scis.smu.edu.sg
+Yeo Jing Yi jingyi.yeo.2020@scis.smu.edu.sg
+Wong Jing Yun jy.wong.2020@scis.smu.edu.sg
+Earnest Ho Jay En earnestho.2020@scis.smu.edu.sg
