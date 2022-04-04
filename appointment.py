@@ -67,20 +67,23 @@ def createAppointment():
     apptDate = data["date"]
     
     #Check the lastest appointment time
-    # now = datetime.now()
-    # current_time = time(now.hour, now.minute, now.second)
+    today_date = date.today()
+    
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==apptDate).first()
     print("\n Last Appt",last_appt)
 
     #No appointment made after the current timing
     if last_appt == None:
-        # if current_time.minute >= 30:
-        #     newTiming = time(current_time.hour + 1,0,0)
-        # else: 
-        #     newTiming = time(current_time.hour,30,0)
-
         # appointmentDate = date.today()
-        newTiming = time(8,0,0)
+        if apptDate == today_date:
+            now = datetime.now()
+            current_time = time(now.hour, now.minute, now.second)
+            if current_time.minute >= 30:
+                newTiming = time(current_time.hour + 1,0,0)
+            else: 
+                newTiming = time(current_time.hour,30,0)
+        else:
+            newTiming = time(8,0,0)
         print("New Timing", newTiming)
 
     #Find next available timing
@@ -102,6 +105,8 @@ def createAppointment():
 
             appointmentDate = last_appt.appointmentDate
             print("New Timing", newTiming)
+
+    
 
     print(nric, symptoms, clinicId, apptDate, newTiming)
     appointment = Appointment(nric, symptoms, clinicId, apptDate, newTiming)
