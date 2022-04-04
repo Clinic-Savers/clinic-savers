@@ -16,10 +16,11 @@
        python3 -m pip install mailjet_rest
        ```
 
-2. Before accessing patient login UI, navigate to files directory under patient_login by entering the following command in command prompt/terminal
+2. Before accessing patient login UI, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal
 
-![First prerequisite](prereq_1.jpg)
-<br>
+```
+cd patient_login/files
+```
 
 Next, enter the following command
 
