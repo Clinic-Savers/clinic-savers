@@ -28,12 +28,12 @@
    npm install
    ```
 
-<br>
-Lastly, to ensure SingPass API is running within our patient login UI - enter the following command
+   <br>
+   Lastly, to ensure SingPass API is running within our patient login UI - enter the following command
 
-```
-.\start.bat
-```
+   ```
+   .\start.bat
+   ```
 
 ## Run the microservices ##
 
