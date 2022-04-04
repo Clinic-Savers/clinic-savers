@@ -3,7 +3,7 @@
 ## Prerequisites ##
 Before accessing patient login UI, navigate to files directory under patient_login by entering the following command in command prompt/terminal
 
-![First prerequisite](prereq#1.jpg)
+![First prerequisite](prereq_1.jpg)
 
 Next, enter the following command
 
