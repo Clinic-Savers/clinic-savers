@@ -71,10 +71,10 @@ def get_timeslots(clinicId,appointmentDate):
         )
     return jsonify(
         { 
-            "code": 404,
+            "code": 299,
             "message": "No appointments"
         }
-    ), 404
+    ), 299
 
 @app.route("/createAppointment", methods=["POST"])
 def createAppointment():

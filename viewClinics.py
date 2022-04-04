@@ -8,6 +8,7 @@ from os import environ
 import requests
 from invokes import invoke_http
 
+import datetime
 import json
 
 app = Flask(__name__)
@@ -63,7 +64,8 @@ def retrieveClinics(patientLocation):
         code = patient_result["code"]
         #cannot find the patient
         if code not in range(200,300):
-            return "Patient not logged in"
+            return {"code": 404,
+            "message": "Patient not logged in"}
         else:
             patientPostalCode= str(patient_result["data"]["postalCode"])
 
@@ -97,15 +99,75 @@ def retrieveClinics(patientLocation):
         }
 
         #3. Invoke appointmentMS to get queue
-        appt_url = appointment_URL + "/" + str(clinic["clinicId"])
-        appointment_result = invoke_http(appt_url)
-        print(appointment_result)
+        current_date = datetime.datetime.now()
+        d1 = datetime.datetime(int(current_date.strftime('%Y')), int(current_date.strftime('%m')), int(current_date.strftime('%d')), int(current_date.strftime('%H')),int(current_date.strftime('%M')),int(current_date.strftime('%S')))
+        
+        if current_date.strftime('%m')[0] == "0":
+            today_month = current_date.strftime('%m')[1]
+        else:
+            today_month = current_date.strftime('%m')
+        if current_date.strftime('%d')[0] == "0":
+            today_day = current_date.strftime('%d')[1]
+        else: 
+            today_day = current_date.strftime('%d')
+        
+        today_date = current_date.strftime("%Y")+"-"+today_month+'-'+today_day
+        
+        appointment_list = invoke_http(appointment_URL + '/' + str(clinic["clinicId"]) + '/' + today_date, method='GET')
+        
+        code = appointment_list['code']
+        if code not in range(200, 300):
+            return {
+                "code": 404,
+                "message": "Failed to retrieve appointments",
+                "data": {
+                    "clinicId": str(clinic["clinicId"]),
+                    "appointmentDate": today_date
+                }
+            }
+        print("appointment_list ======",appointment_list)
+        appt_timings = []
+        if code == 299:
+            pass
+        else:
+            for appt in appointment_list["data"]["appts"]:
+                appt_timings.append(appt['appointmentTime'])
+        
+        print("appointment timings =======",appt_timings)
+        
+        if int(current_date.strftime('%M')) > 30:
+            time_to_check = str(int(current_date.strftime('%H')) + 1) + ":00:00"
+        else:
+            time_to_check = current_date.strftime('%H') + ":30:00"
+        print("time_to_check +++++++++++",time_to_check)
 
-        code = appointment_result["code"]
-        #Got queue 
-        if code in range(200, 300):
-            queueLength = appointment_result["data"]["queueLength"]
-            final_clinic[clinic["clinicId"]]["queue"] = queueLength
+        check_time_now = int("".join(time_to_check.split(":")))
+        if check_time_now in range(0,90000):
+            time_to_check = "09:00:00"
+
+        if time_to_check not in appt_timings:
+            final_clinic[clinic["clinicId"]]["queue"] = 0
+        else:
+            timeslot_list = ["09:00:00","09:30:00","10:00:00","10:30:00","11:00:00","11:30:00","12:00:00","12:30:00","13:00:00","13:30:00","14:00:00","14:30:00","15:00:00","15:30:00","16:00:00","16:30:00"]
+            queue_count = 0
+            for time in timeslot_list:
+                if check_time_now < int("".join(time.split(":"))):
+                    if time in appt_timings:
+                        queue_count += 1
+                    else:
+                        break
+            final_clinic[clinic["clinicId"]]["queue"] = queue_count
+        
+        
+        # appt_url = appointment_URL + "/" + str(clinic["clinicId"])
+        # appointment_result = invoke_http(appt_url)
+        # print(appointment_result)
+
+        # code = appointment_result["code"]
+        # # Got queue 
+        # if code in range(200, 300):
+        #     queueLength = appointment_result["data"]["queueLength"]
+        #     final_clinic[clinic["clinicId"]]["queue"] = queueLength
 
     #create object to send to distanceMS
     check_distance = { 
