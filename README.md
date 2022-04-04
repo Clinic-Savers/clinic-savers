@@ -2,7 +2,7 @@
 
 ## Prerequisites ##
 
-1. To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
+To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
 
     1. For Windows users
 
@@ -16,24 +16,6 @@
        python3 -m pip install mailjet_rest
        ```
 
-2. Before accessing patient login UI, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
-
-   ```
-   cd patient_login/files
-   ```
-
-   Next, enter the following command.
-
-   ```
-   npm install
-   ```
-
-   <br>
-   Lastly, to ensure SingPass API is running within our patient login UI - enter the following command.
-
-   ```
-   .\start.bat
-   ```
 
 ## Run the microservices ##
 
