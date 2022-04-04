@@ -24,9 +24,11 @@
 <body>
 
     <script>
-         if (sessionStorage.getItem("nric") === null) {
+         if (sessionStorage.nric == null) {
                 sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
-            } 
+        } 
+
+        // sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
 
         var nric =  sessionStorage.getItem('nric')
     </script>
