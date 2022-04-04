@@ -115,7 +115,8 @@ Team 5
 ## Authors ##
 
 Bryan Shing Wen Yan bryan.shing.2020@scis.smu.edu.sg<br>
+Earnest Ho Jay En earnestho.2020@scis.smu.edu.sg<br>
 Jann Chia Rui Qi jann.chia.2020@scis.smu.edu.sg<br>
-Yeo Jing Yi jingyi.yeo.2020@scis.smu.edu.sg<br>
 Wong Jing Yun jy.wong.2020@scis.smu.edu.sg<br>
-Earnest Ho Jay En earnestho.2020@scis.smu.edu.sg
+Yeo Jing Yi jingyi.yeo.2020@scis.smu.edu.sg
+
