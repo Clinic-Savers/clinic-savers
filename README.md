@@ -2,7 +2,7 @@
 
 ## Prerequisites ##
 
-1. To ensure Mailjet api is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
+1. To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
 
     1. For Windows users
 
