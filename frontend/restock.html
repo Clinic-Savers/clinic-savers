@@ -328,7 +328,7 @@
                     document.getElementById(`${drugName},${clinicId}`).children[3].innerText = newSupplierName
                     document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierEmail
                     document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newReorderQuantity
-                    if (document.getElementById(`${drugName},${clinicId}`).children.length == 9) {
+                    if (document.getElementById(`${drugName},${clinicId}`).children.length == 9 && document.getElementById(`${drugName},${clinicId}`).children[8].innerText !== "") {
                         confirm_btn = `
                             <button type="button"
                             class="btn btn-success" id="confirm,${drugName}, ${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery</button>
