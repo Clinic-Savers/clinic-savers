@@ -56,6 +56,26 @@ def get_queue_length(clinicId):
         }
     ), 404    
 
+@app.route("/appointment/<string:clinicId>/<string:appointmentDate>")
+def get_timeslots(clinicId,appointmentDate): 
+    clinicId = int(clinicId)
+
+    appointmentList = Appointment.query.filter_by(clinicId=clinicId, appointmentDate=appointmentDate).all()
+    
+    if len(appointmentList):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {"appts": [appt.json() for appt in appointmentList]}
+            }
+        )
+    return jsonify(
+        { 
+            "code": 404,
+            "message": "No appointments"
+        }
+    ), 404
+
 @app.route("/createAppointment", methods=["POST"])
 def createAppointment():
     data = request.get_json()
@@ -64,9 +84,23 @@ def createAppointment():
     nric = data["nric"]
     symptoms = data["symptoms"]
     clinicId = int(data["clinicId"])
-    apptDate = data["date"]
+    appointmentDate = data["appointmentDate"]
+    appointmentTime = data['appointmentTime']
     
+    if (Appointment.query.filter_by(nric=nric,appointmentDate=appointmentDate,appointmentTime=appointmentTime).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "nric": nric,
+                    "appointmentDate": appointmentDate,
+                    'appointmentTime': appointmentTime
+                },
+                "message": "Appointment already exists."
+            }
+        ), 400
     #Check the lastest appointment time
+<<<<<<< Updated upstream
     today_date = date.today()
     
     last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==apptDate).first()
@@ -110,6 +144,45 @@ def createAppointment():
 
     print(nric, symptoms, clinicId, apptDate, newTiming)
     appointment = Appointment(nric, symptoms, clinicId, apptDate, newTiming)
+=======
+    # now = datetime.now()
+    # current_time = time(now.hour, now.minute, now.second)
+    # last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==apptDate).first()
+    # print("\n Last Appt",last_appt)
+
+    # #No appointment made after the current timing
+    # if last_appt == None:
+    #     # if current_time.minute >= 30:
+    #     #     newTiming = time(current_time.hour + 1,0,0)
+    #     # else: 
+    #     #     newTiming = time(current_time.hour,30,0)
+
+    #     # appointmentDate = date.today()
+    #     newTiming = time(8,0,0)
+    #     print("New Timing", newTiming)
+
+    #Find next available timing
+    # else:
+    #     #To make sure no back to back appointment
+    #     if (last_appt.nric == nric):
+    #         return jsonify(
+    #             {
+    #                 "code": 500,
+    #                 "message": "Appointment made already"
+    #             }
+    #         ), 500
+    #     else:
+    #         format = "%H:%M:%S"
+    #         last_timing = datetime.strptime(last_appt.appointmentTime,format)
+
+    #         newTiming= last_timing + timedelta(minutes=30)
+    #         newTiming = newTiming.strftime(format)
+
+    #         appointmentDate = last_appt.appointmentDate
+    #         print("New Timing", newTiming)
+
+    appointment = Appointment(nric, symptoms, clinicId, appointmentDate, appointmentTime)
+>>>>>>> Stashed changes
     
     try:
         db.session.add(appointment)
@@ -118,7 +191,7 @@ def createAppointment():
         return jsonify(
             {
                 "code": 500,
-                "message": "Appointment made already"
+                "message": "Appointment booking failed"
             }
         ), 500
 
@@ -163,6 +236,8 @@ def find_by_appointmentDate(nric, appointmentDate):
         }
     ), 404
 
+
+# can delete this
 @app.route("/appointment/<string:nric>/<string:appointmentDate>/<string:appointmentTime>", methods=['PUT'])
 def update_appointment(nric, appointmentDate, appointmentTime):
     appointment = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate, appointmentTime=appointmentTime).first()

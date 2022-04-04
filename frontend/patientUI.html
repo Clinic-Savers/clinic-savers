@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
     
     <link rel="stylesheet" href="style.css">
+    
 
     <!-- Bootstrap CSS -->
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css'
@@ -18,21 +19,22 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <!-- Vue 3 -->
-    <script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
     
     <title> Patient UI </title>
 </head>
 <body>
 
     <script>
-        var nric = sessionStorage.getItem("nric")
-        console.log(nric) 
-        sessionStorage.clear()
+         if (sessionStorage.nric == null) {
+                sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+        } 
+
+        // sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+
+        var nric =  sessionStorage.getItem('nric')
     </script>
 
-    <div id="app" class="container">
+    <div class="container">
         <div class="container">
     	    <div class="row pt-5 pb-3">
                 <div class="col-lg-9 mx-auto text-center text-white">
@@ -44,338 +46,358 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-lg-8 mx-auto">
-                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Find clinics near you </h5>
-                <div class="bg-white p-5 rounded shadow">
-                    <form action="">
-                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <div class="input-group">
-                                <input v-model="postalCode" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-lg-12 mx-auto">
+                    <h5 class="font-weight-light mb-4 text-white font-italic"> Find Clinics Near You </h5>
+                    <div class="bg-white p-5 rounded shadow" id="searchClinic">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="./patientUI.html"> Find Clinics </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./viewAppointments.html"> View Appointments </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./subsidyCard.html"> Subsidy Cards </a>
+                            </li>
+                        </ul>
 
-                                <div class="input-group-append">
-                                    <button type="button" @click="getClinics" class="btn btn-link text-primary">
-                                        <i class="fa fa-search"></i>
-                                    </button>
+                        <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Find clinics near you </h5>
+                        <div id="clinicsForm">
+                            <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                                <div class="input-group">
+                                    <input id="postalCode" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+
+                                    <div class="input-group-append">
+                                        <button type="button" onclick="getClinics(this)" class="btn btn-link text-primary" id="searchAll">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <div class="form-check">
+                                <button class="btn btn-primary" onclick="getClinics(this)" id="homeAddress">
+                                    Use Home Address
+                                </button>
+                            </div>
                         
-                        <div class="form-check">
-                            <input class="form-check-input"  type="checkbox" @click="getClinics" id="homeAddress">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Use Home Address
-                            </label>
+                            <!-- build the message in js -->
+                            <div class="row mx-auto mt-3">
+                                <table class="table table-striped" id="listClinics">
+                                </table>
+                            </div>
                         </div>
-                    </form> 
-                    <div class="row mx-auto mt-3" v-show="clinicsRetrieved">
-                        <table class="table table-striped">
-                            <thead>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3" id="showAppt">
+
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>  
+        var nric = sessionStorage.getItem('nric')
+        const viewClinicURL = "http://localhost:5100/viewClinics";
+        const selected_clinic_url = "http://localhost:5008/set_appointment"; 
+        const appointment_URL= "http://localhost:5003/appointment"
+        
+        async function getClinics(item){
+            document.getElementById("showAppt").innerHTML = ""
+
+            if (sessionStorage.getItem("nric") === null) {
+                sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
+            } 
+
+            var nric =  sessionStorage.getItem('nric')
+            var postalCode
+            
+            if (item.id == "homeAddress") {
+                postalCode = ""
+            }
+            else{
+                postalCode = document.getElementById("postalCode").value
+            }
+            const response =
+                    await fetch(viewClinicURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({"nric": nric,"postalCode":postalCode}),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
+                            if (data.code === 200) {
+                                console.log(data)
+                                clinics = data.data
+                                message_str =  `
+                                <thead>
                                 <tr>
                                     <th>Clinic Name</th>
                                     <th> Clinic Address </th>
                                     <th> Queue Length </th>
+                                    <th> </th>
                                 </tr>
-            
-                                <tr v-for="clinic in clinics">
-                                    <td> {{clinic[1]["name"]}}</td>
-                                    <td> {{clinic[1]["address"]}} </td>
-                                    <td> {{clinic[1]["queue"]}} </td>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3" v-show="clinicsRetrieved">
-            <div class="col-lg-8 mx-auto">
-                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
-                <div class="bg-white p-5 rounded shadow">
-                    <form action="" class="my-2">
-                        <label for="chooseClinic"> <h5>Select a clinic! </h5> </label>
-                        <select id="chooseClinic" v-model="selected" class="w-100 h-25 p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <option disabled> Select a clinic </option>
-                            <option v-for="clinic in clinics" v-bind:value="clinic[0]">
-                                {{clinic[1]["name"]}}
-                            </option>
-                        </select>
-                    </form> 
-
-                    <form action="">
-                        <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
-                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-
-                            <div class="input-group">
-                                <input id="symptoms" v-model="symptoms" type="text" aria-describedby="button-addon1" class="form-control border-0 bg-light">
-                            </div>
-                        </div>
-
-                        <button type="button" @click="makeAppt" class="btn btn-primary text-white">
-                            Submit!
-                        </button>
-                    </form> 
-
-                    <div class="row mx-auto mt-3" v-show="apptBooked">
-                        <h5> Your appointment details </h5>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th> Appointment Date </th>
-                                    <th> Appointment Time </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td> {{appt.appointmentDate}} </td>
-                                    <td> {{appt.appointmentTime}} </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3" v-show="apptBooked">
-            <div class="col-lg-8 mx-auto">
-                <h5 id="postalHeader" class="font-weight-light mb-4 text-white font-italic"> Add your subsidy card <span class="fst-italic">(optional)</span> </h5>
-                <div class="bg-white p-5 rounded shadow">
-                    <form action="">
-                        <label for="symptoms"> <h5> Subsidy Card Number </h5></label>
-                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <div class="input-group">
-                                <input v-model="cardNumber" type="text" placeholder="Enter your subsidy card number here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
-                            </div>
-                        </div>
-
-                        <label for="cardType" class="mt-2"> <h5> Subsidy Card Type </h5></label>
-                        <select id="cardType" v-model="selectedCard" class="w-100 h-25 p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <option disabled> Select a card type </option>
-                            <option> Green CHAS </option>
-                            <option> Orange CHAS </option>
-                            <option> Blue CHAS </option>
-                            <option> Merdeka </option>
-                            <option> Pioneer </option>
-                            <option> Company </option>
-                        </select>
-
-                        <label for="organisationType" class="mt-2"> <h5> Organisation </h5></label>
-                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <div class="input-group">
-                                <input v-model="organisationType" type="text" placeholder="Optional" aria-describedby="button-addon1" class="form-control border-0 bg-light">
-                            </div>
-                        </div>
-
-                        <label for="expiryDate" class="mt-2"> <h5> Expiry Date of Subsidy Card </h5></label>
-                        <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
-                            <div class="input-group">
-                                <input v-model="expiryDate" type="text" placeholder="dd/mm/yyyy" aria-describedby="button-addon1" class="form-control border-0 bg-light">
-                            </div>
-                        </div>
-
-                        <button type="button" @click="addSubsidy" class="btn btn-primary text-white">
-                            Submit!
-                        </button>
-                    </form> 
-
-                    <div class="row mx-auto mt-3" v-show="subsidyMade">
-                        <h5> Your subsidy card has been added. </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <script>
-        nric = sessionStorage.setItem('nric',"S7380725E");
-        nric = sessionStorage.getItem('nric');
-
-        const viewClinicURL = "http://192.168.1.108:5100/viewClinics";
-        const selected_clinic_url = "http://192.168.1.108:5008/set_appointment"; 
-        const subsidy_url = "http://192.168.1.108:5004/subsidy/create";
-
-        const app = Vue.createApp({
-            data() {
-                return {
-                    postalCode: "",
-                    message: "There is a problem retrieving clinics near you. Please try again later.", 
-                    enterPostal: true, 
-                    clinicsRetrieved: false, 
-                    clinics: [], 
-                    apptBooked: false, 
-                    makeApptError: false, 
-                    selected: "", 
-                    symptoms: "", 
-                    appt: [], 
-                    cardNumber: "", 
-                    selectedCard: "", 
-                    organisationType: "", 
-                    expiryDate: "", 
-                    subsidyMade: false, 
-                };
-            }, 
-
-            methods: {
-                // getPostalCode () {
-                //     let useHomeAddressURL = "http://192.168.1.108:5000/patient/"
-                //     const response =
-                //         fetch(`${useHomeAddressURL}` + nric)
-                //             .then(response => response.json())
-                //             .then(data => {
-                //                 console.log(response);
-                //                 if (data.code === 404) {
-                //                     this.message = data.message;
-                //                 } else {
-                //                     this.postalCode = data.data.postalCode
-                //                 }
-                //             })
-                //             .catch(error => {
-                //                 // Errors when calling the service; such as network error, 
-                //                 // service offline, etc
-                //                 console.log(this.message + error);
-
-                //             });
-
-                // // },
-
-                getClinics () {
-                    this.clinicsRetrieved = false
-                    this.clinics = []
-
-                    let jsonData = JSON.stringify({
-                        nric: nric,
-                        postalCode: this.postalCode
-                    });
-
-                    console.log(nric);
-
-                    const response = 
-                        fetch(viewClinicURL, 
-                        {
-                            method: "POST", 
-                            headers: {
-                                "Content-type": "application/json"
-                            }, 
-                            body: jsonData 
-                            
+                                </thead>`
+                                for (const clinic of clinics) {
+                                    message_str += `
+                                    <tbody>
+                                    <tr id ="${clinic[0]}">
+                                        <td>
+                                            ${clinic[1]['name']}
+                                        </td>
+                                        <td>
+                                            ${clinic[1]['address']}
+                                        </td>
+                                        <td>
+                                            ${clinic[1]['queue']}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary text-center" id="${nric},${clinic[0]},${postalCode}" onclick="toggle_form(this)">
+                                                Book Appointment
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    `
+                                }
+                                // Add the list of clinics into the webpage
+                                document.getElementById("listClinics").innerHTML= message_str
+                                // Scroll the list of clinics into view for better viewing if the list is long
+                                document.getElementById('searchClinic').scrollIntoView()
+                                
+                            }else if (data.code===500){
+                                msg_str = "<p style = 'color:red'> No clinics nearby!<p>"
+                                document.getElementById("listClinics").innerHTML= msg_str
+                            }
                         })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+        }
+
+        async function toggle_form(item){
+            clinicId = item.id.split(',')[1]
+            nric = item.id.split(',')[0]
+            postalCode = item.id.split(',')[2]
+            clinicName = item.parentElement.parentElement.children[0].innerText
+
+            // var currDate = new Date()
+            // currDate.setDate(currDate.getDate() + 7)
+
+            // console.log(currDate);
+            
+            message_str = `
+            <h5 class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
+            <div class="bg-white p-5 rounded shadow">
+                <h3> ${clinicName} </h3>
+                <form action="">
+                    <label for="apptDate"> <h5> Appointment Date </h5></label>
+                    <div>
+                       `
+                for (let i = 0; i < 3; i++) {
+                    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+                    var currDate = new Date()
+                    currDate.setDate(currDate.getDate() + i)
+                    var todayDay =currDate.getFullYear()+'-'+(currDate.getMonth()+1)+'-'+currDate.getDate()
+                    
+
+                    timeslots1 =["09:00:00","09:30:00","10:00:00","10:30:00","11:00:00","11:30:00","12:00:00","12:30:00"]
+                    timeslots2=["13:00:00","13:30:00","14:00:00","14:30:00","15:00:00","15:30:00","16:00:00","16:30:00"]
+                    message_str += `
+                            <div class="fw-bold">
+                                ${days[currDate.getDay()]} (${todayDay})
+                            </div>
+                            <table>
+                                <tr>`
+                    for (const time of timeslots1) {
+                        var nowDate= new Date()
+                        var slotDate = new Date(currDate.getFullYear(),currDate.getMonth(),currDate.getDate(),time.split(":")[0],time.split(":")[1],time.split(":")[2],"00")
+                        var disabled = ""
+                        // console.log("SLOTDATE    "+slotDate)
+                        // console.log("CURRENT DATE:   "+nowDate)
+                        if (nowDate > slotDate){
+                            disabled = "disabled"
+                        }
+                        message_str += `
+                                <td>
+                                    <button id="${todayDay},${time}" class="btn btn-dark" onclick="buttonColour(this)" ${disabled}>
+                                        ${time}
+                                    </button>
+                                </td> `
+                        
+                        
+                    }
+                    message_str += `</tr>
+                                <tr>`
+                    for (const time of timeslots2) {
+                        var nowDate= new Date()
+                        var slotDate = new Date(currDate.getFullYear(),currDate.getMonth(),currDate.getDate(),time.split(":")[0],time.split(":")[1],time.split(":")[2],"00")
+                        var disabled = ""
+                        // console.log("SLOTDATE    "+slotDate)
+                        // console.log("CURRENT DATE:   "+nowDate)
+                        if (nowDate > slotDate){
+                            disabled = "disabled"
+                        }
+                        message_str += `
+                                <td>
+                                    <button id="${todayDay},${time}" class="btn btn-dark" onclick="buttonColour(this)" ${disabled}>
+                                        ${time}
+                                    </button>
+                                </td> `
+                    }
+
+                    message_str += `
+                                </tr>
+                            </table>
+                    `
+                }
+
+    
+            message_str += `
+                    
+                    </div>
+                    <br>
+                    <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
+                    <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                        <div class="input-group">
+                            <input id="symptoms" type="text" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                        </div>
+                    </div>
+                    <br>
+                    <button type="button" class="btn btn-success text-center" id="${nric},${clinicId}" onclick="bookAppointment(this)">
+                        Submit
+                    </button>
+                    <button type="button" class="btn btn-secondary text-center" id="${postalCode}" onclick="setSearch(this)">
+                        Cancel
+                    </button>
+                </form>
+            </div>
+            `
+            // Add the appointment booking form at the bottom of the page
+            document.getElementById("clinicsForm").innerHTML = message_str
+
+            // Fetch for loop
+
+            for (let i = 0; i < 3; i++) {
+                var currDate = new Date()
+                currDate.setDate(currDate.getDate() + i)
+                var todayDay =currDate.getFullYear()+'-'+(currDate.getMonth()+1)+'-'+currDate.getDate()
+                const response =
+                    await fetch(`${appointment_URL}/${clinicId}/${todayDay}`)
                         .then(response => response.json())
                         .then(data => {
-                            console.log(response);
-                            if (data.code === 404) {
-                                this.message = data.message;
-                            } else {
-                                this.clinicsRetrieved = true;
-                                this.clinics = data.data; 
-                                console.log(this.clinics)
-                                for (let i=0; i < this.clinics.length; i++) {
-                                    console.log(this.clinics[i])
+                            console.log(data)
+                            if (data.code === 200){
+                                //console.log(data.message)
+                                for (slot of data.data['appts']){
+                                    // console.log(slot.appointmentDate+','+slot.appointmentTime)
+                                    // console.log(document.getElementById(`${slot.appointmentDate},${slot.appointmentTime}`))
+                                    document.getElementById(`${slot.appointmentDate},${slot.appointmentTime}`).disabled = "true"
                                 }
-                                this.postalCode = ""; 
                             }
                         })
                         .catch(error => {
-                            console.log(this.message + error)
+                            // Errors when calling the service; such as network error, 
+                            // service offline, etc
+                            console.log(error);
                         });
-                },
+                
+            }
+        }
 
-                makeAppt () {
-                    this.apptBooked = false; 
-                    this.makeApptError = "";
+        function setSearch(item) {
+            postalCode = item.id
+            document.getElementById("clinicsForm").innerHTML = `
+                            <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
+                                <div class="input-group">
+                                    <input id="postalCode" value="${postalCode}" type="search" placeholder="Enter your postal code here!" aria-describedby="button-addon1" class="form-control border-0 bg-light">
 
-                    let jsonData = JSON.stringify({
-                        nric: nric,     
-                        clinicId: this.selected, 
-                        symptoms: this.symptoms
-                    });
+                                    <div class="input-group-append">
+                                        <button type="button" onclick="getClinics(this)" class="btn btn-link text-primary" id="searchAll">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
 
-                    console.log("Clinic ID:", this.selected);
+                            <div class="form-check">
+                                <button class="btn btn-primary" onclick="getClinics(this)" id="homeAddress">
+                                    Use Home Address
+                                </button>
+                            </div>
+                        
+                            <!-- build the message in js -->
+                            <div class="row mx-auto mt-3">
+                                <table class="table table-striped" id="listClinics">
+                                </table>
+                            </div>
+            
+            `
+            if (postalCode == "") {
+                getClinics({"id": "homeAddress"})
+            }
+            else{
 
-                    fetch(selected_clinic_url, 
-                        {
-                            method: "POST", 
-                            headers: {
-                                "Content-type": "application/json"
-                            }, 
-                            body: jsonData
+                getClinics({"id": "notHomeAddress"})
+            }
+        }
+
+        async function bookAppointment(item){
+            console.log(item)
+            clinicId = item.id.split(',')[1]
+            nric = item.id.split(',')[0]
+            symptoms = document.getElementById("symptoms").value
+            appointmentDate = document.getElementsByName("buttonSelected")[0].id.split(",")[0]
+            appointmentTime = document.getElementsByName("buttonSelected")[0].id.split(",")[1]
+            const response =
+                    await fetch(selected_clinic_url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({"nric": nric, "clinicId":clinicId, "symptoms": symptoms, "appointmentDate":appointmentDate, "appointmentTime":appointmentTime}),
                         })
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data);
-                            result = data.data; 
-                            console.log(result); 
-
-                            switch (data.code) {
-                                case 201: 
-                                    this.apptBooked = true; 
-                                    this.symptoms = "";
-                                    this.selected = ""; 
+                            console.log('Success:', data);
+                            if (data.code === 255 || data.code === 256 || data.code === 257) {
+                                console.log(data)
+                                message = data["message"]
+                                alert(message)
+                                location.href = "./viewAppointments.html"
                             }
-
-                    })
-                    .catch(error=> {
-                        console.log(this.message + error)
-                    }); 
-                }, 
-
-                addSubsidy() {
-                    this.subsidy = [];
-
-                    if (this.cardType != 'Company') {
-                        this.organisationType = null;
-                    }
-
-                    let jsonData = JSON.stringify({
-                        // cardNumber: this.cardNumber, 
-                        nric: nric,
-                        cardType: this.selectedCard, 
-                        organisationType: this.organisationType, 
-                        expiryDate: this.expiryDate
-                    })
-
-                    console.log(jsonData); 
-                    console.log(`${subsidy_url}/${this.cardNumber}`); 
-                    fetch(`${subsidy_url}/${this.cardNumber}`, 
-                        {
-                            method: "POST", 
-                            headers: {
-                                "Content-type": "application/json"
-                            }, 
-                            body: jsonData
-                        }
-                    )
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data)
-                        result = data.data; 
-                        console.log(result); 
-
-                        if (data.code === 404) {
-                                this.message = data.message
-                            } else {
-                                this.subsidyMade = true;
-                                this.subsidy = result; 
-                                console.log(this.subsidy);  
-                                this.cardNumber = "";
-                                this.cardType = ""; 
-                                this.organisationType = "";
-                                this.expiryDate = "";
-                                this.subsidy = []; 
+                            else{
+                                alert("Appointment created")
                             }
                         })
-                    .catch(error=> {
-                        console.log(this.message + error)
-                    })
-                }
-            }
-        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+        }
 
-        const vm = app.mount('#app');
+        function buttonColour(item){
+            event.preventDefault()
+            if (document.getElementsByName("buttonSelected").length == 1) {
+                document.getElementsByName("buttonSelected")[0].classList = "btn btn-dark"
+                document.getElementsByName("buttonSelected")[0].name = ""
+            }
+            if (document.getElementById(item.id).classList =="btn btn-dark"){
+                document.getElementById(item.id).classList = "btn btn-danger"
+                document.getElementById(item.id).name = "buttonSelected"
+            }
+            else if (document.getElementById(item.id).classList =="btn btn-danger"){
+                document.getElementById(item.id).classList = "btn btn-dark"
+                document.getElementById(item.id).name = ""
+            }   
+        }
+
     </script>
 
     <!-- Bootstrap Javascript; at the end of the <body> -->
