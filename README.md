@@ -107,15 +107,15 @@ Our frontend webpages can be accessed through these links:
 
 ## Course and Team Information ##
 
-IS213 Enterprise Solution Development
-AY2021-2022, Term 2
-Section 4
+IS213 Enterprise Solution Development<br>
+AY2021-2022, Term 2<br>
+Section 4<br>
 Team 5
 
 ## Authors ##
 
-Bryan Shing Wen Yan bryan.shing.2020@scis.smu.edu.sg
-Jann Chia Rui Qi jann.chia.2020@scis.smu.edu.sg
-Yeo Jing Yi jingyi.yeo.2020@scis.smu.edu.sg
-Wong Jing Yun jy.wong.2020@scis.smu.edu.sg
+Bryan Shing Wen Yan bryan.shing.2020@scis.smu.edu.sg<br>
+Jann Chia Rui Qi jann.chia.2020@scis.smu.edu.sg<br>
+Yeo Jing Yi jingyi.yeo.2020@scis.smu.edu.sg<br>
+Wong Jing Yun jy.wong.2020@scis.smu.edu.sg<br>
 Earnest Ho Jay En earnestho.2020@scis.smu.edu.sg
