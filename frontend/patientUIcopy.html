@@ -181,7 +181,7 @@
         }
 
         function auto_scroll() {
-            window.scrollTo($('#makeAppt'), 500);
+            document.getElementById('makeAppt').scrollIntoView()
         }
 
         function toggle_form(item){
@@ -189,6 +189,7 @@
             clinicId = item.id.split(',')[2]
             nric = item.id.split(',')[1]
             index = item.id.split(',')[0]
+            clinicName = item.parentElement.parentElement.children[0].innerText
             //row = document.getElementById(`${clinicId}`)
             // table = 
             // for (let i = 1; i < table.children.length; i++) {
@@ -198,6 +199,7 @@
             message_str = `
             <h5 id="makeAppt" class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
             <div class="bg-white p-5 rounded shadow">
+                <h3> ${clinicName} </h3>
                 <form action="">
                     <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
                     <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
