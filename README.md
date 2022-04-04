@@ -24,7 +24,7 @@ Our databases are set up with phpMyAdmin. In order to access the databases:
 
       1. Login credentials for Windows users
 
-         Username: root
+         Username: root<br>
          No password required
          ![Windows login](images/phpmyadminwinlogin.jpg)
 
