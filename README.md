@@ -30,6 +30,7 @@ Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
 
          Username: root<br>
          No password required<br>
+         
          ![Windows login](images/phpmyadminwinlogin.jpg)
 
       2. Login credentials for Mac users
