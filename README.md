@@ -4,13 +4,13 @@
 
 To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
 
-    1. For Windows users
+   1. For Windows users
 
        ```
        pip install mailjet_rest
        ```
     
-    2. For Mac users
+   2. For Mac users
 
        ```
        python3 -m pip install mailjet_rest
