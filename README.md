@@ -1,5 +1,9 @@
 # clinic-savers
 
+## What is clinic-savers ##
+
+desc of proj
+
 ## Prerequisites ##
 
 To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
@@ -18,14 +22,14 @@ To ensure Mailjet API is functioning within Notification microservice, navigate 
 
 ## Access to database ##
 
-Our databases are set up with phpMyAdmin. In order to access the databases:
+Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
 
    1. Launch WAMP/MAMP server and access phpMyAdmin through this URL http://localhost/phpmyadmin/
 
       1. Login credentials for Windows users
 
          Username: root<br>
-         No password required
+         No password required<br>
          ![Windows login](images/phpmyadminwinlogin.jpg)
 
       2. Login credentials for Mac users
@@ -62,6 +66,36 @@ docker-compose up
 All of our microservices will be deployed as Docker containers.
 
 
+## Features of our application ##
+
+1. Patient http://localhost/clinic-savers/frontend/patientUIcopy.html
+
+   * Utilising Google Distance Matrix API to locate a clinic nearest to you.  
+
+   * Make an appointment
+
+   * Filter through the appointments you have made by entering a date.
+
+
+2. Clinic http://localhost/clinic-savers/frontend/clinicLogin.html
+
+   * Please enter the following login credentials for testing purposes:
+
+      * Username: staff
+
+      * Password: 12345
+
+   * Clinic staff will be able to access our application to perform the following tasks:
+
+      * Prescribe drugs
+
+      * Restock drugs
+
+      * View patient records
+
+   * With the help of Mailjet API, the supplier will be notified through email whenever there is a low supply of drugs.
+
+
 ## Access to Frontend UI ##
 add process of user journey (order in which the pages will be accessed)
 
@@ -76,7 +110,7 @@ Our frontend webpages can be accessed through these links:
 * Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
 * Patient login: http://localhost:3001
 * User type selection: http://localhost/clinic-savers/frontend/user.html
-* Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
+* Appointment booking: http://localhost/clinic-savers/frontend/patientUIcopy.html
 * Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
 * Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
 * Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
