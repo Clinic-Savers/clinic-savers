@@ -117,12 +117,14 @@
     </div>
 
     <script>
+        // Setting the URL links to fetch for information
         const drug_URL ="http://localhost:5007/drug"
         const prescribeDrug_URL ="http://localhost:5120/create_record"
 
+        // Displaying the ClinicId on the webpage to ensure that Clinic Staff will access to correct database. ClinicId taken from session.
         document.getElementById("clinicId").value = sessionStorage.getItem("clinicId")
 
-        // Get the current date and time function
+        // Get the current date and time function and display on the webpage
         function setTime(){
             var today = new Date()
             var currTime =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
@@ -134,7 +136,11 @@
         setTime()
 
 
-        //functions
+        //Functions
+
+        // Get all drugs from the drug database and construct the appropriate list of drugs to display.
+        // Doctors can see the remaining quantity of each drug and a text field to input the amount to prescribe.
+        // Upon clicking on the Prescribe Button, the prescribe_drug function would be called.
         async function getAllDrugs(){
             var clinicId = sessionStorage.getItem("clinicId")
             const response =
@@ -179,8 +185,10 @@
                                 console.log(error);
                             });
         }
+        // Call the function on first load to show all the drugs available to prescribe.
         getAllDrugs()
 
+        // Function to find a specific drug in the database and constructed for display.
         async function findDrug(){
             var drugName = document.getElementById('drugNameSearch').value
             var clinicId = sessionStorage.getItem("clinicId")
@@ -225,6 +233,8 @@
                             });
         }
 
+        // Function that fetch the prescribeDrugURL to call the complex microservice prescribeDrug
+        // Alert messages will be shown appropriately for the different instances.
         async function prescribe_drug(item){
             var nric = document.getElementById("nric").value
             var time = document.getElementById("time").innerText

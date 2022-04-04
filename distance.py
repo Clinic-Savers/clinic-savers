@@ -13,14 +13,12 @@ CORS(app)
 
 api_key = "AIzaSyC1hytlrSzRCAMd4LK-A0hzQ85IoVZIJpg"
 
-
 @app.route("/checkDist", methods = ["POST"])
 def get_distance():
     data = request.get_json()
     
     patient = data["patientAddress"]
     clinics = data["clinics"]
-    print(patient)
 
     clinic_path = ""
     for postal in clinics:
@@ -29,9 +27,8 @@ def get_distance():
 
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + clinic_path + "&origins=Singapore " + patient + "&region=sg&key=" + api_key
     result = invokes.invoke_http(url,"GET")
-    print(url)
     
-    if result["status"] == 'OK':
+    if result["origin_addresses"] != [""]:
         return jsonify(
             {
                 "code": 200,

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../files/app');
+var app = require('../files/credential');
 var debug = require('debug')('example-oauth-client:server');
 var http = require('http');
 

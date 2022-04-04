@@ -220,7 +220,7 @@
                                     </tr>
                                     </tbody>`
                                 } else {
-                                    message_str += `</tr> </tbody>`
+                                    message_str += `<td></td></tr> </tbody>`
                                 }
                                     
                                 
@@ -245,34 +245,27 @@
             var reorderQuantity = item.id.split(",")[5]
             console.log([drugName,quantity, restockStatus,supplierName,supplierEmail,reorderQuantity])
             supplierName_input = `
-                <input type = "text" id="supplierName,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" value="${supplierName}">
+                <input type = "text" id="supplierName,${drugName}" value="${supplierName}">
             `
             item.parentElement.parentElement.children[3].innerHTML = supplierName_input
             supplierEmail_input = `
-                <input type = "text" id="supplierEmail,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" value="${supplierEmail}">
+                <input type = "text" id="supplierEmail,${drugName}" value="${supplierEmail}">
             `
             item.parentElement.parentElement.children[4].innerHTML = supplierEmail_input
             reorderQuantity_input = `
-                <input type = "number" id="reorderQuantity,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" value="${reorderQuantity}" min='0'>
+                <input type = "number" id="reorderQuantity,${drugName}" value="${reorderQuantity}" min='0'>
             `
             item.parentElement.parentElement.children[5].innerHTML = reorderQuantity_input
+            cancel_btn = `<button type="button"
+                            class="btn btn-light" id="cancel,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="cancel_update(this)">Cancel
+                        </button>`
+            item.parentElement.parentElement.children[7].innerHTML = cancel_btn
             update_btn = `
                     <button type="button"
                     class="btn btn-warning" id="save,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="save_drug(this)">Update
                     </button>
             `
             item.parentElement.parentElement.children[6].innerHTML = update_btn
-            var row =document.getElementById(`${drugName},${clinicId}`)
-            var del_btn
-            if (document.getElementById(`${drugName},${clinicId}`).children.length == 8) {
-                del_btn =  row.insertCell(row.children.length - 1)
-            }
-            else{
-                del_btn =  row.insertCell(row.children.length)
-            }
-            del_btn.innerHTML = `<button type="button"
-                            class="btn btn-light" id="cancel,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="cancel_update(this)">Cancel
-                            </button>`
         }
  
         function cancel_update(item){
@@ -282,7 +275,7 @@
             var supplierName = item.id.split(",")[4]
             var supplierEmail = item.id.split(",")[5]
             var reorderQuantity = parseInt(item.id.split(",")[6])
-            console.log(item.parentElement.parentElement.children[4])
+
             item.parentElement.parentElement.children[3].innerText= supplierName
             item.parentElement.parentElement.children[4].innerText= supplierEmail
             item.parentElement.parentElement.children[5].innerText= reorderQuantity
@@ -294,13 +287,18 @@
                 </button>
             `
             item.parentElement.parentElement.children[6].innerHTML = edit_btn
-            var row = document.getElementById(`${drugName},${clinicId}`)
-            if (row.children.length == 9) {
-                row.deleteCell(row.children.length - 2)
+            var cfm_delivery_btn
+            if (restockStatus == "yes") {
+                cfm_delivery_btn = `
+                    <button type="button"
+                    class="btn btn-success" id="confirm,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery
+                    </button>
+                `
             }
             else{
-                row.deleteCell(row.children.length - 1)
+                cfm_delivery_btn = `<td></td>`
             }
+            item.parentElement.parentElement.children[7].innerHTML = cfm_delivery_btn
         }
 
         async function save_drug(item){
@@ -310,9 +308,9 @@
             var supplierName = item.id.split(",")[4]
             var supplierEmail = item.id.split(",")[5]
             var reorderQuantity = parseInt(item.id.split(",")[6])
-            var newSupplierName = document.getElementById(`supplierName,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value
-            var newSupplierEmail = document.getElementById(`supplierEmail,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value
-            var newReorderQuantity = parseInt(document.getElementById(`reorderQuantity,${drugName},${quantity},${restockStatus},${supplierName},${supplierEmail},${reorderQuantity}`).value)
+            var newSupplierName = document.getElementById(`supplierName,${drugName}`).value
+            var newSupplierEmail = document.getElementById(`supplierEmail,${drugName}`).value
+            var newReorderQuantity = parseInt(document.getElementById(`reorderQuantity,${drugName}`).value)
             console.log([clinicId, drugName, newSupplierName,newSupplierEmail,newReorderQuantity])
             fetch(`${drug_URL}/${drugName}`, {
                 method: 'PUT',
@@ -328,12 +326,15 @@
                     document.getElementById(`${drugName},${clinicId}`).children[3].innerText = newSupplierName
                     document.getElementById(`${drugName},${clinicId}`).children[4].innerText = newSupplierEmail
                     document.getElementById(`${drugName},${clinicId}`).children[5].innerText = newReorderQuantity
-                    if (document.getElementById(`${drugName},${clinicId}`).children.length == 9) {
+                    if (restockStatus == "yes") {
                         confirm_btn = `
                             <button type="button"
                             class="btn btn-success" id="confirm,${drugName}, ${quantity},${restockStatus},${newSupplierName},${newSupplierEmail},${newReorderQuantity}" onclick="confirm_delivery(this)">Confirm Delivery</button>
                         `
-                        document.getElementById(`${drugName},${clinicId}`).children[8].innerHTML= confirm_btn   
+                        document.getElementById(`${drugName},${clinicId}`).children[7].innerHTML= confirm_btn   
+                    }
+                    else{
+                        document.getElementById(`${drugName},${clinicId}`).children[7].innerText = ""  
                     }
                     edit_btn = `
                         <button type="button"
@@ -341,14 +342,6 @@
                         </button>
                     `
                     document.getElementById(`${drugName},${clinicId}`).children[6].innerHTML= edit_btn
-                    var row = document.getElementById(`${drugName},${clinicId}`)
-                    console.log(row)
-                    if (row.children.length == 9) {
-                        row.deleteCell(row.children.length - 2)
-                    }
-                    else{
-                        row.deleteCell(row.children.length - 1)
-                    }
                     alert(`${drugName} successfully updated!`)
                 }
                 
@@ -377,12 +370,10 @@
               .then(data => {
                 console.log('Success:', data);
                 if (data.code === 200) {
-                    if (document.getElementById('drugName').value !== "") {
-                        findDrug()
-                    }
-                    else{
-                        getAllDrugs()
-                    }
+                    document.getElementById(`${drugName},${clinicId}`).children[2].innerText = `no`
+                    document.getElementById(`${drugName},${clinicId}`).children[1].innerText = `${newQuantity}`
+                    document.getElementById(`${drugName},${clinicId}`).children[7].innerText = ""
+                    document.getElementById(`${drugName},${clinicId}`).children[6].innerHTML = `<button type="button" class="btn btn-primary" id="${drugName},${newQuantity},no,${supplierName},${supplierEmail},${reorderQuantity}" onclick="edit(this)">Edit</button>`
                     alert(`${drugName} confirmed delivery!`)
                 }
                 

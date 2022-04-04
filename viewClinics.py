@@ -26,7 +26,7 @@ def viewClinics():
             patientLocation = request.get_json()
             print("\n Received an patient location in JSON:", patientLocation)
 
-            # 1. Send patientAddress to retrieve clinics sorted by distance
+            # 1. Send patientPostalCode to retrieve clinics sorted by distance
             listOfClinics = retrieveClinics(patientLocation)
             return listOfClinics
 
@@ -52,12 +52,14 @@ def viewClinics():
 def retrieveClinics(patientLocation):
     patientPostalCode = patientLocation["postalCode"]
 
+    # Patient want to use home address
     if patientPostalCode == "":
         patientNRIC = patientLocation["nric"]
 
         #invoke patientMS to get the home address 
         patient_result = invoke_http(patient_URL + str(patientNRIC))
         print(patient_result)
+
         code = patient_result["code"]
         #cannot find the patient
         if code not in range(200,300):
@@ -79,7 +81,7 @@ def retrieveClinics(patientLocation):
         if clinic_result["code"] not in range(200,300):
             return {
                 "code": 500,
-                "message": "No Clinic Nearby!"
+                "message": "No Clinic Nearby! Please use another postal code"
             }
     
     listOfClinics = clinic_result["data"]["clinic"]
@@ -112,7 +114,7 @@ def retrieveClinics(patientLocation):
     }
     
     #4. Invoke distance microservice
-    distance_result = invoke_http(distance_URL, method="POST", json = check_distance)
+    distance_result = invoke_http(distance_URL, method="POST", json=check_distance)
     print("\n Distance result:", distance_result)
 
     code = distance_result["code"]
@@ -126,7 +128,10 @@ def retrieveClinics(patientLocation):
 
         #sort by distance
         final_clinic = sorted(final_clinic.items(), key= lambda x: x[1]["distance"])
-    print(final_clinic)
+    
+    else:
+        final_clinic = sorted(final_clinic.items())
+
     return {
         "code":200,
         "data": final_clinic
