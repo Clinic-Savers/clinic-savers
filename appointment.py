@@ -34,32 +34,6 @@ class Appointment(db.Model):
     def json(self):
         return {"nric": self.nric, "symptoms": self.symptoms, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
-#get the booked timeslot in the a specific clinic
-@app.route("/appointment/<string:clinicId>/<string:appointmentDate>")
-def check_appt_timing(clinicId, appointmentDate):
-    clinicId = int(clinicId)
-    now = datetime.now()
-    current_time = time(now.hour, now.minute, now.second)
-    # appt_list = Appointment.query.filter_by(clinicId=clinicId, appointmentDate=appointmentDate).all()
-    appt_list = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==appointmentDate, func.time(Appointment.appointmentTime)>=current_time).all()
-
-    if len(appt_list):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "appointment": [appointment.json() for appointment in appt_list]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no appointments."
-        }
-    ), 404
-
-
 # get queue length of specified clinic id 
 @app.route("/appointment/<string:clinicId>")
 def get_queue_length(clinicId): 
@@ -81,6 +55,74 @@ def get_queue_length(clinicId):
             "message": "No queue."
         }
     ), 404    
+
+@app.route("/createAppointment", methods=["POST"])
+def createAppointment():
+    data = request.get_json()
+
+    #retrieve the details
+    nric = data["nric"]
+    symptoms = data["symptoms"]
+    clinicId = int(data["clinicId"])
+    apptDate = data["date"]
+    
+    #Check the lastest appointment time
+    # now = datetime.now()
+    # current_time = time(now.hour, now.minute, now.second)
+    last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==apptDate).first()
+    print("\n Last Appt",last_appt)
+
+    #No appointment made after the current timing
+    if last_appt == None:
+        # if current_time.minute >= 30:
+        #     newTiming = time(current_time.hour + 1,0,0)
+        # else: 
+        #     newTiming = time(current_time.hour,30,0)
+
+        # appointmentDate = date.today()
+        newTiming = time(8,0,0)
+        print("New Timing", newTiming)
+
+    #Find next available timing
+    else:
+        #To make sure no back to back appointment
+        if (last_appt.nric == nric):
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "Appointment made already"
+                }
+            ), 500
+        else:
+            format = "%H:%M:%S"
+            last_timing = datetime.strptime(last_appt.appointmentTime,format)
+
+            newTiming= last_timing + timedelta(minutes=30)
+            newTiming = newTiming.strftime(format)
+
+            appointmentDate = last_appt.appointmentDate
+            print("New Timing", newTiming)
+
+    print(nric, symptoms, clinicId, apptDate, newTiming)
+    appointment = Appointment(nric, symptoms, clinicId, apptDate, newTiming)
+    
+    try:
+        db.session.add(appointment)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "Appointment made already"
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": appointment.json()
+        }
+    ), 201
 
 @app.route("/appointment/nric/<string:nric>")
 def find_by_nric(nric):
@@ -115,66 +157,6 @@ def find_by_appointmentDate(nric, appointmentDate):
             "message": "Appointment not found."
         }
     ), 404
-
-
-@app.route("/createAppointment", methods=["POST"])
-def createAppointment():
-    data = request.get_json()
-    #retrieve the details
-    nric = data["nric"]
-    symptoms = data["symptoms"]
-    clinicId = int(data["clinicId"])
-
-
-    #Check the lastest appointment time
-    now = datetime.now()
-    current_time = time(now.hour, now.minute, now.second)
-    last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today()>=current_time).first()
-    print(now)
-    print(current_time)
-    print(last_appt)
-    #No appointment made after the current timing
-    if last_appt == None:
-        print(current_time)
-        if current_time.minute >= 30:
-            newTiming = time(current_time.hour + 1,0,0)
-        else: 
-            newTiming = time(current_time.hour,30,0)
-
-        appointmentDate = date.today()
-        print(newTiming)
-
-    #Find next available timing
-    else:
-        format = "%H:%M:%S"
-        last_timing = datetime.strptime(last_appt.appointmentTime,format)
-
-        newTiming= last_timing + timedelta(minutes=30)
-        newTiming = newTiming.strftime(format)
-
-        appointmentDate = last_appt.appointmentDate
-        print(newTiming)
-
-    appointment = Appointment(nric, symptoms, clinicId, appointmentDate, newTiming)
-    
-    try:
-        db.session.add(appointment)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "message": "Appointment made already"
-            }
-        ), 500
-
-    return jsonify(
-        {
-            "code": 201,
-            "data": appointment.json()
-        }
-    ), 201
-
 
 @app.route("/appointment/<string:nric>/<string:appointmentDate>/<string:appointmentTime>", methods=['PUT'])
 def update_appointment(nric, appointmentDate, appointmentTime):
