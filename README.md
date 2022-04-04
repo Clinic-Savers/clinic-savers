@@ -4,6 +4,7 @@
 Before accessing patient login UI, navigate to files directory under patient_login by entering the following command in command prompt/terminal
 
 ![First prerequisite](prereq_1.jpg)
+<br>
 
 Next, enter the following command
 
@@ -11,6 +12,7 @@ Next, enter the following command
 npm install
 ```
 
+<br>
 Lastly, to ensure SingPass API is running within our patient login UI - enter the following command
 
 ```
