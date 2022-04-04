@@ -93,13 +93,18 @@
     </div>
 
     <script>
+        // Setting the URL links to fetch for information
         const patientRecord_URL ="http://localhost:5006/patientRecord"
         const updateRecord_URL ="http://localhost:5120/update_record"
         const deleteRecord_URL = "http://localhost:5120/delete_record"
 
+        // Displaying the ClinicId on the webpage to ensure that Clinic Staff will access to correct database. ClinicId taken from session.
         document.getElementById("clinicId").value = sessionStorage.getItem("clinicId")
 
-        //functions
+        //Functions
+
+        // Get all patient records from the patientRecord database and construct the appropriate list of records to display.
+        // Edit and Delete buttons are included if the doctor would like to make changes to the patient record
         async function getAllRecords(){
             var clinicId = sessionStorage.getItem("clinicId")
             const response =
@@ -166,9 +171,10 @@
 
                             });
         }
-        
+        // Call the function on first load to show all the patient records available.
         getAllRecords()
 
+        // Function to find all records of a specific patient in the database and constructed for display.
         async function findRecords(){
             var nric = document.getElementById('nric').value
             var clinicId = sessionStorage.getItem("clinicId")
@@ -238,6 +244,7 @@
                             });
         }
 
+        // Function to delete a specific record from the database.
         async function delete_record(item){
             var nric = item.id.split(",")[2]
             var time = item.id.split(",")[6]
@@ -266,6 +273,7 @@
                 console.error('Error:', error);
               });   
         }
+        // Function to update the record. A text field would appear in the prescribed quantity and buttons changed to Update and Cancel
         function update_record(item){
             var nric = item.id.split(",")[2]
             var time = item.id.split(",")[6]
@@ -290,6 +298,7 @@
             `
             item.parentElement.parentElement.children[6].innerHTML = cancel_btn
         }
+        // Function when doctor changes their mind and cancels the update.
         function cancel_record(item){
             var nric = item.id.split(",")[2]
             var time = item.id.split(",")[6]
@@ -311,6 +320,7 @@
             `
             item.parentElement.parentElement.children[6].innerHTML = edit_btn
         }
+        // Function to save the updated record into the database
         async function save_record(item){
             var nric = item.id.split(",")[2]
             var time = item.id.split(",")[6]
