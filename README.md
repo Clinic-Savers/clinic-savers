@@ -16,55 +16,51 @@ To ensure Mailjet API is functioning within Notification microservice, navigate 
        python3 -m pip install mailjet_rest
        ```
 
+## Access to database ##
 
-## Run the microservices ##
+Our databases are set up with phpMyAdmin. In order to access the databases:
 
-The microservices will be run on localhost. Please make sure you're at the correct directory ```clinic-savers``` before running the commands below.
+   1. Launch WAMP/MAMP server and access phpMyAdmin through this URL http://localhost/phpmyadmin/
 
-To run Clinic, run this command in command prompt/terminal.
-```
-python clinic.py
-```
+      1. Login credentials for Windows users
 
-To run Distance, run this command in command prompt/terminal.
-```
-python distance.py
-```
+         Username: root
+         No password required
+         ![Windows login](images/phpmyadminwinlogin.jpg)
 
-To run Drug, run this command in command prompt/terminal.
-```
-python drug.py
-```
+      2. Login credentials for Mac users
+   
+   2. Navigate to the Import tab
 
-To run Notification, run this command in command prompt/terminal.
-```
-python notification.py
-```
+      ![phpMyAdmin Import](images/phpmyadminimport.jpg)
 
-To run Patient, run this command in command prompt/terminal.
-```
-python patient.py
-```
+   3. Click on "Choose File" and navigate to ```database``` directory in ```clinic-savers``` respository.
 
-To run Prescribe Drug, run this command in command prompt/terminal.
-```
-python prescribeDrug.py
-```
+      * Install the following database schemes as shown below
 
-To run Set Appointment, run this command in command prompt/terminal.
-```
-python setAppointment.py
-```
+        ![Database Install](images/databaseinstall.jpg)
 
-To run Subsidy, run this command in command prompt/terminal.
+      * Click on "Go" on the bottom right
+
+        ![Installation screen](images/installscreen.jpg)
+
+   4. The following message will appear if the database has been successfully imported.
+
+      ![Successful import](images/successimport.jpg)
+
+
+## Running the microservices with Docker ##
+
+We have utilised Docker Compose to deploy mutiple microservice docker containers at once.
+
+Navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
+
 ```
-python subsidy.py
+docker-compose up
 ```
 
-To run View Clinics, run this command in command prompt/terminal.
-```
-python viewClinics.py
-```
+All of our microservices will be deployed as Docker containers.
+
 
 ## Access to Frontend UI ##
 add process of user journey (order in which the pages will be accessed)
