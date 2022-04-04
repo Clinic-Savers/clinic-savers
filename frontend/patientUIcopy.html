@@ -24,9 +24,11 @@
 <body>
 
     <script>
-         if (sessionStorage.getItem("nric") === null) {
+         if (sessionStorage.nric == null) {
                 sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
-            } 
+        } 
+
+        // sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
 
         var nric =  sessionStorage.getItem('nric')
     </script>
@@ -158,7 +160,7 @@
                                             ${clinic[1]['queue']}
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-primary text-center"  id="${i},${nric},${clinic[0]}" onclick="toggle_form(this)">
+                                            <button type="button" class="btn btn-primary text-center" id="${i},${nric},${clinic[0]}" onclick="toggle_form(this)">
                                                 Book Appointment
                                             </button>
                                         </td>
@@ -178,6 +180,9 @@
                         });
         }
 
+        function auto_scroll() {
+            window.scrollTo($('#makeAppt'), 500);
+        }
 
         function toggle_form(item){
             console.log(item)
@@ -193,7 +198,7 @@
             message_str = `
             <h5 id="makeAppt" class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
             <div class="bg-white p-5 rounded shadow">
-                <form action="" class="my-2">
+                <form action="">
                     <label for="symptoms"> <h5> Let us know about your symptoms. </h5></label>
                     <div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                         <div class="input-group">
@@ -210,6 +215,7 @@
             </div>
             `
             document.getElementById("showAppt").innerHTML = message_str
+            auto_scroll(); 
         }
 
         async function bookAppointment(item){

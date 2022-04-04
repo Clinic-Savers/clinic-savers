@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 
 INSERT INTO `appointment` (`nric`,`symptoms`, `clinicID`, `appointmentDate`, `appointmentTime`) VALUES
 ('S9812388A', 'runny nose, sore throat and fever', 7, '2022-1-27','13:30:00'),
-('S7955237B', 'stomach pain, nausea and heartburn', 8, '2022-4-2', '23:30:00'),
-('S9245177A', 'rashes on my body', 8, '2022-4-2', '23:00:00'),
-('S8243452F', 'insomnia and headache', 8, '2022-3-19', '08:00:00'); 
+('S9640091H', 'stomach pain, nausea and heartburn', 8, '2022-4-4', '23:30:00'),
+('S7955237B', 'rashes on my body', 8, '2022-4-4', '23:00:00'),
+('S9245177A', 'insomnia and headache', 8, '2022-3-19', '08:00:00'); 
 
 COMMIT;
 
