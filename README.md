@@ -18,15 +18,15 @@
 
 2. Before accessing patient login UI, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal
 
-```
-cd patient_login/files
-```
+   ```
+   cd patient_login/files
+   ```
 
-Next, enter the following command
+   Next, enter the following command
 
-```
-npm install
-```
+   ```
+   npm install
+   ```
 
 <br>
 Lastly, to ensure SingPass API is running within our patient login UI - enter the following command
