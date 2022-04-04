@@ -16,20 +16,20 @@
        python3 -m pip install mailjet_rest
        ```
 
-2. Before accessing patient login UI, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal
+2. Before accessing patient login UI, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
 
    ```
    cd patient_login/files
    ```
 
-   Next, enter the following command
+   Next, enter the following command.
 
    ```
    npm install
    ```
 
    <br>
-   Lastly, to ensure SingPass API is running within our patient login UI - enter the following command
+   Lastly, to ensure SingPass API is running within our patient login UI - enter the following command.
 
    ```
    .\start.bat
@@ -39,47 +39,47 @@
 
 The microservices will be run on localhost. Please make sure you're at the correct directory ```clinic-savers``` before running the commands below.
 
-To run Clinic, run this command in command prompt/terminal
+To run Clinic, run this command in command prompt/terminal.
 ```
 python clinic.py
 ```
 
-To run Distance, run this command in command prompt/terminal
+To run Distance, run this command in command prompt/terminal.
 ```
 python distance.py
 ```
 
-To run Drug, run this command in command prompt/terminal
+To run Drug, run this command in command prompt/terminal.
 ```
 python drug.py
 ```
 
-To run Notification, run this command in command prompt/terminal
+To run Notification, run this command in command prompt/terminal.
 ```
 python notification.py
 ```
 
-To run Patient, run this command in command prompt/terminal
+To run Patient, run this command in command prompt/terminal.
 ```
 python patient.py
 ```
 
-To run Prescribe Drug, run this command in command prompt/terminal
+To run Prescribe Drug, run this command in command prompt/terminal.
 ```
 python prescribeDrug.py
 ```
 
-To run Set Appointment, run this command in command prompt/terminal
+To run Set Appointment, run this command in command prompt/terminal.
 ```
 python setAppointment.py
 ```
 
-To run Subsidy, run this command in command prompt/terminal
+To run Subsidy, run this command in command prompt/terminal.
 ```
 python subsidy.py
 ```
 
-To run View Clinics, run this command in command prompt/terminal
+To run View Clinics, run this command in command prompt/terminal.
 ```
 python viewClinics.py
 ```
@@ -88,7 +88,7 @@ python viewClinics.py
 add process of user journey (order in which the pages will be accessed)
 
 <br><br>
-For the frontend files to function, clinic-savers repository has to be saved in the webroot
+For the frontend files to function, clinic-savers repository has to be saved in the webroot.
 
 ![Location of clinic-savers](clinicsaversloc.jpg)
 
