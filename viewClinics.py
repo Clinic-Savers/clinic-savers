@@ -29,7 +29,7 @@ def getClinicsNames(nric):
     if code not in range(200, 300):
         return {
             "code": 404,
-            "message": "No appoitnments made"
+            "message": "No appointments made"
         }
 
     all_appt_result = all_appt["data"]
