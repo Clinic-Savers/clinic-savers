@@ -48,12 +48,12 @@ var _attributes = "uinfin,name,mobileno,regadd";
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.sendFile((path.join(__dirname + "/patientLogIn.html")));
+  res.sendFile((path.join(__dirname + "/patientLogin.html")));
 });
 
 // callback function - directs back to home page
 router.get('/callback', function(req, res) {
-  res.sendFile((path.join(__dirname + "/patientLogIn.html")));
+  res.sendFile((path.join(__dirname + "/patientLogin.html")));
 });
 
 // function for getting environment variables to the frontend

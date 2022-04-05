@@ -29,8 +29,6 @@
                 sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
         } 
 
-        // sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
-
         var nric =  sessionStorage.getItem('nric')
     </script>
 
@@ -200,7 +198,7 @@
                 <form action="">
                     <label for="apptDate"> <h5> Appointment Date </h5></label>
                     <div>
-                       `
+                `
                 for (let i = 0; i < 3; i++) {
                     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
                     var currDate = new Date()

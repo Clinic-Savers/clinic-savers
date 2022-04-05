@@ -19,6 +19,27 @@ distance_URL = environ.get('distance_URL') or "http://localhost:5001/checkDist"
 appointment_URL = environ.get('appointment_URL') or "http://localhost:5003/appointment"
 patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
 
+@app.route ("/getClinicsName/nric/<string:nric>")
+def getClinicsNames(nric):
+    all_appt = invoke_http(appointment_URL + "/nric/" + str(nric))
+    print("\n", all_appt)
+    all_appt_result = all_appt["data"]
+
+    for i in range(0,len(all_appt_result)):
+        appt = all_appt_result[i]
+        clinicId = appt["clinicId"]
+        clinic_info = invoke_http(clinic_URL + "/id/" + str(clinicId))
+        print("\n", clinic_info)
+        clinicName = clinic_info["data"]["clinicName"]
+        all_appt_result[i]["clinicName"] = clinicName
+
+    return  {
+        "code":200,
+        "data": all_appt_result
+    }
+        
+        
+
 @app.route("/viewClinics", methods=["POST"])
 def viewClinics():
     # Simple check of input format and data of the request are JSON
@@ -151,7 +172,7 @@ def retrieveClinics(patientLocation):
             timeslot_list = ["09:00:00","09:30:00","10:00:00","10:30:00","11:00:00","11:30:00","12:00:00","12:30:00","13:00:00","13:30:00","14:00:00","14:30:00","15:00:00","15:30:00","16:00:00","16:30:00"]
             queue_count = 0
             for time in timeslot_list:
-                if check_time_now < int("".join(time.split(":"))):
+                if check_time_now <= int("".join(time.split(":"))):
                     if time in appt_timings:
                         queue_count += 1
                     else:
