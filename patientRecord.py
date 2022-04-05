@@ -75,25 +75,6 @@ def find_patient_record_by_clinic(clinicId):
         }
     ), 404
 
-# @app.route("/patientRecord/<string:nric>/<string:drugName>")
-# def find_patient_record_by_nric_and_drug(nric,drugName):
-#     record_list = PatientRecord.query.filter_by(nric=nric,drugName=drugName).all()
-#     if len(record_list):
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data":{
-#                     "PatientRecords": [record.json() for record in record_list]
-#                 }
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "Patient record not found."
-#         }
-#     ), 404
-
 @app.route("/patientRecord/clinic/<string:nric>/<string:clinicId>")
 def find_patient_record_by_nric_and_clinic(nric,clinicId):
     record_list = PatientRecord.query.filter_by(nric=nric,clinicId=clinicId).all()
