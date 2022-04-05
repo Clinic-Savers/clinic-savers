@@ -25,7 +25,7 @@
 <body>
 
     <script>
-        if (sessionStorage.nric == null) {
+        if (sessionStorage.nric == null || location.search.substr(1).split("=").length == 2) {
                 sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
         } 
 
@@ -106,10 +106,6 @@
         
         async function getClinics(item){
             document.getElementById("showAppt").innerHTML = ""
-
-            if (sessionStorage.getItem("nric") === null) {
-                sessionStorage.setItem('nric',location.search.substr(1).split("=")[1])
-            } 
 
             var nric =  sessionStorage.getItem('nric')
             var postalCode
