@@ -14,7 +14,7 @@ services:
     build:
       context: ./
       dockerfile: patient.Dockerfile
-    image: jingyun00/patient:esd
+    image: clinicsavers/patient:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient
@@ -30,7 +30,7 @@ services:
     build:
       context: ./
       dockerfile: clinic.Dockerfile
-    image: jingyun00/clinic:esd
+    image: clinicsavers/clinic:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/clinic
@@ -46,7 +46,7 @@ services:
     build:
       context: ./
       dockerfile: appointment.Dockerfile
-    image: jingyun00/appointment:esd
+    image: clinicsavers/appointment:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/appointment
@@ -62,7 +62,7 @@ services:
     build:
       context: ./
       dockerfile: distance.Dockerfile
-    image: jingyun00/distance:esd
+    image: clinicsavers/distance:esd
     restart: always
     environment:
       PYTHONUNBUFFERED: 1
@@ -77,7 +77,7 @@ services:
     build:
       context: ./
       dockerfile: drug.Dockerfile
-    image: jingyun00/drug:esd
+    image: clinicsavers/drug:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/drug
@@ -93,7 +93,7 @@ services:
     build:
       context: ./
       dockerfile: patientRecord.Dockerfile
-    image: jingyun00/patient_record:esd
+    image: clinicsavers/patient_record:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patientRecord
@@ -109,7 +109,7 @@ services:
     build:
       context: ./
       dockerfile: subsidy.Dockerfile
-    image: jingyun00/subsidy:esd
+    image: clinicsavers/subsidy:esd
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/subsidy
@@ -138,7 +138,7 @@ services:
     build:
       context: ./
       dockerfile: notification.Dockerfile
-    image: jingyun00/notification:esd
+    image: clinicsavers/notification:esd
     restart: always
     depends_on:
       - rabbitmq
@@ -155,7 +155,7 @@ services:
     build:
       context: ./
       dockerfile: prescribeDrug.Dockerfile
-    image: jingyun00/prescribe_drug:esd
+    image: clinicsavers/prescribe_drug:esd
     restart: always
     depends_on:
       - clinic
@@ -181,7 +181,7 @@ services:
     build:
       context: ./
       dockerfile: viewClinics.Dockerfile
-    image: jingyun00/view_clinics:esd
+    image: clinicsavers/view_clinics:esd
     restart: always
     depends_on:
       - clinic
@@ -205,7 +205,7 @@ services:
     build:
       context: ./
       dockerfile: setAppointment.Dockerfile
-    image: jingyun00/set_appointment:esd
+    image: clinicsavers/set_appointment:esd
     restart: always
     depends_on:
       - subsidy
@@ -225,7 +225,7 @@ services:
     build:
       context: ./patient_login
       dockerfile: Dockerfile
-    image: jingyun00/patient_login:esd
+    image: clinicsavers/patient_login:esd
     restart: always
     ports:
       - "3001:3001"

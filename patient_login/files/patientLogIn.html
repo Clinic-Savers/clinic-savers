@@ -99,30 +99,9 @@
 				type: "POST", // post to serverside
 				success: function(data) {
 					if (data.status == "OK") { // successful
-						prefillForm(data.text);
-						console.log(data)
-
-						sessionStorage.clear()
-						sessionStorage.setItem("nric", String(data.text.uinfin.value))
-						console.log(sessionStorage.getItem("nric"))
-
-						$.ajax({
-							url: "http://localhost:5000/patient/" + String(data.text.uinfin.value),
-							data: 
-								JSON.stringify({
-
-								'patientName': data.text.name.value,
-								'mobileNumber': data.text.mobileno.nbr.value,
-								'postalCode': data.text.regadd.postal.value,
-								'address': data.text.regadd.block.value + " " + data.text.regadd.street.value + " #" + data.text.regadd.floor.value + "-" + data.text.regadd.unit.value
-
-								}),
-							type: "POST",
-							dataType: 'json',
-							contentType: 'application/json'
-						})
-						
-					} else {
+						prefillForm(data.text);		
+					} 
+					else {
 						// error occured
 						alert("ERROR:" + JSON.stringify(data.msg));
 					}
@@ -137,10 +116,10 @@
 			if (data.regadd.type == "SG") {
 				address = str(data.regadd.country) == "" ? "" :
 					str(data.regadd.block) + " " +
-					str(data.regadd.building) + " \n" +
+					str(data.regadd.building) +
 					"#" + str(data.regadd.floor) + "-" + str(data.regadd.unit) + " " +
-					str(data.regadd.street) + " \n" +
-					"Singapore " + str(data.regadd.postal)
+					str(data.regadd.street) + " " +
+					"Singapore" + str(data.regadd.postal)
 			} 
 			else {
 				address = str(data.regadd.line1) + "\n" +
@@ -221,14 +200,14 @@
 						<label for="uinfin"> <h5> NRIC </h5> </label>
 						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                             <div class="input-group">
-                                <input type="text" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
+                                <input type="text" id="nric" aria-describedby="button-addon1" class="form-control login-form-field form-control border-0 bg-light" name="uinfin" value="" placeholder="" required="">
                             </div>
                         </div>
 
 						<label for="name"> <h5> Full Name </h5> </label>
 						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                             <div class="input-group">
-                                <input type="text" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
+                                <input type="text" id="name" class="form-control login-form-field form-control border-0 bg-light" name="name" value="" placeholder="" required="">
                             </div>
                         </div>
 
@@ -237,13 +216,13 @@
 						<label for="mobileno"> <h5> Mobile Number </h5> </label>
 						<div class="p-1 bg-light rounded rounded-pill border shadow-sm mb-2">
                             <div class="input-group">
-                                <input type="text" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
+                                <input type="text" id="mobile" class="form-control login-form-field form-control border-0 bg-light" name="mobileno" value="" placeholder="" required="">
                             </div>
                         </div>
 
 						<label for="regadd"> <h5> Registered Address </h5> </label>
 						<div class="input-group">
-							<textarea cols="50" rows="3" name="regadd" class="border-1 bg-light"></textarea>
+							<textarea cols="50" id="address" rows="3" name="regadd" class="border-1 bg-light"></textarea>
 						</div>
                         
 						<div id="submitApplicationButton">
@@ -300,8 +279,34 @@
 		},1000)
 
 		function swtichPage(){
-			var nric = sessionStorage.getItem("nric")
-			console.log(nric)
+			var nric = document.getElementById("nric").value;
+			var patientName = document.getElementById("name").value;
+			var mobileNumber = document.getElementById("mobile").value;
+			var address = document.getElementById("address").value;
+			var mobileNumber = mobileNumber.split(" ")[1];
+
+			if (address.split("Singapore")[1] != undefined){
+				var postalCode = address.split("Singapore")[1]
+			}
+			else{
+				var postalCode = ""
+			}
+
+			$.ajax({
+					url: "http://localhost:5000/patient/" + String(nric),
+					data: 
+						JSON.stringify({
+						'patientName': patientName,
+						'mobileNumber': mobileNumber,
+						'postalCode': postalCode,
+						'address': address
+						}),
+
+					type: "POST",
+					dataType: 'json',
+					contentType: 'application/json'
+			})
+
 			window.location.replace("http://localhost/clinic-savers/frontend/patientUI.html?nric=" + nric)
 		}
 	</script>
