@@ -73,7 +73,7 @@ For the frontend files to function, clinic-savers repository has to be saved in 
 
 <br>
 
-The patient user process first begins at the [Patient Login Page](http://localhost/clinic-savers/patient_login/files/patientLogin.html) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
+The patient user process first begins at the [Patient Login Page](http://localhost:3001) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
 
 The clinic staff user process first begins at the [Clinic Login Page](http://localhost/clinic-savers/frontend/clinicLogin.html) where they can login using a username and password. Clinic staff will then be able to access the other services such as prescribing drugs, restocking drugs and viewing patient records.
 
@@ -88,7 +88,7 @@ Our frontend webpages can also be accessed through these links:
   * Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
   
 * Patient 
-  * Patient login: http://localhost/clinic-savers/patient_login/files/patientLogin.html
+  * Patient login: http://localhost:3001
   * Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
   * Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
   * Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
