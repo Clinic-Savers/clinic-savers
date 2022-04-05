@@ -96,7 +96,7 @@ Our frontend webpages can also be accessed through these links:
 
 ## Features of our application ##
 
-1. Patient http://localhost/clinic-savers/frontend/patientUI.html
+1. Patient http://localhost:3001
    
    * Log in via [MyInfo API](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
 
