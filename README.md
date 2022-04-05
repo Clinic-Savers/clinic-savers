@@ -80,18 +80,18 @@ The clinic staff user process first begins at the [Clinic Login Page](http://loc
 <br>
 Our frontend webpages can also be accessed through these links:
 
-Clinic Staff 
-* Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
-* Clinic-side user type selection: http://localhost/clinic-savers/frontend/user.html
-* Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
-* Drug restocking: http://localhost/clinic-savers/frontend/restock.html
-* Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
+* Clinic Staff 
+  * Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
+  * Clinic-side user type selection: http://localhost/clinic-savers/frontend/user.html
+  * Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
+  * Drug restocking: http://localhost/clinic-savers/frontend/restock.html
+  * Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
   
-Patient 
-* Patient login: http://localhost/clinic-savers/patient_login/files/patientLogin.html
-* Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
-* Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
-* Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
+* Patient 
+  * Patient login: http://localhost/clinic-savers/patient_login/files/patientLogin.html
+  * Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
+  * Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
+  * Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
   
 
 ## Features of our application ##
