@@ -100,7 +100,7 @@ Our frontend webpages can also be accessed through these links:
    
    * Log in via [MyInfo API](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
 
-   * Utilising Google Distance Matrix API to locate a clinic nearest to you.  
+   * Utilising [Google Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix/overview) to locate a clinic nearest to you.  
 
    * Make appointment at selected clinic 
 
