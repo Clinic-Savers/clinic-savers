@@ -50,7 +50,7 @@ def get_all():
         }
     ), 404
 
-#Finding clinics in the region
+#Finding clinics in the district
 @app.route("/clinic/postal/<string:patientPostalCode>")
 def find_by_patientPostalCode(patientPostalCode):
     district = patientPostalCode[:2]

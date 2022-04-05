@@ -133,7 +133,6 @@ def find_by_appointmentDate(nric, appointmentDate):
     ), 404
 
 
-# can delete this
 @app.route("/appointment/<string:nric>/<string:appointmentDate>/<string:appointmentTime>", methods=['PUT'])
 def update_appointment(nric, appointmentDate, appointmentTime):
     appointment = Appointment.query.filter_by(nric=nric, appointmentDate=appointmentDate, appointmentTime=appointmentTime).first()
