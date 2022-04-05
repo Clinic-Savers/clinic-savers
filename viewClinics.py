@@ -21,36 +21,28 @@ patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
 
 @app.route ("/getClinicsName/nric/<string:nric>")
 def getClinicsNames(nric):
-    # Invoke appointmentsMS made by the specified patient
     all_appt = invoke_http(appointment_URL + "/nric/" + str(nric))
-    print("\n", all_appt)
-
+    # print("\n", all_appt)
     code = all_appt["code"]
     if code not in range(200, 300):
         return {
             "code": 404,
             "message": "No appointments made"
         }
-
     all_appt_result = all_appt["data"]
     for i in range(0,len(all_appt_result)):
         appt = all_appt_result[i]
         clinicId = appt["clinicId"]
-
-        #Invoke clinicMS to get the clinic information
         clinic_info = invoke_http(clinic_URL + "/id/" + str(clinicId))
-        print("\n", clinic_info)
-
+        # print("\n", clinic_info)
         code = clinic_info["code"]
         if code not in range(200, 300):
             return {
                 "code": 404,
                 "message": "No clinic found"
             }
-
         clinicName = clinic_info["data"]["clinicName"]
         all_appt_result[i]["clinicName"] = clinicName
-
     return  {
         "code":200,
         "data": all_appt_result
@@ -58,18 +50,14 @@ def getClinicsNames(nric):
 
 @app.route("/viewClinics", methods=["POST"])
 def viewClinics():
-    # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
             patientLocation = request.get_json()
-            print("\n Received an patient location in JSON:", patientLocation)
-
-            # 1. Send patientPostalCode to retrieve clinics sorted by distance
+            # print("\n Received an patient location in JSON:", patientLocation)
             listOfClinics = retrieveClinics(patientLocation)
             return listOfClinics
 
         except Exception as e:
-            # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
@@ -80,7 +68,6 @@ def viewClinics():
                 "message": "viewClinics.py internal error: " + ex_str
             }), 500
 
-    # if reached here, not a JSON request.
     return jsonify({
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
@@ -90,32 +77,27 @@ def viewClinics():
 def retrieveClinics(patientLocation):
     patientPostalCode = patientLocation["postalCode"]
 
-    # Patient want to use home address
     if patientPostalCode == "":
         patientNRIC = patientLocation["nric"]
 
-        #invoke patientMS to get the home address 
         patient_result = invoke_http(patient_URL + str(patientNRIC))
-        print(patient_result)
+        # print(patient_result)
 
         code = patient_result["code"]
-        #cannot find the patient
         if code not in range(200,300):
             return {"code": 404,
             "message": "Patient not logged in"}
         else:
             patientPostalCode= str(patient_result["data"]["postalCode"])
 
-    # 2. Invoking clinicMS to get those in the region
     clinic_result = invoke_http(clinic_URL + "/postal/" + patientPostalCode)
-    print('\n Clinic result:', clinic_result)
+    # print('\n Clinic result:', clinic_result)
 
     code = clinic_result["code"]
     #no clinic in the region
     if code not in range(200, 300):
         #get all clinics
         clinic_result = invoke_http(clinic_URL)
-
         #no clinic in database
         if clinic_result["code"] not in range(200,300):
             return {
@@ -162,21 +144,17 @@ def retrieveClinics(patientLocation):
                     "appointmentDate": today_date
                 }
             }
-        print("appointment_list ======",appointment_list)
         appt_timings = []
         if code == 299:
             pass
         else:
             for appt in appointment_list["data"]["appts"]:
                 appt_timings.append(appt['appointmentTime'])
-        
-        print("appointment timings =======",appt_timings)
-        
+                
         if int(current_date.strftime('%M')) > 30:
             time_to_check = str(int(current_date.strftime('%H')) + 1) + ":00:00"
         else:
             time_to_check = current_date.strftime('%H') + ":30:00"
-        print("time_to_check +++++++++++",time_to_check)
 
         check_time_now = int("".join(time_to_check.split(":")))
         if check_time_now in range(0,90000):
@@ -195,17 +173,6 @@ def retrieveClinics(patientLocation):
                         break
             final_clinic[clinic["clinicId"]]["queue"] = queue_count
         
-        
-        # appt_url = appointment_URL + "/" + str(clinic["clinicId"])
-        # appointment_result = invoke_http(appt_url)
-        # print(appointment_result)
-
-        # code = appointment_result["code"]
-        # # Got queue 
-        # if code in range(200, 300):
-        #     queueLength = appointment_result["data"]["queueLength"]
-        #     final_clinic[clinic["clinicId"]]["queue"] = queueLength
-
     #create object to send to distanceMS
     check_distance = { 
         "patientAddress": patientPostalCode,
@@ -214,7 +181,7 @@ def retrieveClinics(patientLocation):
     
     #4. Invoke distance microservice
     distance_result = invoke_http(distance_URL, method="POST", json=check_distance)
-    print("\n Distance result:", distance_result)
+    # print("\n Distance result:", distance_result)
 
     code = distance_result["code"]
     #location found
