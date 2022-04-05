@@ -1,8 +1,6 @@
-# clinic-savers
+# Clinic-savers #
 
-## What is clinic-savers ##
-
-desc of proj
+Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the current user processes.
 
 ## Prerequisites ##
 
@@ -31,10 +29,11 @@ Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
          Username: root<br>
          No password required<br>
 
-         ![Windows login](images/phpmyadminwinlogin.jpg)
-
       2. Login credentials for Mac users
-   
+
+         Username: root<br>
+         Password: root<br>
+
    2. Navigate to the Import tab
 
       ![phpMyAdmin Import](images/phpmyadminimport.jpg)
@@ -98,7 +97,11 @@ All of our microservices will be deployed as Docker containers.
 
 
 ## Access to Frontend UI ##
-add process of user journey (order in which the pages will be accessed)
+
+The patient user process first begins at the [Patient Login Page](http://localhost/patient_login/files/patientLogin.html) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
+
+The clinic staff user process first begins at the [Clinic Login Page](http://localhost/clinic-savers/frontend/clinicLogin.html) where they can login using a username and password. Clinic staff will then be able to access the other services such as prescribing drugs, restocking drugs and viewing patient records.
+
 
 <br><br>
 For the frontend files to function, clinic-savers repository has to be saved in the webroot.
@@ -109,7 +112,7 @@ For the frontend files to function, clinic-savers repository has to be saved in 
 Our frontend webpages can be accessed through these links:
 
 * Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
-* Patient login: http://localhost:3001
+* Patient login: http://localhost/patient_login/files/patientLogin.html
 * User type selection: http://localhost/clinic-savers/frontend/user.html
 * Appointment booking: http://localhost/clinic-savers/frontend/patientUIcopy.html
 * Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
