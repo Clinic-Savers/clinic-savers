@@ -30,7 +30,7 @@ Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
 
          Username: root<br>
          No password required<br>
-         
+
          ![Windows login](images/phpmyadminwinlogin.jpg)
 
       2. Login credentials for Mac users
@@ -103,7 +103,7 @@ add process of user journey (order in which the pages will be accessed)
 <br><br>
 For the frontend files to function, clinic-savers repository has to be saved in the webroot.
 
-![Location of clinic-savers](clinicsaversloc.jpg)
+![Location of clinic-savers](images/clinicsaversloc.jpg)
 
 <br><br>
 Our frontend webpages can be accessed through these links:
