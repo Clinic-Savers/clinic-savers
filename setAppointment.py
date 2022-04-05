@@ -66,7 +66,7 @@ def set_appointment(appt_details):
         nric = appt_details["nric"]
 
         #3. Invoke subsidyMS to check for subsidy card
-        subsidy_result = invoke_http(subsidy_URL + str(nric))
+        subsidy_result = invoke_http(subsidy_URL + "check/" + str(nric))
         print("\n Subsidy result:", subsidy_result)
         
         code = subsidy_result["code"]

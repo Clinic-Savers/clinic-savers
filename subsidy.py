@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import date
+from datetime import date, datetime
 from os import environ
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ class Subsidy(db.Model):
         return {"cardNumber": self.cardNumber, "nric": self.nric, "cardType": self.cardType, "organisationType": self.organisationType, "expiryDate": self.expiryDate,}
 
 
-@app.route("/subsidy/<string:nric>/<string:cardNumber>")
+@app.route("/subsidy/check/<string:nric>")
 def verify_subsidy(nric):
     patient = Subsidy.query.filter_by(nric=nric).first()
     if patient:
@@ -40,21 +40,23 @@ def verify_subsidy(nric):
         currentmonth = currentDate[3:5]
         currentday = currentDate[0:2] 
 
-        expiryyear = patient.expiryDate[6:10]
-        expirymonth = patient.expiryDate[3:5]
-        expiryday = patient.expiryDate[0:2]
+        expire_date = patient.expiryDate.split("-")
+        expiryyear = expire_date[0]
+        expirymonth = expire_date[1]
+        expiryday = expire_date[2]
 
-        check = True
-        
-        if (int(expiryyear) + int(expirymonth) + int(expiryday)) <= (int(currentyear) + int(currentmonth) + int(currentday)):
-            check = False
-
-        return jsonify (
+        if datetime(int(expiryyear),int(expirymonth),int(expiryday)) <= datetime(int(currentyear),int(currentmonth),int(currentday)):
+            return jsonify (
             {
                 "code": 200,
-                "data" : check
+                "data" : False
             })
-        
+        else:
+            return jsonify (
+            {
+                "code": 200,
+                "data" : True
+            })
                 
     return jsonify(
         {
@@ -173,9 +175,6 @@ def delete_subsidy(cardNumber):
             "message": "Card not found."
         }
     ), 404
-
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
