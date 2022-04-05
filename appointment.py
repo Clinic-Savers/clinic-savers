@@ -99,42 +99,6 @@ def createAppointment():
                 "message": "Appointment already exists."
             }
         ), 400
-    #Check the lastest appointment time
-    # now = datetime.now()
-    # current_time = time(now.hour, now.minute, now.second)
-    # last_appt = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==apptDate).first()
-    # print("\n Last Appt",last_appt)
-
-    # #No appointment made after the current timing
-    # if last_appt == None:
-    #     # if current_time.minute >= 30:
-    #     #     newTiming = time(current_time.hour + 1,0,0)
-    #     # else: 
-    #     #     newTiming = time(current_time.hour,30,0)
-
-    #     # appointmentDate = date.today()
-    #     newTiming = time(8,0,0)
-    #     print("New Timing", newTiming)
-
-    #Find next available timing
-    # else:
-    #     #To make sure no back to back appointment
-    #     if (last_appt.nric == nric):
-    #         return jsonify(
-    #             {
-    #                 "code": 500,
-    #                 "message": "Appointment made already"
-    #             }
-    #         ), 500
-    #     else:
-    #         format = "%H:%M:%S"
-    #         last_timing = datetime.strptime(last_appt.appointmentTime,format)
-
-    #         newTiming= last_timing + timedelta(minutes=30)
-    #         newTiming = newTiming.strftime(format)
-
-    #         appointmentDate = last_appt.appointmentDate
-    #         print("New Timing", newTiming)
 
     appointment = Appointment(nric, symptoms, clinicId, appointmentDate, appointmentTime)
     
