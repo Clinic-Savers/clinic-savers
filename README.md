@@ -115,7 +115,7 @@ Our frontend webpages can also be accessed through these links:
    * There are 9 clinics registered to the medical group. Each clinic utilises similar login credentials. Refer to the table below for each clinic's login credentials. 
    * For testing purposes, you may use any of the usernames and corresponding passwords provided. 
   
-     * |Clinic ID | Clinic Name | Username      | Password |
+       |Clinic ID | Clinic Name | Username      | Password |
        | ----------- | ----------- | ----------- | ----------- |
        | 1| Raffles Medical Anchorvale | 1      | one       |
        | 2| Raffles Medical Ang Mo Kio| 2   | two        |
