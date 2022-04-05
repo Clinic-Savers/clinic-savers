@@ -21,15 +21,33 @@ patient_URL = environ.get('patient_URL') or "http://localhost:5000/patient/"
 
 @app.route ("/getClinicsName/nric/<string:nric>")
 def getClinicsNames(nric):
+    # Invoke appointmentsMS made by the specified patient
     all_appt = invoke_http(appointment_URL + "/nric/" + str(nric))
     print("\n", all_appt)
-    all_appt_result = all_appt["data"]
 
+    code = all_appt["code"]
+    if code not in range(200, 300):
+        return {
+            "code": 404,
+            "message": "No appoitnments made"
+        }
+
+    all_appt_result = all_appt["data"]
     for i in range(0,len(all_appt_result)):
         appt = all_appt_result[i]
         clinicId = appt["clinicId"]
+
+        #Invoke clinicMS to get the clinic information
         clinic_info = invoke_http(clinic_URL + "/id/" + str(clinicId))
         print("\n", clinic_info)
+
+        code = clinic_info["code"]
+        if code not in range(200, 300):
+            return {
+                "code": 404,
+                "message": "No clinic found"
+            }
+
         clinicName = clinic_info["data"]["clinicName"]
         all_appt_result[i]["clinicName"] = clinicName
 
@@ -37,8 +55,6 @@ def getClinicsNames(nric):
         "code":200,
         "data": all_appt_result
     }
-        
-        
 
 @app.route("/viewClinics", methods=["POST"])
 def viewClinics():
