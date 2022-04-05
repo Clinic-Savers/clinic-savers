@@ -20,29 +20,22 @@ subsidy_URL = environ.get('subsidy_URL') or "http://localhost:5004/subsidy/"
 
 @app.route("/set_appointment", methods=['POST'])
 def check_appointment():
-    # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
             appt_details = request.get_json()
-            print("\n Appointment info in JSON:", appt_details)
-
-            #1. Send appt details to set appointment
+            # print("\n Appointment info in JSON:", appt_details)
             appt_result = set_appointment(appt_details)
             return appt_result
-
         except Exception as e:
-            # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
-
             return jsonify({
                 "code": 500,
                 "message": "setAppointment.py internal error: " + ex_str
             }), 500
 
-    # if reached here, not a JSON request.
     return jsonify({
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
@@ -50,9 +43,8 @@ def check_appointment():
 
 
 def set_appointment(appt_details):
-    #2. Invoke appointmentMS
     appt_result = invoke_http(appt_URL, method="POST", json=appt_details)
-    print("\n Appointment result", appt_result)
+    # print("\n Appointment result", appt_result)
 
     code = appt_result["code"]
     if code not in range(200, 300):
@@ -64,11 +56,8 @@ def set_appointment(appt_details):
 
     else:
         nric = appt_details["nric"]
-
-        #3. Invoke subsidyMS to check for subsidy card
         subsidy_result = invoke_http(subsidy_URL + str(nric))
-        print("\n Subsidy result:", subsidy_result)
-        
+        # print("\n Subsidy result:", subsidy_result)
         code = subsidy_result["code"]
         if code not in range(200,300):
             return {
@@ -76,14 +65,11 @@ def set_appointment(appt_details):
                 "message": "Appointment successfully created. No subsidy card available!"
             }
         else:
-            #check card if expired then if expired delete & alert card from DB
             current_date = datetime.datetime.now().date()
             d1 = datetime.datetime(int(current_date.strftime('%Y')), int(current_date.strftime('%m')), int(current_date.strftime('%d')))
             d2 = datetime.datetime(int(subsidy_result["data"]["expiryDate"].split('-')[0]), int(subsidy_result["data"]["expiryDate"].split('-')[1]), int(subsidy_result["data"]["expiryDate"].split('-')[2]))
-            
+            #card expired
             if d2 < d1:
-                #expired and delete
-                #delete
                 subsidy_delete = invoke_http(subsidy_URL + str(subsidy_result["data"]['cardNumber']), method="DELETE")
                 #return with a unique code number which means expired then in js check that num then alert
                 code = subsidy_delete['code']
@@ -93,7 +79,6 @@ def set_appointment(appt_details):
                         "data" : {"subsidy_card":subsidy_delete},
                         "message": "Error in deleting subsidy card!"
                     }), 400
-                
                 return {
                     "code": 256,
                     "data": {"subsidy_card": subsidy_delete["data"]["subsidy"]},
