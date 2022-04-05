@@ -55,7 +55,7 @@
                                 <a class="nav-link active" href="./viewAppointments.html"> View Appointments </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./subsidyCard.html"> Subsidy Cards </a>
+                                <a class="nav-link" href="./subsidyCard.html"> Subsidy Wallet </a>
                             </li>
                         </ul>
 
@@ -106,8 +106,8 @@
                                     <tr>
                                         <th>Clinic Name</th>
                                         <th>Symptoms</th>
-                                        <th>appointmentDate</th>
-                                        <th>appointmentTime</th>
+                                        <th>Appointment Date</th>
+                                        <th>Appointment Time</th>
                                         <th></th>
                                     </tr>
                                 </thead>`
@@ -168,8 +168,9 @@
                                     <tr>
                                         <th>NRIC</th>
                                         <th>Symptoms</th>
-                                        <th>appointmentDate</th>
-                                        <th>appointmentTime</th>
+                                        <th>Appointment Date</th>
+                                        <th>Appointment Time</th>
+                                        <th></th>
                                     </tr>
                                 </thead>`
                                 for (const record of result) {
@@ -209,6 +210,7 @@
         }
 
         async function deleteAppointment(item){
+            event.preventDefault()
             var nric = sessionStorage.getItem("nric")
             var time = item.id.split(",")[1]
             var date = item.id.split(",")[0]
