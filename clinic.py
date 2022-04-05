@@ -59,7 +59,7 @@ def find_by_patientPostalCode(patientPostalCode):
     if clinicsListByDistrict:
         return jsonify(
             {
-                "code": 200, 
+                "code": 200,
                 "data": {
                     "clinic": [clinic.json() for clinic in clinicsListByDistrict]
                 }
@@ -72,22 +72,22 @@ def find_by_patientPostalCode(patientPostalCode):
         }
     )
     
-@app.route("/clinic/<string:clinicName>")
-def find_by_clinicName(clinicName):
-    clinic = Clinic.query.filter_by(clinicName=clinicName).first()
-    if clinic:
-        return jsonify(
-            {
-                "code": 200,
-                "data": clinic.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Clinic not found."
-        }
-    ), 404
+# @app.route("/clinic/<string:clinicName>")
+# def find_by_clinicName(clinicName):
+#     clinic = Clinic.query.filter_by(clinicName=clinicName).first()
+#     if clinic:
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": clinic.json()
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "Clinic not found."
+#         }
+#     ), 404
 
 @app.route("/clinic/id/<string:clinicId>")
 def find_by_clinicId(clinicId):
