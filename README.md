@@ -144,9 +144,9 @@ Our frontend webpages can also be accessed through these links:
 
 ## References ##
 
-   * MyInfo API | ["Reference"](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
-   * MailJet API | ["Reference"](https://dev.mailjet.com/)
-   * Google Distance Matrix API | ["Reference"](https://developers.google.com/maps/documentation/distance-matrix/overview)
+   * MyInfo API | [Reference](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
+   * MailJet API | [Reference](https://dev.mailjet.com/)
+   * Google Distance Matrix API | [Reference](https://developers.google.com/maps/documentation/distance-matrix/overview)
 
 ## Course and Team Information ##
 
