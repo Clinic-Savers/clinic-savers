@@ -30,41 +30,6 @@ class Subsidy(db.Model):
     def json(self):
         return {"cardNumber": self.cardNumber, "nric": self.nric, "cardType": self.cardType, "organisationType": self.organisationType, "expiryDate": self.expiryDate,}
 
-
-@app.route("/subsidy/check/<string:nric>")
-def verify_subsidy(nric):
-    patient = Subsidy.query.filter_by(nric=nric).first()
-    if patient:
-        currentDate = date.today().strftime("%d/%m/%Y")
-        currentyear = currentDate[6:10]
-        currentmonth = currentDate[3:5]
-        currentday = currentDate[0:2] 
-
-        expire_date = patient.expiryDate.split("-")
-        expiryyear = expire_date[0]
-        expirymonth = expire_date[1]
-        expiryday = expire_date[2]
-
-        if datetime(int(expiryyear),int(expirymonth),int(expiryday)) <= datetime(int(currentyear),int(currentmonth),int(currentday)):
-            return jsonify (
-            {
-                "code": 200,
-                "data" : False
-            })
-        else:
-            return jsonify (
-            {
-                "code": 200,
-                "data" : True
-            })
-                
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Patient not found."
-        }
-    ), 404
-
 @app.route("/subsidy/<string:nric>")
 def find_by_nric(nric):
     subsidy = Subsidy.query.filter_by(nric=nric).first()
