@@ -97,6 +97,8 @@ Our frontend webpages can also be accessed through these links:
 ## Features of our application ##
 
 1. Patient http://localhost/clinic-savers/frontend/patientUI.html
+   
+   * Log in via [MyInfo API](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
 
    * Utilising Google Distance Matrix API to locate a clinic nearest to you.  
 
