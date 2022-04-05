@@ -1,8 +1,24 @@
 # Clinic-savers #
 
-Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the user processes found in clinics.
+Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the user processes found in clinics. The microservices under our enterprise solution are Appointment, Clinic, Credential, Distance, Drug, Notification, Patient, Patient Record, Prescribe Drug, Set Appointment, Subsidy and View Clinics. 
+
+This projects seeks to alleviate the concern of uncertain waiting times at clinics,  especially during the Covid-19 pandemic, which poses a risk to an unwell patient's exposure outdoors. By providing visibility of queue lengths and allowing prior booking of appointments, coupled with the clinic-side drug prescription and restock interfaces, a patient's journey from admission to drug prescription becomes much smoother and efficient.     
 
 ## Prerequisites ##
+
+The team has built requirements.txt which stores the required Python libraries to be installed. In Command Prompt (Windows) / Terminal (Mac), navigate to clinic-savers directory and run the following command to install all dependencies in our enterprise solution.
+
+   1. For Windows users
+
+       ```
+       pip install -r requirements.txt
+       ```
+    
+   2. For MacOS users
+
+       ```
+       python3 -m pip install requirements.txt
+       ```
 
 To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
 
@@ -12,15 +28,18 @@ To ensure Mailjet API is functioning within Notification microservice, navigate 
        pip install mailjet_rest
        ```
     
-   2. For Mac users
+   2. For MacOS users
 
        ```
        python3 -m pip install mailjet_rest
        ```
 
+MySQL Workbench should also be installed in the local computer. 
+   * Refer to this [installation guide](https://dev.mysql.com/doc/workbench/en/wb-installing.html) from the MySQL Workbench manual. This includes guides for Windows and MacOS users. 
+
 ## Access to database ##
 
-Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
+Our MySQL databases are managed by phpMyAdmin. In order to create and populate the databases:
 
    1. Launch WAMP/MAMP server and access phpMyAdmin through this URL http://localhost/phpmyadmin/
 
@@ -38,7 +57,7 @@ Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
 
       ![phpMyAdmin Import](images/phpmyadminimport.jpg)
 
-   3. Click on "Choose File" and navigate to ```database``` directory in ```clinic-savers``` respository.
+   3. Click on "Choose File" and navigate to ```database``` directory in ```clinic-savers``` repository.
 
       * Install the following database schemes as shown below
 
@@ -52,23 +71,33 @@ Our MySQL databases are managed by phpMyAdmin. In order to access the databases:
 
       ![Successful import](images/successimport.jpg)
 
+## Access to Frontend UI ##
 
-## Running the microservices with Docker ##
+For the frontend files to function, clinic-savers repository has to be saved in the webroot.
 
-We have utilised Docker Compose to deploy mutiple microservice docker containers at once.
+![Location of clinic-savers](images/clinicsaversloc.jpg)
 
-Navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
+The patient user process first begins at the [Patient Login Page](http://localhost/clinic-savers/patient_login/files/patientLogin.html) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
 
-```
-docker-compose up
-```
+The clinic staff user process first begins at the [Clinic Login Page](http://localhost/clinic-savers/frontend/clinicLogin.html) where they can login using a username and password. Clinic staff will then be able to access the other services such as prescribing drugs, restocking drugs and viewing patient records.
 
-All of our microservices will be deployed as Docker containers.
+<br><br>
+Our frontend webpages can be accessed through these links:
 
+* Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
+* Patient login: http://localhost/patient_login/files/patientLogin.html
+* Clinic-side user type selection: http://localhost/clinic-savers/frontend/user.html
+* Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
+* Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
+* Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
+* Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
+* Drug restocking: http://localhost/clinic-savers/frontend/restock.html
+* Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
+  
 
 ## Features of our application ##
 
-1. Patient http://localhost/clinic-savers/frontend/patientUIcopy.html
+1. Patient http://localhost/clinic-savers/frontend/patientUI.html
 
    * Utilising Google Distance Matrix API to locate a clinic nearest to you.  
 
@@ -78,12 +107,21 @@ All of our microservices will be deployed as Docker containers.
 
 
 2. Clinic http://localhost/clinic-savers/frontend/clinicLogin.html
-
-   * Please enter the following login credentials for testing purposes:
-
-      * Username: staff
-
-      * Password: 12345
+   
+   * There are 9 clinics registered to the medical group. Each clinic utilises similar login credentials. Refer to the table below for each clinic's login credentials. 
+   * For testing purposes, you may use any of the usernames and corresponding passwords provided. 
+  
+     * |Clinic ID | Clinic Name | Username      | Password |
+       | ----------- | ----------- | ----------- | ----------- |
+       | 1| Raffles Medical Anchorvale | 1      | one       |
+       | 2| Raffles Medical Ang Mo Kio| 2   | two        |
+       | 3| Raffles Medical Anson Centre| 3   | three        |
+       | 4| Raffles Medical Bishan| 4   | four        |
+       | 5| Raffles Medical Compass One| 5   | five        |
+       | 6| Raffles Medical Rivervale Mall| 6   | six        |
+       | 7| Raffles Medical Toa Payoh| 7   | seven        |
+       | 8| Raffles Medical Hillion Mall | 8   | eight        |
+       | 9| Raffles Medical Tampines 1 | 9   | nine        |
 
    * Clinic staff will be able to access our application to perform the following tasks:
 
@@ -93,33 +131,12 @@ All of our microservices will be deployed as Docker containers.
 
       * View patient records
 
-   * With the help of Mailjet API, the supplier will be notified through email whenever there is a low supply of drugs.
-
-
-## Access to Frontend UI ##
-
-The patient user process first begins at the [Patient Login Page](http://localhost/patient_login/files/patientLogin.html) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
-
-The clinic staff user process first begins at the [Clinic Login Page](http://localhost/clinic-savers/frontend/clinicLogin.html) where they can login using a username and password. Clinic staff will then be able to access the other services such as prescribing drugs, restocking drugs and viewing patient records.
-
-
-<br><br>
-For the frontend files to function, clinic-savers repository has to be saved in the webroot.
-
-![Location of clinic-savers](images/clinicsaversloc.jpg)
-
-<br><br>
-Our frontend webpages can be accessed through these links:
-
-* Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
-* Patient login: http://localhost/patient_login/files/patientLogin.html
-* User type selection: http://localhost/clinic-savers/frontend/user.html
-* Appointment booking: http://localhost/clinic-savers/frontend/patientUIcopy.html
-* Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
-* Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
-* Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
-* Drug restocking: http://localhost/clinic-savers/frontend/restock.html
-* Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
+   * With the help of Mailjet API, the supplier will be notified through email whenever a drug's quantity falls below its Safety Stock Level.
+  
+     * For testing purposes, you may view the email notifications received by the drug suppliers with these login credentials via Gmail. 
+  
+       * Email: clinicDrugSupplier@gmail.com
+       * Password: Jsf83%91ns)9nFe
 
 ## Course and Team Information ##
 
