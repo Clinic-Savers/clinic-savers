@@ -34,28 +34,6 @@ class Appointment(db.Model):
     def json(self):
         return {"nric": self.nric, "symptoms": self.symptoms, "clinicId": self.clinicId, "appointmentDate": self.appointmentDate, "appointmentTime": self.appointmentTime}
 
-# get queue length of specified clinic id 
-# @app.route("/appointment/<string:clinicId>")
-# def get_queue_length(clinicId): 
-#     clinicId = int(clinicId)
-#     now = datetime.now()
-#     current_time = time(now.hour, now.minute, now.second)
-#     this = Appointment.query.filter(Appointment.clinicId.like(clinicId), func.date(Appointment.appointmentDate)==date.today(), func.time(Appointment.appointmentTime)>=current_time).count()
-    
-#     if this:
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": {"queueLength": this}
-#             }
-#         )
-#     return jsonify(
-#         { 
-#             "code": 404,
-#             "message": "No queue."
-#         }
-#     ), 404    
-
 @app.route("/appointment/<string:clinicId>/<string:appointmentDate>")
 def get_timeslots(clinicId,appointmentDate): 
     clinicId = int(clinicId)

@@ -181,11 +181,6 @@
             nric = item.id.split(',')[0]
             postalCode = item.id.split(',')[2]
             clinicName = item.parentElement.parentElement.children[0].innerText
-
-            // var currDate = new Date()
-            // currDate.setDate(currDate.getDate() + 7)
-
-            // console.log(currDate);
             
             message_str = `
             <h5 class="font-weight-light mb-4 text-white font-italic"> Make an appointment & go! </h5>
@@ -214,8 +209,7 @@
                         var nowDate= new Date()
                         var slotDate = new Date(currDate.getFullYear(),currDate.getMonth(),currDate.getDate(),time.split(":")[0],time.split(":")[1],time.split(":")[2],"00")
                         var disabled = ""
-                        // console.log("SLOTDATE    "+slotDate)
-                        // console.log("CURRENT DATE:   "+nowDate)
+
                         if (nowDate > slotDate){
                             disabled = "disabled"
                         }
@@ -234,8 +228,7 @@
                         var nowDate= new Date()
                         var slotDate = new Date(currDate.getFullYear(),currDate.getMonth(),currDate.getDate(),time.split(":")[0],time.split(":")[1],time.split(":")[2],"00")
                         var disabled = ""
-                        // console.log("SLOTDATE    "+slotDate)
-                        // console.log("CURRENT DATE:   "+nowDate)
+
                         if (nowDate > slotDate){
                             disabled = "disabled"
                         }
@@ -291,8 +284,6 @@
                             if (data.code === 200){
                                 //console.log(data.message)
                                 for (slot of data.data['appts']){
-                                    // console.log(slot.appointmentDate+','+slot.appointmentTime)
-                                    // console.log(document.getElementById(`${slot.appointmentDate},${slot.appointmentTime}`))
                                     document.getElementById(`${slot.appointmentDate},${slot.appointmentTime}`).disabled = "true"
                                 }
                             }

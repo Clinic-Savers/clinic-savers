@@ -71,23 +71,6 @@ def find_by_patientPostalCode(patientPostalCode):
             "message": "There are no matching clinics."
         }
     )
-    
-# @app.route("/clinic/<string:clinicName>")
-# def find_by_clinicName(clinicName):
-#     clinic = Clinic.query.filter_by(clinicName=clinicName).first()
-#     if clinic:
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": clinic.json()
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "Clinic not found."
-#         }
-#     ), 404
 
 @app.route("/clinic/id/<string:clinicId>")
 def find_by_clinicId(clinicId):
@@ -107,7 +90,6 @@ def find_by_clinicId(clinicId):
         }
     ), 404
 
-#cannot create with just postal code
 @app.route("/clinic/<int:clinicId>", methods=['POST'])
 def create_clinic(clinicId):
     if (Clinic.query.filter_by(clinicId=clinicId).first()):
@@ -145,8 +127,6 @@ def create_clinic(clinicId):
         }
     ), 201
 
-
-# primary key is now clinicId, so this one need to change?
 @app.route("/clinic/<int:clinicId>", methods=['PUT'])
 def update_clinic(clinicId):
     clinic = Clinic.query.filter_by(clinicId=clinicId).first()
