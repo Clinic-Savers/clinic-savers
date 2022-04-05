@@ -1,6 +1,6 @@
 # Clinic-savers #
 
-Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the current user processes.
+Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the user processes found in clinics.
 
 ## Prerequisites ##
 

@@ -73,7 +73,7 @@ def set_appointment(appt_details):
         if code not in range(200,300):
             return {
                 "code": 255,
-                "message": "Appointment succesfully created. No subsidy card available!"
+                "message": "Appointment successfully created. No subsidy card available!"
             }
         else:
             #check card if expired then if expired delete & alert card from DB
@@ -90,18 +90,19 @@ def set_appointment(appt_details):
                 if code not in range(200,300):
                     return jsonify({
                         "code": 400,
-                        "message": "Error in deleting subsidy card: " + str(subsidy_delete)
+                        "data" : {"subsidy_card":subsidy_delete},
+                        "message": "Error in deleting subsidy card!"
                     }), 400
                 
                 return {
                     "code": 256,
                     "data": {"subsidy_card": subsidy_delete["data"]["subsidy"]},
-                    "message": "Appointment succesfully created. Your " + subsidy_result["data"]["cardType"] + " card has expired. It has been deleted in your subsidy wallet."
+                    "message": "Appointment successfully created. Your " + subsidy_result["data"]["cardType"] + " card has expired. It has been deleted in your subsidy wallet."
                 }
             #card not expired
             return {
                 "code": 257,
-                "message": "Appointment succesfully created. Your "+  subsidy_result["data"]["cardType"] +" card is still in use!"
+                "message": "Appointment successfully created. Your "+  subsidy_result["data"]["cardType"] +" card is still in use!"
             }
             
 
