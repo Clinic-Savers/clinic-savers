@@ -143,17 +143,10 @@ Our frontend webpages can also be accessed through these links:
        * Password: Jsf83%91ns)9nFe
 
 ## References ##
-API
-["Reference"](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
-MyInfo API 
 
-API
-["Reference"](https://dev.mailjet.com/)
-MailJet API
-
-API 
-["Reference"](https://developers.google.com/maps/documentation/distance-matrix/overview)
-Google Distance Matrix API
+   * MyInfo API | ["Reference"](https://public.cloud.myinfo.gov.sg/myinfo/api/myinfo-kyc-v3.2.0.html)
+   * MailJet API | ["Reference"](https://dev.mailjet.com/)
+   * Google Distance Matrix API | ["Reference"](https://developers.google.com/maps/documentation/distance-matrix/overview)
 
 ## Course and Team Information ##
 
