@@ -8,16 +8,10 @@ This projects seeks to alleviate the concern of uncertain waiting times at clini
 
 The team has built requirements.txt which stores the required Python libraries to be installed. In Command Prompt (Windows) / Terminal (Mac), navigate to clinic-savers directory and run the following command to install all dependencies in our enterprise solution.
 
-   1. For Windows users
+   1. For both Windows & MacOS users
 
        ```
        pip install -r requirements.txt
-       ```
-    
-   2. For MacOS users
-
-       ```
-       python3 -m pip install requirements.txt
        ```
 
 To ensure Mailjet API is functioning within Notification microservice, navigate to ```clinic-savers``` directory and enter the following command in command prompt/terminal.
@@ -77,21 +71,26 @@ For the frontend files to function, clinic-savers repository has to be saved in 
 
 ![Location of clinic-savers](images/clinicsaversloc.jpg)
 
+<br>
+
 The patient user process first begins at the [Patient Login Page](http://localhost/clinic-savers/patient_login/files/patientLogin.html) where they can login using their NRIC. From then on, patients can access the other services such as finding nearby clinics as well as viewing their appointments.
 
 The clinic staff user process first begins at the [Clinic Login Page](http://localhost/clinic-savers/frontend/clinicLogin.html) where they can login using a username and password. Clinic staff will then be able to access the other services such as prescribing drugs, restocking drugs and viewing patient records.
 
-<br><br>
-Our frontend webpages can be accessed through these links:
+<br>
+Our frontend webpages can also be accessed through these links:
 
+Clinic Staff 
 * Clinic login: http://localhost/clinic-savers/frontend/clinicLogin.html
-* Patient login: http://localhost/patient_login/files/patientLogin.html
 * Clinic-side user type selection: http://localhost/clinic-savers/frontend/user.html
-* Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
-* Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
-* Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
 * Drug prescription: http://localhost/clinic-savers/frontend/prescribeDrug.html
 * Drug restocking: http://localhost/clinic-savers/frontend/restock.html
+* Patient records: http://localhost/clinic-savers/frontend/patientRecords.html
+  
+Patient 
+* Patient login: http://localhost/clinic-savers/patient_login/files/patientLogin.html
+* Appointment booking: http://localhost/clinic-savers/frontend/patientUI.html
+* Appointment record: http://localhost/clinic-savers/frontend/viewAppointments.html
 * Subsidy card information: http://localhost/clinic-savers/frontend/subsidyCard.html
   
 
@@ -101,9 +100,12 @@ Our frontend webpages can be accessed through these links:
 
    * Utilising Google Distance Matrix API to locate a clinic nearest to you.  
 
-   * Make an appointment
+   * Make appointment at selected clinic 
 
-   * Filter through the appointments you have made by entering a date.
+   * View appointments by filtering according to date
+
+   * View patient's subsidy cards and add new ones 
+
 
 
 2. Clinic http://localhost/clinic-savers/frontend/clinicLogin.html
