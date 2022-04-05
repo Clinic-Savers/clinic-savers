@@ -1,4 +1,4 @@
-# Clinic-savers #
+# :hospital: Clinic-Savers :hospital: #
 
 Clinic-savers is an enterprise solution that provides a multi-functional application for clinic staff as well as patients. Through our clinic management system and quick booking system, users will be able to access various microservices that can help streamline many of the user processes found in clinics. The microservices under our enterprise solution are Appointment, Clinic, Credential, Distance, Drug, Notification, Patient, Patient Record, Prescribe Drug, Set Appointment, Subsidy and View Clinics. 
 
