@@ -42,7 +42,7 @@ Our MySQL databases are managed by phpMyAdmin. In order to create and populate t
          Username: root<br>
          No password required<br>
 
-      2. Login credentials for Mac users
+      2. Login credentials for MacOS users
 
          Username: root<br>
          Password: root<br>
